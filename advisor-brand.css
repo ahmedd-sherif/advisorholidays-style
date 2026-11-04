@@ -1,4 +1,8 @@
 @charset "UTF-8";
+/* advisorholidays.sa brand stylesheet v4 (v3 + round-2 fixes merged).
+   System: fields and buttons 48px / 12px radius, border #8E80B8 (--input); secondary actions are 44px outlined pills (1.5px #7A45A0);
+   small tiles 14px; cards 18-20px; page panels 24px.
+   Heading accents (gradient bar under the title, at the inline start or centred with the title): page title 72x5, section title 64x4, sub-heading inside a card 56x4. */
 :root{--adv-grad:linear-gradient(90deg,#1AA0C8 0%,#3070B8 28%,#7A45A0 52%,#C03A80 76%,#E8604A 100%);--adv-grad-soft:linear-gradient(90deg,#5CCBEA 0%,#8FA8F0 35%,#C08BEA 62%,#FF8AA0 100%);--adv-grad-v:linear-gradient(180deg,#1AA0C8 0%,#7A45A0 55%,#E8604A 100%);--adv-grad-tile:linear-gradient(135deg,#1AA0C8 0%,#3070B8 30%,#7A45A0 60%,#C03A80 82%,#E8604A 100%);--adv-btn:linear-gradient(90deg,#1E64AB 0%,#5B3FA0 50%,#B0306F 100%);--adv-btn-bright:linear-gradient(90deg,#1F78B8 0%,#7A45A0 50%,#C03A80 100%);--adv-deep:#14294A 0%,#1D3772 38%,#3A2F7E 72%,#5A2A78 100%;--adv-dir:to left;--adv-s:100%;--adv-e:0%;--adv-grad-text:linear-gradient(var(--adv-dir),#1E5FA8 0%,#5B3FA0 50%,#A3347C 100%);--adv-mist:linear-gradient(var(--adv-dir),#E2F1FA 0%,#ECE8FA 50%,#F8E8F0 100%);--adv-hero-h:clamp(170px,50vw,300px);--adv-search-title:'Find your hotel'}
 html[dir='ltr']{--adv-dir:to right;--adv-s:0%;--adv-e:100%}
 html:lang(ar){--adv-search-title:'ابحث عن فندقك'}
@@ -12,6 +16,8 @@ html{scroll-padding-top:72px}
 body{background-color:#F6F5FC;background-image:radial-gradient(64rem 36rem at var(--adv-s) 0,rgba(26,160,200,.12),transparent 62%),radial-gradient(56rem 40rem at var(--adv-e) 30%,rgba(122,69,160,.08),transparent 62%),radial-gradient(56rem 40rem at var(--adv-s) 74%,rgba(192,58,128,.07),transparent 62%),linear-gradient(180deg,#EEF6FC 0%,#F4F1FC 38%,#F9F0F7 72%,#FDF2EE 100%);background-repeat:no-repeat}
 ::selection{background:#7A45A0;color:#fff;-webkit-text-fill-color:#fff}
 main a:focus-visible{outline:2px solid #3070B8;outline-offset:3px}
+
+/* ===== Header and top strip ===== */
 [data-block-id='header']>div{position:relative}
 [data-block-id='header']>div::after{content:'';position:absolute;inset-inline:0;bottom:0;height:3px;background:var(--adv-grad);pointer-events:none}
 [data-block-id='header']>div>.container{min-height:60px;padding-block:10px}
@@ -22,6 +28,8 @@ main a:focus-visible{outline:2px solid #3070B8;outline-offset:3px}
 [data-block-id='header'] nav a::after{content:'';position:absolute;inset-inline:0;bottom:-8px;height:2px;border-radius:2px;background:var(--adv-grad);transform:scaleX(0)}
 [data-block-id='header'] nav a.router-link-exact-active::after{transform:scaleX(1)}
 [data-block-id='header'] button[data-slot='button']{border-radius:999px;padding-inline:18px}
+/* sign-in: the link fills the whole pill (only the word was clickable); EN CMS label is lowercase "login" */
+[data-block-id='header'] button[data-slot='button']>a[href$='/login']{display:flex;align-items:center;justify-content:center;align-self:stretch;margin:-8px -18px;padding:8px 18px;border-radius:inherit;text-transform:capitalize}
 [data-block-id='header']:has(img[src*='LOGO-WHITE'])>div{color:#fff!important;background-color:#14294A;background-image:linear-gradient(var(--adv-dir),var(--adv-deep))}
 [data-block-id='header']:has(img[src*='LOGO-WHITE']) nav a.text-primary,[data-block-id='header']:has(img[src*='LOGO-WHITE']) nav a.text-primary span{color:#8EDCF2!important}
 [data-block-id='header']:has(img[src*='LOGO-WHITE']) button[data-slot='button']{border-color:rgba(255,255,255,.75);color:#fff}
@@ -31,19 +39,44 @@ main a:focus-visible{outline:2px solid #3070B8;outline-offset:3px}
 [data-block-id='header']:not(:has(img[src*='LOGO-WHITE']))>div{color:#14294A!important;background-image:linear-gradient(var(--adv-dir),#E4F3FA 0%,#F6F4FC 42%,#F1EAFB 74%,#FBEAF1 100%)}
 [data-block-id='header']:not(:has(img[src*='LOGO-WHITE'])) nav a.text-primary span{color:#6B3FA0!important}
 [data-block-id='header']:not(:has(img[src*='LOGO-WHITE'])) button[data-slot='button']:hover{background-color:#14294A;border-color:#14294A;color:#fff}
+/* only the exact current page is highlighted (theme also gives the home link .text-primary on /about-us) */
+[data-block-id='header'] nav a.text-primary:not(.router-link-exact-active):not([aria-current='page']),
+[data-block-id='header'] nav a.text-primary:not(.router-link-exact-active):not([aria-current='page']) span{color:inherit!important}
 [data-block-id='header']+div{background-color:#EEF0FB;background-image:linear-gradient(var(--adv-dir),#E2F3FA 0%,#EDEAFB 50%,#FBE6EF 100%);border-bottom-color:rgba(122,69,160,.18);color:#14294A}
 [data-block-id='header']+div>.container{padding-block:8px}
-[data-block-id='header']+div p{font-weight:700}
+[data-block-id='header']+div p{font-weight:700;text-wrap:balance}
 [data-block-id='header']+div a[data-slot='button']{min-height:40px;border-radius:999px;padding-inline:18px}
 @media (max-width:639.98px){[data-block-id='header']+div>.container{column-gap:10px;row-gap:8px}[data-block-id='header']+div p{font-size:13px}[data-block-id='header']+div a[data-slot='button']{min-height:38px;padding:6px 14px;font-size:13px}}
-:is(main,[data-block-id],[data-block-id='header']+div) [data-slot='button'].bg-primary{background-image:var(--adv-btn);background-size:180% 100%;background-position:0 50%;border-color:transparent;color:#fff;font-weight:700;box-shadow:0 10px 22px -12px rgba(91,63,160,.8)}
+/* phone menu (portalled dropdown): brand panel off the screen edge, capitalised EN labels, full-width 48px gradient sign-in button, current page marked with the vertical accent bar */
+[data-slot='dropdown-menu-content']:has(nav a[href]){margin-inline:12px;border-radius:18px;background:var(--adv-grad) top/100% 4px no-repeat,#fff;box-shadow:0 0 0 1px rgba(122,69,160,.12),0 24px 50px -20px rgba(20,41,74,.55);color:#14294A}
+[data-slot='dropdown-menu-content'] p.text-2xl.font-extrabold{text-transform:capitalize;color:#14294A}
+[data-slot='dropdown-menu-content'] p.text-2xl.font-extrabold+p{color:#5A5F78}
+[data-slot='dropdown-menu-content'] button[data-slot='button']:has(>a[href$='/login']){height:48px;padding:0;border-color:transparent;border-radius:12px;background-image:var(--adv-btn);background-origin:border-box;color:#fff;box-shadow:0 10px 22px -12px rgba(91,63,160,.8)}
+[data-slot='dropdown-menu-content'] button[data-slot='button']>a[href$='/login']{display:flex;align-items:center;justify-content:center;align-self:stretch;width:100%;border-radius:inherit;font-size:15px;font-weight:800;text-transform:capitalize}
+[data-slot='dropdown-menu-content'] button[data-slot='button']>a[href$='/login']:focus-visible{outline:2px solid #3070B8;outline-offset:2px}
+[data-slot='dropdown-menu-content'] nav a{display:block;color:#14294A}
+[data-slot='dropdown-menu-content'] nav a p{font-weight:700}
+[data-slot='dropdown-menu-content'] nav a[aria-current='page']{color:#6B3FA0}
+[data-slot='dropdown-menu-content'] nav a[aria-current='page']>span>p{position:relative;padding-inline-start:14px}
+[data-slot='dropdown-menu-content'] nav a[aria-current='page']>span>p::before{content:'';position:absolute;inset-inline-start:0;top:.15em;bottom:.15em;width:4px;border-radius:4px;background:var(--adv-grad-v)}
+
+/* ===== Buttons ===== */
+:is(main,[data-block-id],[data-block-id='header']+div) [data-slot='button'].bg-primary{background-image:var(--adv-btn);background-size:180% 100%;background-position:0 50%;background-origin:border-box;border-color:transparent;color:#fff;font-weight:700;box-shadow:0 10px 22px -12px rgba(91,63,160,.8)}
 :is(main,[data-block-id],[data-block-id='header']+div) [data-slot='button'].bg-primary:hover{background-position:100% 50%;box-shadow:0 14px 28px -12px rgba(176,48,111,.75)}
 :is(main,[data-block-id],[data-block-id='header']+div) [data-slot='button'].bg-primary:disabled{box-shadow:none}
 :is(main,[data-block-id],[data-block-id='header']+div) [data-slot='button'].bg-primary:focus-visible,main :is([data-slot='carousel-previous'],[data-slot='carousel-next']):focus-visible{outline:2px solid #3070B8;outline-offset:3px}
+/* mobile search sheet close button is portalled outside main: same brand gradient as every other primary button */
+[data-slot='sheet-content'] [data-slot='sheet-close'].bg-primary{height:48px;border-radius:12px;background-image:var(--adv-btn);background-origin:border-box;font-weight:700;color:#fff;box-shadow:0 10px 22px -12px rgba(91,63,160,.8)}
 main input.bg-transparent:not([type='checkbox']):not([type='radio']):not([type='range']),main textarea.bg-transparent,main button[role='combobox'].bg-transparent{background-color:#fff}
 main button.bg-background:not([class*='bg-primary']):not([aria-expanded='true']):not(:disabled):hover{background-color:#F4EFFB}
-main .container.py-0>div>h1{width:fit-content;max-width:100%;font-size:clamp(28px,2.6vw + 16px,48px);font-weight:800;color:#14294A;--leading-normal:1.3}
-@supports ((-webkit-background-clip:text) or (background-clip:text)){@media (forced-colors:none){main [role='heading'][aria-level='2'] span:not([style*='color']),main .container.py-0>div>h1:not([style*='color']),[data-block-id^='city-'] span[style*='clamp(22px']:not([style*='color']),[data-block-id^='city-search'] h2,[data-block-id='contact-form'] section>div:first-child span:not([style*='color']){background-image:var(--adv-grad-text);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;-webkit-box-decoration-break:clone;box-decoration-break:clone}main :is([data-block-id='booking-step'],[data-block-id='newsletter']) [role='heading'][aria-level='2'] span{background:none;-webkit-text-fill-color:#fff}}}
+main button[data-slot='sheet-trigger'].border-border{border-color:var(--input)}
+
+/* ===== Titles and heading accents ===== */
+main .container.py-0>div>h1{position:relative;width:fit-content;max-width:100%;font-size:clamp(28px,2.6vw + 16px,48px);font-weight:800;color:#14294A;--leading-normal:1.3}
+/* page title accent (hotels: absolutely placed so the filters stay centred on the title; cities: in flow above the intro line) */
+main .container.py-0>div>h1::after{content:'';position:absolute;inset-inline-start:0;top:100%;width:72px;height:5px;margin-top:4px;border-radius:5px;background:var(--adv-grad)}
+main .container.py-0>div:not([class*='md:flex-row'])>h1::after{position:static;display:block;margin-top:12px}
+@supports ((-webkit-background-clip:text) or (background-clip:text)){@media (forced-colors:none){main [role='heading'][aria-level='2'] span:not([style*='color']),main .container.py-0>div>h1:not([style*='color']),[data-block-id^='city-'] span[style*='clamp(22px']:not([style*='color']),[data-block-id^='city-search'] section>div.grid>div>h2,[data-block-id^='city-intro'] div.grid>div.text-center>div:first-child span,[data-block-id='contact-form'] section>div:first-child span:not([style*='color']),main>div.gap-12>div.space-y-4:not([data-block-id])>h2:first-child{background-image:var(--adv-grad-text);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;-webkit-box-decoration-break:clone;box-decoration-break:clone}main :is([data-block-id='booking-step'],[data-block-id='newsletter']) [role='heading'][aria-level='2'] span{background:none;-webkit-text-fill-color:#fff}}}
 main :is([data-block-id='booking-step'],[data-block-id='newsletter']) [role='heading'][aria-level='2'] span{color:#fff}
 main header:has(>div>[role='heading']){row-gap:10px}
 main header:has(>div>[role='heading'])::after{content:'';order:1;flex:none;width:64px;height:4px;border-radius:4px;background:var(--adv-grad)}
@@ -53,6 +86,15 @@ main :is([data-block-id='booking-step'],[data-block-id='newsletter']) header:has
 main [data-block-id='booking-step'] header:has(>div>[role='heading'])::after{background:var(--adv-grad-soft)}
 main [data-block-id='newsletter'] header:has(>div>[role='heading'])::after{background:rgba(255,255,255,.8)}
 main [data-block-id] span[style*='clamp(11px']{font-size:clamp(13px,.45vw + 11.5px,17px)!important}
+/* homepage: one section-title size (the blog title had its own larger clamp; phones got 19px) */
+main>div.gap-12:has(>[data-block-id^='hero-section']) [role='heading'][aria-level='2'] span[style*='clamp(']{font-size:clamp(23px,1.1vw + 17px,34px)!important;line-height:1.4}
+/* homepage section subtitles: one size per width for every section (were 13px on phones, 17-22px on desktop) */
+main>div.gap-12:has(>[data-block-id^='hero-section']) header:has(>div>[role='heading'])>div~div span[style*='clamp(']{font-size:clamp(15px,.45vw + 13.3px,19px)!important;line-height:1.6}
+main>div.gap-12:has(>[data-block-id^='hero-section']) header:has(>div>[role='heading'])>div~div p{text-wrap:balance}
+/* section title accent, city page (same bar as the home section titles) */
+[data-block-id^='city-'] div:has(>p>span[style*='clamp(22px'])::after,[data-block-id^='city-search'] section>div.grid>div>h2::after{content:'';display:block;width:64px;height:4px;margin-top:10px;border-radius:4px;background:var(--adv-grad)}
+
+/* ===== Home: hero photo + search band ===== */
 main>div.gap-12:has(>[data-block-id^='hero-section']){row-gap:0}
 main>div.gap-12:has(>[data-block-id^='hero-section'])>[data-block-id]:not([data-block-id^='hero-section'],[data-block-id='booking-step']){padding-block:clamp(28px,3.5vw,48px)}
 main>div.gap-12:has(>[data-block-id^='hero-section'])>:is([data-block-id^='available-hotels'],[data-block-id^='landing-latest-posts']){background:var(--adv-mist)}
@@ -82,33 +124,72 @@ main>div.gap-12:has(>[data-block-id^='hero-section'])>:is([data-block-id^='avail
 [data-block-id^='hero-section'] [data-block-id='hotel-search'] .dark-form [role='button']:focus-visible{outline:none}
 [data-block-id^='hero-section'] [data-block-id='hotel-search'] .dark-form :is(button,input):focus-visible,[data-block-id^='hero-section'] [data-block-id='hotel-search'] .dark-form [role='button']:focus-visible>div:last-child{outline:3px solid #8EDCF2;outline-offset:2px}
 [data-block-id^='hero-section'] [data-block-id='hotel-search'] .dark-form [data-slot='form-item'] :is(button,input)[aria-invalid='true']{border-color:#FFB4AB;box-shadow:0 0 0 2px #FFB4AB}
-[data-block-id^='hero-section'] [data-block-id='hotel-search'] .dark-form form button[type='submit']{background-image:var(--adv-btn-bright);box-shadow:0 12px 28px -12px rgba(192,58,128,.75)}
+/* search CTA: warm fill that stands out from the cool navy/purple band (white text 6.0:1 to 4.7:1) */
+[data-block-id^='hero-section'] [data-block-id='hotel-search'] .dark-form form button[type='submit']{background-image:linear-gradient(90deg,#B0306F 0%,#C9482F 100%);background-size:100% 100%;box-shadow:inset 0 0 0 1px rgba(255,255,255,.4),0 12px 28px -12px rgba(232,96,74,.75)}
+[data-block-id^='hero-section'] [data-block-id='hotel-search'] .dark-form form button[type='submit']:hover{background-image:linear-gradient(90deg,#9E2A63 0%,#B33F28 100%)}
+
+/* ===== Hotel search form (home band, hotels, city, hotel page) ===== */
 [data-block-id='hotel-search'] form>div.grid{column-gap:12px;row-gap:14px}
 [data-block-id='hotel-search'] form button[type='submit'],[data-block-id^='city-search'] aside form>button[type='submit']{height:48px;border-radius:12px;font-size:16px;font-weight:800}
 @media (max-width:639.98px){[data-block-id='hotel-search'] form>div.grid{grid-template-columns:minmax(0,2fr) minmax(0,3fr);column-gap:10px;row-gap:10px}[data-block-id='hotel-search'] form>div.grid>*{grid-column:1/-1}[data-block-id='hotel-search'] form>div.grid>div:last-of-type,[data-block-id='hotel-search'] form>div.grid>button[type='submit']{grid-column:auto}[data-block-id='hotel-search'] form label,[data-block-id^='hero-section'] [data-block-id='hotel-search'] .dark-form label{font-size:13px}}
 @media (min-width:640px) and (max-width:1023.98px){[data-block-id='hotel-search'] form>div.grid{grid-template-columns:repeat(2,minmax(0,1fr))}[data-block-id='hotel-search'] form>div.grid>*{grid-column:auto}[data-block-id='hotel-search'] form>div.grid>button[type='submit']{grid-column:1/-1}[data-block-id='hotel-search'] form>div.grid>div:nth-child(odd):last-of-type+button[type='submit']{grid-column:auto}}
+/* home band 1024-1279: size the five fields by what they hold (theme 2/3/3/2/2 of 12 cut the dates and wrapped the EN destination label).
+   Weights = measured needs in px at 14px inset: EN label 170, date range 295, "1 room, 2 adults, 0 children" 213, promo 108, "Search Now" 121. Home hero only: the hotel page form is a 10-col grid with 4 fields. */
+@media (min-width:1024px) and (max-width:1279.98px){[data-block-id^='hero-section'] [data-block-id='hotel-search'] form>div.grid:has(>:nth-child(5):last-child){column-gap:10px;grid-template-columns:minmax(0,172fr) minmax(0,305fr) minmax(0,217fr) minmax(0,110fr) minmax(0,123fr)}[data-block-id^='hero-section'] [data-block-id='hotel-search'] form>div.grid:has(>:nth-child(5):last-child)>*{grid-column:auto}}
+/* one text inset in every field; "Stay Dates" label is a block like its neighbours so all labels sit on one line */
+[data-block-id='hotel-search'] [role='button']>div.mb-2>label{display:block}
+[data-block-id='hotel-search'] form>div.grid>div :is(button[data-slot='form-control'],button[data-slot='popover-trigger'],button[data-slot='sheet-trigger'],input[data-slot='form-control'],[role='button']>div.h-11){padding-inline:14px}
+/* guests summary: space after each separator ("1 room, 2 adults, 0 children") on the desktop popover, the phone sheet and the city-page search card */
+:is([data-block-id='hotel-search'],[data-block-id^='city-search'] aside form) button:is([data-slot='popover-trigger'],[data-slot='sheet-trigger']) :is(div.truncate,p>span)>span:nth-child(even){margin-inline-end:.3em}
+/* phone occupancy field: icon centred on the text with the desktop's 8px gap */
+[data-block-id='hotel-search'] button[data-slot='sheet-trigger']>p.flex{align-items:center;column-gap:8px}
+/* promo placeholder at the same 14px as the other field values (the input itself stays 16px on phones so iOS does not zoom) */
+[data-block-id='hotel-search'] form input[data-slot='form-control']::placeholder{font-size:14px}
 main [data-block-id='hotel-search'] .bg-card.shadow-center,[data-block-id^='city-search'] aside form{border:1px solid transparent;border-top-width:4px;border-radius:20px;background:linear-gradient(#fff,#fff) padding-box,var(--adv-grad) border-box;box-shadow:0 20px 44px -28px rgba(74,42,122,.55)}
 :is(main [data-block-id='hotel-search'] .bg-card,[data-block-id^='city-search'] aside form) label{font-weight:700}
 :is(main [data-block-id='hotel-search'] .bg-card,[data-block-id^='city-search'] aside form) label:not([data-error='true']){color:#14294A}
-:is(main [data-block-id='hotel-search'] .bg-card,[data-block-id^='city-search'] aside form) :is(button[data-slot='form-control'],[data-slot='form-item']>button,input.border:not(.border-none),div.h-11.border){height:48px;border:1px solid #9486BC;border-radius:12px;background-color:#fff;color:#1A2238}
+:is(main [data-block-id='hotel-search'] .bg-card,[data-block-id^='city-search'] aside form) :is(button[data-slot='form-control'],[data-slot='form-item']>button,input.border:not(.border-none),div.h-11.border){height:48px;border:1px solid #8E80B8;border-radius:12px;background-color:#fff;color:#1A2238}
 :is(main [data-block-id='hotel-search'] .bg-card,[data-block-id^='city-search'] aside form) :is(button[data-slot='form-control'],[data-slot='form-item']>button,input.border:not(.border-none),div.h-11.border):hover{border-color:#6F5FA6}
 :is(main [data-block-id='hotel-search'] .bg-card,[data-block-id^='city-search'] aside form) :is(button[data-slot='form-control'],input.border:not(.border-none))[aria-invalid='true']{border-color:var(--destructive)}
 :is(main [data-block-id='hotel-search'] .bg-card,[data-block-id^='city-search'] aside form) [role='button']:focus-visible{outline:none}
 :is(main [data-block-id='hotel-search'] .bg-card,[data-block-id^='city-search'] aside form) :is(button,input.border:not(.border-none)):focus-visible,:is(main [data-block-id='hotel-search'] .bg-card,[data-block-id^='city-search'] aside form) [role='button']:focus-visible>div.h-11.border,:is(main [data-block-id='hotel-search'] .bg-card,[data-block-id^='city-search'] aside form) div.h-11.border:focus-within{outline:2px solid #3070B8;outline-offset:2px}
 [data-block-id^='city-search'] aside form h3{font-weight:800;color:#14294A}
+/* city search card: every field has a 16px purple icon at the inline start and one 14px inset (dates/promo had the icon at the far end, guests a 13px icon) */
+[data-block-id^='city-search'] aside form :is(div.h-11.border,[data-slot='form-item']>button){gap:10px;padding-inline:14px}
+[data-block-id^='city-search'] aside form div.h-11.border>svg:last-child{order:-1}
+[data-block-id^='city-search'] aside form :is(div.h-11.border,[data-slot='form-item']>button)>svg{flex:none;width:16px;height:16px;color:#7A45A0}
+/* 1024-1279 the card is 306px wide: tighter inset and a 13px date so the whole stay range fits */
+@media (min-width:1024px) and (max-width:1279.98px){[data-block-id^='city-search'] aside form :is(div.h-11.border,[data-slot='form-item']>button){gap:8px;padding-inline:12px}[data-block-id^='city-search'] aside form [role='button'] div.h-11.border>span{font-size:13px}}
 @media (min-width:1024px) and (min-height:640px){[data-block-id^='city-search'] aside{position:sticky;top:104px;align-self:start}}
+form img[alt$=' flag']+span{direction:ltr;unicode-bidi:isolate}
+
+/* ===== Cities and hotel cards ===== */
 main a[href*='/cities/']>div.relative{overflow:hidden;border-radius:18px;box-shadow:0 14px 30px -20px rgba(20,41,74,.55)}
 main a[href*='/cities/']>div.relative>div.absolute{padding:22px 18px 18px;font-size:1.25rem;font-weight:800;color:#fff;background-image:linear-gradient(to top,rgba(20,41,74,.92) 0%,rgba(58,47,126,.55) 55%,rgba(20,41,74,0) 100%)}
 main a[href*='/cities/']>div.relative>div.absolute::after{content:'';display:block;width:44px;height:3px;margin-top:8px;border-radius:3px;background:var(--adv-grad)}
 :is([data-block-id^='cities-section'],[data-block-id^='available-hotels']) [data-slot='carousel-content']>.flex{padding-block:12px 30px}
-main a.bg-card[href*='/hotels/'],main .grid>a[href*='/hotels/']>div.rounded-xl{border-bottom:3px solid transparent;background:linear-gradient(#fff,#fff) padding-box,var(--adv-grad) border-box;box-shadow:0 12px 28px -18px rgba(20,41,74,.45)}
-main .grid>a[href*='/hotels/']>div.rounded-xl>div:last-child{border-color:transparent}
+/* Riyadh has no hotels: keep its slide in the track at zero width (display:none left Embla with no scroll room). Better: remove it from the cities block in the CMS. */
+[data-block-id^="cities-section"] [data-slot="carousel-item"]:has(>a[href$="/cities/riyadh"]){display:block;flex:0 0 0;width:0;min-width:0;padding:0;margin:0;overflow:hidden;visibility:hidden}
+/* hotel cards (home, /hotels, city suggestions): white card on a 3px gradient base edge */
+main a.bg-card[href*='/hotels/'],main .grid>a[href*='/hotels/']>div.rounded-xl,[data-block-id^='city-search'] section>div.grid>div article{border-bottom:3px solid transparent;background:linear-gradient(#fff,#fff) padding-box,var(--adv-grad) border-box;box-shadow:0 12px 28px -18px rgba(20,41,74,.45)}
+main .grid>a[href*='/hotels/']>div.rounded-xl>div:last-child{padding-block:16px;border-color:transparent}
+main .grid>a[href*='/hotels/']>div.rounded-xl>div:last-child>h2{margin-top:2px}
+/* star row pinned to the card foot: stars line up across a row when one name wraps to two lines */
+main .grid>a[href*='/hotels/']>div.rounded-xl>div:last-child>span.flex:last-child{margin-top:auto}
+/* photo area: brand-mist tile while a lazy photo (infinite scroll) has not painted yet */
+main .grid>a[href*='/hotels/']>div.rounded-xl>div.relative:first-child{background-color:#ECE8FA;background-image:linear-gradient(135deg,#E2F1FA 0%,#ECE8FA 50%,#F8E8F0 100%)}
+/* 768-1023: the 3-column cards were 224x288 portrait strips; square them like the desktop grid */
+@media (min-width:768px) and (max-width:1023.98px){main .grid>a[href*='/hotels/']>div.rounded-xl>div.relative:first-child{height:auto;aspect-ratio:1/1}main .grid>a[href*='/hotels/']>div.rounded-xl>div.relative:first-child>img{position:absolute;inset:0;height:100%}}
 main a.bg-card[href*='/hotels/'] span.text-muted-foreground,main .grid>a[href*='/hotels/'] span.text-muted-foreground{color:#6B3FA0;font-weight:700}
-main a.bg-card[href*='/hotels/'] h3,main .grid>a[href*='/hotels/'] h2{font-weight:700;color:#14294A}
+/* one hotel-name style everywhere: bold navy */
+main a.bg-card[href*='/hotels/'] h3,main .grid>a[href*='/hotels/'] h2,main a.bg-card[href*='/hotels/'] span.text-lg,[data-block-id^='city-search'] article h2{font-weight:700;color:#14294A}
 main svg.lucide-star.fill-primary{color:#B57B00;fill:#F0B323}
 main nav[aria-label='page'] a{min-width:40px;border-radius:999px;background-color:#fff;font-weight:700}
 main nav[aria-label='page'] a.bg-primary{background-image:var(--adv-btn);border-color:transparent;color:#fff}
+
+/* ===== Home: booking steps, articles, newsletter, FAQ ===== */
 [data-block-id='booking-step']{position:relative;padding-block:clamp(44px,5.5vw,80px);color:#fff;background-color:#14294A;background-image:radial-gradient(40rem 22rem at var(--adv-s) 0,rgba(26,160,200,.28),transparent 70%),radial-gradient(40rem 22rem at var(--adv-e) 100%,rgba(232,96,74,.24),transparent 70%),linear-gradient(var(--adv-dir),var(--adv-deep));border-block:3px solid transparent;border-image:var(--adv-grad) 1}
+[data-block-id='booking-step'] .container>header{margin-bottom:clamp(14px,2vw,28px)}
 [data-block-id='booking-step'] .grid>div span{color:#fff}
 [data-block-id='booking-step'] .grid>div>div>div:last-child span{color:rgba(255,255,255,.92)}
 [data-block-id='booking-step'] .grid svg{box-sizing:border-box;color:#fff;padding:22px;border-radius:28px;background-image:var(--adv-grad-tile);box-shadow:0 0 0 6px rgba(255,255,255,.1),0 18px 36px -14px rgba(0,0,0,.65)}
@@ -116,6 +197,9 @@ main nav[aria-label='page'] a.bg-primary{background-image:var(--adv-btn);border-
 @media (min-width:768px){[data-block-id^='landing-latest-posts'] .aspect-video{aspect-ratio:21/9}}
 [data-block-id^='landing-latest-posts'] [data-slot='carousel-item'] a{border-radius:20px;box-shadow:0 24px 50px -30px rgba(20,41,74,.6)}
 [data-block-id^='landing-latest-posts'] [data-slot='carousel-item'] a>div.absolute.inset-0{background-image:linear-gradient(to top,rgba(20,41,74,.94) 0%,rgba(58,47,126,.55) 45%,rgba(20,41,74,0) 80%)}
+/* >=768 the title covers only the bottom 11-31% of the wide slide: keep the scrim dark there and let the photo show above it */
+@media (min-width:768px){[data-block-id^='landing-latest-posts'] [data-slot='carousel-item'] a>div.absolute.inset-0{background-image:linear-gradient(to top,rgba(20,41,74,.92) 0%,rgba(20,41,74,.66) 32%,rgba(36,40,100,.2) 58%,rgba(20,41,74,0) 78%)}}
+[data-block-id^='landing-latest-posts'] [data-slot='carousel-item'] a p{text-shadow:0 2px 14px rgba(10,20,40,.45)}
 [data-block-id^='landing-latest-posts'] [data-slot='carousel-item'] a::after{content:'';position:absolute;inset-inline:0;bottom:0;height:4px;background:var(--adv-grad);z-index:2}
 [data-block-id^='landing-latest-posts'] section>div:first-child>span{padding:4px 14px;border-radius:999px;background:#fff;color:#4A2A7A;font-size:14px;font-weight:700;box-shadow:0 6px 16px -10px rgba(20,41,74,.5)}
 [data-block-id='newsletter'] section>div.rounded-2xl{border-radius:24px;padding-block:clamp(28px,4vw,48px);color:#fff;background-color:#3A2F7E;background-image:radial-gradient(28rem 16rem at var(--adv-s) 0,rgba(26,160,200,.3),transparent 70%),radial-gradient(28rem 16rem at var(--adv-e) 100%,rgba(232,96,74,.32),transparent 70%),linear-gradient(var(--adv-dir),#1E5FA8 0%,#5B3FA0 55%,#A3347C 100%);box-shadow:0 24px 50px -28px rgba(74,42,122,.75)}
@@ -126,6 +210,9 @@ main [data-block-id='newsletter'] form [data-slot='button'].bg-primary{height:48
 main [data-block-id='newsletter'] form [data-slot='button'].bg-primary:hover{background:#F4EFFB}
 [data-block-id='newsletter'] section>div.rounded-2xl :is(input,[data-slot='button']):focus-visible{outline:3px solid #fff;outline-offset:2px;box-shadow:none}
 [data-block-id='newsletter'] [data-slot='form-message']{color:#fff;font-weight:700}
+/* e-mail field, RTL: the input is dir=ltr and reserves its 40px icon gap on the right; the theme drew the icon on the left, under the typed text */
+html[dir='rtl'] [data-block-id='newsletter'] [data-slot='form-control']>svg{inset-inline-end:auto;inset-inline-start:12px}
+[data-block-id='newsletter'] [data-slot='form-control']>svg{color:#6B3FA0}
 [data-block-id^='faq-section'] [data-slot='accordion']{width:100%;max-width:880px;margin-inline:auto}
 main [data-slot='accordion-item']{position:relative;border-radius:14px}
 main [data-slot='accordion-item']::before{content:'';position:absolute;inset-block:12px;inset-inline-start:0;width:4px;border-radius:4px;background:var(--adv-grad-v);opacity:0}
@@ -138,18 +225,106 @@ main [data-slot='accordion-content']>div{--leading-normal:1.8;color:#46506A}
 [data-block-id^='faq-section'] [data-slot='accordion']+button{border-radius:999px;padding-inline:24px;border-color:#7A45A0;color:#4A2A7A;font-weight:700}
 main [data-slot='carousel-previous'],main [data-slot='carousel-next']{width:44px;height:44px;border:1px solid rgba(122,69,160,.25);background:#fff;color:#4A2A7A;box-shadow:0 8px 20px -10px rgba(20,41,74,.5)}
 main [data-slot='carousel-previous']:not(:disabled):hover,main [data-slot='carousel-next']:not(:disabled):hover{border-color:transparent;background-image:var(--adv-btn);color:#fff}
-main [data-slot='carousel-previous']:disabled,main [data-slot='carousel-next']:disabled{opacity:.4}
+main :is([data-slot='carousel-previous'],[data-slot='carousel-next']):disabled{visibility:hidden}
+
+/* ===== Hotels list (/hotels) ===== */
+/* heading row: title stays on one line; the filters shrink first and drop below the title only when they truly do not fit (FR at 768) */
+@media (min-width:768px){main .container.py-0>div[class*='md:flex-row']{flex-wrap:wrap;row-gap:24px}main .container.py-0>div[class*='md:flex-row']>h1{flex:none;white-space:nowrap}main .container.py-0>div[class*='md:flex-row']>h1+div{flex:1 1 0;min-width:min-content}main .container.py-0>div[class*='md:flex-row']>h1+div>div:has(>[data-slot='popover-trigger']){width:auto;flex:1 1 320px;min-width:180px}}
+@media (max-width:767.98px){main .container.py-0>div>div:has(>[data-slot='select-trigger'])>[data-slot='select-trigger']{max-width:none}}
+/* filters: same field language as the search forms */
+main .container.py-0>div[class*='md:flex-row'] :is([data-slot='popover-trigger'],[data-slot='select-trigger'],[data-slot='sheet-trigger']){height:48px;border-radius:12px;padding-inline:16px;border-color:var(--input);background-color:#fff;color:#1A2238;font-size:15px;box-shadow:0 10px 22px -18px rgba(20,41,74,.6)}
+main .container.py-0>div[class*='md:flex-row'] :is([data-slot='popover-trigger'],[data-slot='sheet-trigger'])>span{color:#5A5F78}
+main .container.py-0>div[class*='md:flex-row'] :is([data-slot='popover-trigger'],[data-slot='select-trigger'],[data-slot='sheet-trigger']) svg{color:#7A45A0}
+main .container.py-0>div[class*='md:flex-row'] :is([data-slot='popover-trigger'],[data-slot='select-trigger'],[data-slot='sheet-trigger']):hover{border-color:#6F5FA6;background-color:#fff}
+main .container.py-0>div[class*='md:flex-row'] :is([data-slot='popover-trigger'],[data-slot='select-trigger'],[data-slot='sheet-trigger']):focus-visible{outline:2px solid #3070B8;outline-offset:2px}
+/* hotel-name search: a magnifier at the inline start instead of the theme's up/down chevrons, so it no longer reads as a second select */
+main .container.py-0>div[class*='md:flex-row'] :is([data-slot='popover-trigger'],[data-slot='sheet-trigger']):has(svg.lucide-chevrons-up-down){justify-content:flex-start;gap:10px}
+main .container.py-0>div[class*='md:flex-row'] :is([data-slot='popover-trigger'],[data-slot='sheet-trigger']):has(svg.lucide-chevrons-up-down)::before{content:'';flex:none;width:18px;height:18px;background-color:#7A45A0;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.3' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20.5 20.5-4.2-4.2'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.3' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20.5 20.5-4.2-4.2'/%3E%3C/svg%3E") center/contain no-repeat}
+main .container.py-0>div[class*='md:flex-row'] :is([data-slot='popover-trigger'],[data-slot='sheet-trigger'])>div:has(>svg.lucide-chevrons-up-down){margin-inline-start:auto}
+main .container.py-0>div[class*='md:flex-row'] :is([data-slot='popover-trigger'],[data-slot='sheet-trigger']) svg.lucide-chevrons-up-down{display:none}
+@media (forced-colors:active){main .container.py-0>div[class*='md:flex-row'] :is([data-slot='popover-trigger'],[data-slot='sheet-trigger']):has(svg.lucide-chevrons-up-down)::before{background-color:ButtonText}}
+/* card grid flush with the title, filters and breadcrumb (theme px-2), and clear air under the title row */
+main .grid.px-2:has(>a[href*='/hotels/']){padding-inline:0;margin-top:clamp(24px,2.6vw,40px)}
+/* hotel search results (phone sheet + desktop popover): names wrap to two lines instead of losing their start in RTL */
+:is([data-slot='sheet-content'],[data-slot='popover-content']) button>span.flex-col>span.truncate.font-bold{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;white-space:normal;overflow:hidden;--leading-normal:1.45}
+
+/* ===== Hotel page ===== */
 main h1.text-2xl.mt-2{font-size:clamp(24px,1.6vw + 16px,36px);font-weight:800;color:#14294A;--leading-normal:1.3}
 main .text-muted-foreground.mt-1.flex span+span{color:#1E64AB;font-weight:700}
 main [data-slot='sheet-trigger'] img,main div:has(>[data-slot='sheet-trigger'])>div.absolute.inset-0{border-radius:14px}
+/* gallery: "more photos" tile in a brand tint with a bold label; map corners match the photos */
+main div:has(>[data-slot='sheet-trigger'])>div.absolute.inset-0.pointer-events-none{background-color:transparent;background-image:linear-gradient(135deg,rgba(20,41,74,.8) 0%,rgba(74,42,122,.74) 100%)}
+main div:has(>[data-slot='sheet-trigger'])>[data-slot='sheet-trigger']>div.absolute.inset-0{font-size:15px;font-weight:700}
+main div.row-span-2.col-span-3>iframe{border-radius:14px}
+/* back control: same white disc as the carousel arrows */
+main div.w-7.h-7.rounded-full.cursor-pointer{display:grid;place-items:center;width:40px;height:40px;border:1px solid rgba(122,69,160,.25);background:#fff;color:#4A2A7A;box-shadow:0 8px 20px -10px rgba(20,41,74,.5)}
+main div.w-7.h-7.rounded-full.cursor-pointer>svg{width:22px;height:22px;stroke-width:2}
+main div.w-7.h-7.rounded-full.cursor-pointer:hover{border-color:transparent;background-image:var(--adv-btn);color:#fff}
+/* "view map" under the address (<1024): the outlined secondary pill (was a flat purple 6px box); the link fills the pill */
+main button[data-slot='button'].bg-secondary:has(>a[href*='openstreetmap']){height:auto;margin-top:12px;padding:0;border:1.5px solid #7A45A0;border-radius:999px;background:#fff;color:#4A2A7A;font-weight:700;box-shadow:0 10px 22px -16px rgba(74,42,122,.6)}
+main button[data-slot='button'].bg-secondary:has(>a[href*='openstreetmap'])>a{align-items:center;min-height:42px;padding:8px 18px;border-radius:999px;font-size:14px}
+main button[data-slot='button'].bg-secondary:has(>a[href*='openstreetmap'])>a svg{color:#7A45A0}
+main button[data-slot='button'].bg-secondary:has(>a[href*='openstreetmap']):hover{background:#F4EFFB}
 main div.container>h2{position:relative;padding-inline-start:14px;font-weight:800;color:#14294A}
 main div.container>h2::before{content:'';position:absolute;inset-inline-start:0;top:.15em;bottom:.15em;width:4px;border-radius:4px;background:var(--adv-grad-v)}
+main div.container>h2::first-letter{text-transform:uppercase}
+/* "إبدأ حجزك الآن" / "وسائل الراحة" fell back to the 36px global h2; match the other section titles. Amenities also sat 24px under the last room. */
+main div.container>h2:is(.mt-6,[class~='md:mt-14']){font-size:1.125rem;line-height:1.75rem}
+main div.container>h2.mt-6{margin-top:clamp(36px,4vw,48px)}
+@media (min-width:768px){main div.container>h2:is(.mt-6,[class~='md:mt-14']){font-size:1.5rem;line-height:2rem}}
 main .gap-x-20{column-gap:12px;row-gap:10px}
 main .grid:has(>div.px-0.py-2.items-center){gap:10px}
 main div.px-0.py-2.items-center.font-medium{padding:10px 14px;border:1px solid #E2DCEE;border-radius:12px;background:#fff;font-size:15px;font-weight:600}
 main div.px-0.py-2.items-center.font-medium svg{color:#7A45A0}
-main div.shadow-card.bg-card.py-4{border-radius:16px;background:linear-gradient(90deg,#1AA0C8,#7A45A0,#E8604A) top/100% 3px no-repeat,#fff}
+main div.px-0.py-2.items-center.font-medium>span{text-wrap:balance}
+/* 1024-1279: four columns (five 187px tiles wrapped the longer labels) */
+@media (min-width:1024px) and (max-width:1279.98px){main div[class*='lg:grid-cols-5']:has(>div.px-0.py-2.items-center){grid-template-columns:repeat(4,minmax(0,1fr))}}
+/* phones: amenities "show more" is the outlined secondary pill (was 12px blue link text) */
+main div:has(>div.px-0.py-2.items-center)+div.mt-4{justify-content:center}
+main div:has(>div.px-0.py-2.items-center)+div.mt-4>button[data-slot='button']{height:auto;min-height:44px;padding:10px 24px;border:1.5px solid #7A45A0;border-radius:999px;background:#fff;color:#4A2A7A;font-size:14px;font-weight:700;box-shadow:0 10px 22px -16px rgba(74,42,122,.6)}
+main div:has(>div.px-0.py-2.items-center)+div.mt-4>button[data-slot='button'] :is(span,svg){color:#4A2A7A}
+main div:has(>div.px-0.py-2.items-center)+div.mt-4>button[data-slot='button']:hover{background:#F4EFFB}
+main div:has(>div.px-0.py-2.items-center)+div.mt-4>button[data-slot='button']:focus-visible{outline:2px solid #3070B8;outline-offset:3px;box-shadow:none}
+/* room cards: one card style (18px, soft shadow, mist title bar); the placeholder room photo is a compact thumbnail, not a 288px banner per room */
+main div.bg-card.rounded-lg:has([data-slot='room-current-price']):has(>div.border-b>p){overflow:hidden;border-color:#E2DCEE;border-radius:18px;box-shadow:0 16px 34px -26px rgba(20,41,74,.55)}
+main div.bg-card.rounded-lg:has([data-slot='room-current-price'])>div.border-b:first-child{padding:14px 20px;border-bottom-color:#E7E1F2;background:var(--adv-mist)}
+main div.bg-card.rounded-lg:has([data-slot='room-current-price'])>div.border-b:first-child>p{font-size:clamp(15px,.3vw + 14px,18px);font-weight:700;line-height:1.6;color:#14294A}
+main div.bg-card:has([data-slot='room-current-price']) div.relative[class*='h-72']{height:104px}
+/* occupancy overlay: navy-purple wash so the white labels pass AA (were 2.8-3.0:1 on the light photo) */
+main div.bg-card:has([data-slot='room-current-price']) div.relative[class*='h-72']>div.absolute{flex-direction:row;flex-wrap:wrap;column-gap:28px;row-gap:4px;background-image:linear-gradient(160deg,rgba(20,41,74,.62) 0%,rgba(58,47,126,.58) 100%);--text-2xl:17px;--text-4xl:26px;font-size:24px}
+main div.bg-card:has([data-slot='room-current-price']) div.relative[class*='h-72']>div.absolute>p+p{margin-top:0}
+main div.bg-card:has([data-slot='room-current-price']) div.relative[class*='h-72']>div.absolute svg{width:22px;height:22px}
+@media (min-width:1024px){
+main div.bg-card:has([data-slot='room-current-price'])>div[class*='2xl:flex-row']{flex-direction:row;align-items:stretch}
+main div.bg-card:has([data-slot='room-current-price']) div.relative[class*='h-72']{flex:none;width:236px;max-width:236px;height:auto;min-height:150px;padding:14px}
+main div.bg-card:has([data-slot='room-current-price']) div.relative[class*='h-72']>img{border-radius:12px}
+main div.bg-card:has([data-slot='room-current-price']) div.relative[class*='h-72']>div.absolute{flex-direction:column;inset:14px;padding:0;border-radius:12px}
+main div.bg-card:has([data-slot='room-current-price']) div.relative[class*='h-72']>div.absolute>p+p{margin-top:4px}
+main div.bg-card:has([data-slot='room-current-price']) div[class*='2xl:border-s']{justify-content:center;border-inline-start:0}
+}
+main div.bg-card:has([data-slot='room-current-price']) [data-slot='room-current-price']{font-weight:800;color:#14294A}
+/* rate rows: the meal plan is what separates the two prices, so it reads navy bold with a brand icon (was grey with a blue icon) */
+main div.bg-card:has([data-slot='room-current-price']) div.grid>div:first-child:not(:has([data-slot='room-current-price']))>div.flex{align-items:center;color:#14294A;font-weight:700}
+main div.bg-card:has([data-slot='room-current-price']) div.grid>div:first-child:not(:has([data-slot='room-current-price']))>div.flex>svg{flex:none;color:#7A45A0}
+main div.bg-card:has([data-slot='room-current-price']) button[data-slot='button'].border-input,main div.container.items-center>hr+h2+button[data-slot='dialog-trigger']{min-width:96px;border-color:#7A45A0;border-radius:999px;padding-inline:20px;color:#4A2A7A;font-weight:700}
+main div.bg-card:has([data-slot='room-current-price']) button[data-slot='button'].border-input:hover,main div.container.items-center>hr+h2+button[data-slot='dialog-trigger']:hover{border-color:transparent;background-color:#5B3FA0;background-image:var(--adv-btn);background-origin:border-box;color:#fff}
+/* booking total card (>=1280, theme hides it below): same gradient-edge card as the search box, kept in view beside the long room list */
+main div[class*='xl:flex-row']>div[class*='w-[300px]'][class*='h-fit']{border:1px solid transparent;border-top-width:4px;border-radius:18px;background:linear-gradient(#fff,#fff) padding-box,var(--adv-grad) border-box;box-shadow:0 20px 44px -28px rgba(74,42,122,.55)}
+main div[class*='xl:flex-row']>div[class*='w-[300px]'][class*='h-fit'] p.text-4xl{color:#14294A}
+@media (min-width:1280px){main div[class*='xl:flex-row']>div[class*='w-[300px]'][class*='h-fit']{position:sticky;top:104px;align-self:flex-start;max-height:calc(100vh - 120px);overflow-y:auto}}
+/* policies: short facts as a grid of tiles (2 columns from 768, 4 from 1280) */
+main div.shadow-card.bg-card.py-4{border-radius:14px;background:linear-gradient(90deg,#1AA0C8,#7A45A0,#E8604A) top/100% 3px no-repeat,#fff}
+main div.shadow-card.bg-card.py-4>h3{font-weight:700;color:#14294A}
+main div.shadow-card.bg-card.py-4>h3+div{color:#46506A}
+@media (min-width:768px){main div.flex.flex-col.gap-2:not([data-slot]):has(>div.shadow-card.bg-card.py-4){display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}}
+@media (min-width:1280px){main div.flex.flex-col.gap-2:not([data-slot]):has(>div.shadow-card.bg-card.py-4){grid-template-columns:repeat(4,minmax(0,1fr))}}
 main .prose{--tw-prose-headings:#14294A;--tw-prose-links:#1E64AB;--tw-prose-bullets:#7A45A0;--tw-prose-bold:#14294A}
+/* about the hotel: a white card like the rooms and tiles (was bare text on the page gradient); theme p line-height follows --leading-normal */
+main div.container>h2.mt-12+div.prose.inject-html{--leading-normal:1.9;padding:clamp(18px,2.4vw,28px) clamp(18px,2.6vw,32px);border:1px solid #E2DCEE;border-radius:18px;background:#fff;box-shadow:0 16px 34px -26px rgba(20,41,74,.55);--tw-prose-body:#2A3350;color:#2A3350}
+main div.container>h2.mt-12+div.prose.inject-html>:first-child{margin-top:0}
+main div.container>h2.mt-12+div.prose.inject-html>:last-child{margin-bottom:0}
+
+/* ===== City page ===== */
 [data-block-id^='city-hero'] section{border-bottom:4px solid transparent;border-image:var(--adv-grad) 1}
 [data-block-id^='city-hero'] div.absolute.inset-0[class*='from-foreground']{background-image:linear-gradient(var(--adv-dir),rgba(20,41,74,.9) 0%,rgba(58,47,126,.6) 45%,rgba(122,36,102,.12) 100%)}
 [data-block-id^='city-hero'] h1{text-shadow:0 2px 18px rgba(0,0,0,.35)}
@@ -157,104 +332,206 @@ main .prose{--tw-prose-headings:#14294A;--tw-prose-links:#1E64AB;--tw-prose-bull
 @media (max-width:767.98px){[data-block-id^='city-hero'] [class*='h-[420px]']{height:340px}}
 [data-block-id^='city-highlights'] section>div{border:1px solid transparent;border-top-width:4px;background:linear-gradient(#fff,#fff) padding-box,var(--adv-grad) border-box;box-shadow:0 24px 50px -30px rgba(20,41,74,.55)}
 [data-block-id^='city-highlights'] svg.size-9{box-sizing:border-box;width:48px;height:48px;padding:11px;border-radius:14px;color:#fff;background-image:var(--adv-grad-tile)}
+/* intro key facts: 2x2 white tiles with a bold gradient figure (were four cramped columns with 3-4 line labels) */
+[data-block-id^='city-intro'] div.grid:has(>div.text-center){grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+[data-block-id^='city-intro'] div.grid>div.text-center{justify-content:center;gap:4px;padding:14px 12px;border:1px solid #E4DDF0;border-radius:14px;background:#fff;box-shadow:0 12px 26px -22px rgba(20,41,74,.55)}
+/* the theme sets every <p> to 16px, so sizes go on the tile rows and the p inherits */
+[data-block-id^='city-intro'] div.grid>div.text-center p{font-size:inherit}
+[data-block-id^='city-intro'] div.grid>div.text-center>div:first-child{--leading-normal:1.25;font-size:clamp(20px,.9vw + 13px,26px);line-height:1.35;color:#14294A}
+[data-block-id^='city-intro'] div.grid>div.text-center>div:first-child span{font-weight:800!important}
+[data-block-id^='city-intro'] div.grid>div.text-center>div:last-child{--leading-normal:1.55;font-size:14px;color:#5A5F78}
 [data-block-id^='city-'] div.rounded-3xl{border:1px solid rgba(122,69,160,.14);background-color:#fff;background-image:linear-gradient(135deg,rgba(26,160,200,.1) 0%,rgba(122,69,160,.08) 50%,rgba(232,96,74,.1) 100%)}
+/* trip-planning cards: a real card title over a hairline; item icons in soft tiles */
+[data-block-id^='city-trip-planning'] div.rounded-3xl>div:first-child{padding-bottom:14px;border-bottom:1px solid rgba(122,69,160,.18)}
+[data-block-id^='city-trip-planning'] div.rounded-3xl>div:first-child span{font-size:clamp(18px,.5vw + 14px,21px);font-weight:800;color:#14294A}
+[data-block-id^='city-trip-planning'] li>svg{box-sizing:border-box;width:40px;height:40px;margin-top:-6px;padding:9px;border-radius:12px;background:#fff;color:#6B3FA0;box-shadow:0 8px 18px -12px rgba(74,42,122,.55)}
 [data-block-id^='city-'] article{border-radius:16px}
 [data-block-id^='city-'] article>span:first-child{color:#fff;background-image:var(--adv-grad-tile)}
+/* suggested hotels: names read in full (Latin names were cut at their start in RTL, then by the star column): stars on a small row above, name up to two lines */
+[data-block-id^='city-search'] article h2.truncate{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;white-space:normal;overflow:hidden;line-height:1.3;unicode-bidi:plaintext}
+/* plaintext resolves start to left for a Latin name: pin the side to the page direction */
+html[dir='rtl'] [data-block-id^='city-search'] article h2.truncate{text-align:right}
+html[dir='ltr'] [data-block-id^='city-search'] article h2.truncate{text-align:left}
+@media (min-width:1280px){[data-block-id^='city-search'] article h2{font-size:1.375rem}}
+[data-block-id^='city-search'] article div:has(>h2.truncate+div){flex-wrap:wrap;row-gap:6px}
+[data-block-id^='city-search'] article div:has(>h2.truncate+div)>h2{flex:1 1 100%}
+[data-block-id^='city-search'] article h2.truncate+div{order:-1}
+/* >=1024: price column shrinks to its content (theme fixed 224px left the name/address 220px and cut addresses) */
+@media (min-width:1024px){[data-block-id^='city-search'] article div[class*='lg:w-56'][class*='lg:shrink-0']{width:auto;min-width:9.5rem}}
+[data-block-id^='city-search'] article p.line-clamp-1+div.flex{flex-wrap:wrap;column-gap:4px}
+/* "show more results": an outlined pill under the list instead of a 14px link in the corner */
+[data-block-id^='city-search'] section>div.grid>div>h2~button{align-self:center;min-height:44px;padding:10px 26px;border:1.5px solid #7A45A0;border-radius:999px;background:#fff;color:#4A2A7A;font-size:15px;font-weight:700;text-decoration:none;box-shadow:0 10px 22px -16px rgba(74,42,122,.6)}
+[data-block-id^='city-search'] section>div.grid>div>h2~button:hover{background:#F4EFFB;text-decoration:none}
+[data-block-id^='city-search'] section>div.grid>div>h2~button:focus-visible{outline:2px solid #3070B8;outline-offset:3px}
+/* tips take the full width when the block has no FAQ column */
+@media (min-width:1024px){[data-block-id^='city-faq-tips'] section>div.grid>div:only-child{grid-column:1/-1}}
+@media (min-width:1280px){[data-block-id^='city-faq-tips'] section>div.grid>div:only-child>div.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+/* map: framed like the cards; price pins shrink to content */
+[data-block-id^='city-map'] section>div.relative{border-color:#E4DDF0;border-radius:20px;box-shadow:0 20px 44px -30px rgba(20,41,74,.55)}
+[data-block-id^='city-map'] .leaflet-marker-icon>span{width:max-content;margin-inline:auto;justify-content:center}
+[data-block-id^='city-map'] .leaflet-marker-icon>span.bg-primary{background-color:#1E64AB;background-image:linear-gradient(135deg,#1E64AB 0%,#5B3FA0 100%)}
+
+/* ===== Blog ===== */
+/* search: same 48px / 12px field as the hotel search */
+[data-block-id^='blog-more'] section>form{gap:10px}
+[data-block-id^='blog-more'] section>form>input{height:48px;border-radius:12px;padding-inline:16px;border-color:#8E80B8;background-color:#fff;color:#1A2238;font-size:15px;box-shadow:0 8px 20px -16px rgba(20,41,74,.45)}
+[data-block-id^='blog-more'] section>form>input:hover{border-color:#6F5FA6}
+[data-block-id^='blog-more'] section>form>input:focus-visible{border-color:#3070B8;outline:2px solid #3070B8;outline-offset:2px}
+[data-block-id^='blog-more'] section>form>button[type='submit']{height:48px;width:56px;border-radius:12px}
+[data-block-id^='blog-more'] section>form>button[type='submit'] svg{width:20px;height:20px}
+[data-block-id^='blog-more'] section>div.flex-wrap>button{border-radius:999px;border-color:rgba(122,69,160,.25);background:#fff;color:#4A2A7A;font-size:13px;font-weight:700}
+[data-block-id^='blog-more'] section>div.flex-wrap>button:not(.bg-primary):hover{background:#F4EFFB}
+/* cards: even gutters; date pinned to the card foot over a hairline so dates line up across a row */
+[data-block-id^='blog-more'] section>div.grid{row-gap:24px}
+@media (min-width:1024px){[data-block-id^='blog-more'] section>div.grid{row-gap:32px;column-gap:32px}}
 [data-block-id^='blog-more'] section>div.grid>a.group{padding:12px 12px 18px;border-radius:20px;background:#fff;box-shadow:0 14px 34px -24px rgba(20,41,74,.5)}
 [data-block-id^='blog-more'] section>div.grid>a.group>div.rounded-lg{border-radius:14px}
+[data-block-id^='blog-more'] section>div.grid>a.group>div.aspect-video>img{object-position:50% 100%}
 [data-block-id^='blog-more'] section>div.grid>a.group>:not(div){padding-inline:6px}
-[data-block-id^='blog-more'] section>div.grid>a.group h3{color:#14294A}
+[data-block-id^='blog-more'] section>div.grid>a.group h3{font-size:18px;line-height:1.55;color:#14294A}
+@media (min-width:768px){[data-block-id^='blog-more'] section>div.grid>a.group h3{font-size:20px}}
 [data-block-id^='blog-more'] section>div.grid>a.group:hover h3{color:#5B3FA0}
-[data-block-id^='blog-more'] section>div.grid>a.group time{color:#6B3FA0;font-weight:700}
-[data-block-id^='blog-more'] section>div.flex-wrap>button{border-radius:999px;border-color:rgba(122,69,160,.25);background:#fff;color:#4A2A7A;font-weight:700}
-[data-block-id^='blog-more'] section>div.flex-wrap>button:not(.bg-primary):hover{background:#F4EFFB}
-main>div.gap-12>div.space-y-4:not([data-block-id]){--leading-normal:1.9;width:min(960px,calc(100% - 32px));margin:32px auto;padding:clamp(20px,4vw,48px);border:0 solid transparent;border-top-width:4px;border-radius:24px;background:linear-gradient(#fff,#fff) padding-box,var(--adv-grad) border-box;box-shadow:0 24px 50px -32px rgba(20,41,74,.45);color:#2A3350}
+[data-block-id^='blog-more'] section>div.grid>a.group time{color:#6B3FA0;font-size:13px;font-weight:700;word-spacing:.2em}
+[data-block-id^='blog-more'] section>div.grid>a.group>time{margin-top:auto;padding-top:12px;border-top:1px solid rgba(122,69,160,.14)}
+/* lead story: when the count would leave an orphan, the first post spans the row (image beside text, gradient top edge).
+   768-1279 (2 columns): odd counts. >=1280 (3 columns, 6-track grid): 3k+1 counts lead, 3k+2 counts open with two half-width cards. */
+@media (min-width:768px) and (max-width:1279.98px){
+[data-block-id^='blog-more'] section>div.grid:has(>a.group:nth-child(odd):last-child)>a.group:first-child{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,1fr);grid-template-rows:1fr auto auto 1fr;column-gap:clamp(24px,2.4vw,40px);row-gap:0;padding:14px 14px 18px;border:0 solid transparent;border-top-width:4px;background:linear-gradient(#fff,#fff) padding-box,var(--adv-grad) border-box}
+[data-block-id^='blog-more'] section>div.grid:has(>a.group:nth-child(odd):last-child)>a.group:first-child>div.aspect-video{grid-column:1;grid-row:1/-1;align-self:stretch}
+[data-block-id^='blog-more'] section>div.grid:has(>a.group:nth-child(odd):last-child)>a.group:first-child>h3{grid-column:2;grid-row:2;font-size:clamp(22px,.9vw + 13px,28px);line-height:1.45}
+[data-block-id^='blog-more'] section>div.grid:has(>a.group:nth-child(odd):last-child)>a.group:first-child>p{grid-column:2;grid-row:3;margin-top:12px;font-size:15px;--leading-normal:1.8;-webkit-line-clamp:3}
+[data-block-id^='blog-more'] section>div.grid:has(>a.group:nth-child(odd):last-child)>a.group:first-child>time{grid-column:2;grid-row:4;align-self:end;margin-top:20px}
+}
+@media (min-width:1280px){
+[data-block-id^='blog-more'] section>div.grid{grid-template-columns:repeat(6,minmax(0,1fr))}
+[data-block-id^='blog-more'] section>div.grid>a.group{grid-column:span 2}
+[data-block-id^='blog-more'] section>div.grid:has(>a.group:nth-child(3n+2):last-child)>a.group:nth-child(-n+2){grid-column:span 3}
+[data-block-id^='blog-more'] section>div.grid:has(>a.group:nth-child(3n+1):last-child)>a.group:first-child{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,1fr);grid-template-rows:1fr auto auto 1fr;column-gap:clamp(24px,2.4vw,40px);row-gap:0;padding:14px 14px 18px;border:0 solid transparent;border-top-width:4px;background:linear-gradient(#fff,#fff) padding-box,var(--adv-grad) border-box}
+[data-block-id^='blog-more'] section>div.grid:has(>a.group:nth-child(3n+1):last-child)>a.group:first-child>div.aspect-video{grid-column:1;grid-row:1/-1;align-self:stretch}
+[data-block-id^='blog-more'] section>div.grid:has(>a.group:nth-child(3n+1):last-child)>a.group:first-child>h3{grid-column:2;grid-row:2;font-size:clamp(22px,.9vw + 13px,28px);line-height:1.45}
+[data-block-id^='blog-more'] section>div.grid:has(>a.group:nth-child(3n+1):last-child)>a.group:first-child>p{grid-column:2;grid-row:3;margin-top:12px;font-size:15px;--leading-normal:1.8;-webkit-line-clamp:3}
+[data-block-id^='blog-more'] section>div.grid:has(>a.group:nth-child(3n+1):last-child)>a.group:first-child>time{grid-column:2;grid-row:4;align-self:end;margin-top:20px}
+}
+/* pagination (data-slot markup); Arabic order runs right to left (theme forces dir=ltr on the nav) */
+main nav[data-slot='pagination'] button[data-slot='pagination-item']{border-radius:999px;font-weight:700;border-color:rgba(122,69,160,.2)}
+main nav[data-slot='pagination'] button[data-slot='pagination-item'][aria-current='page']{background-image:var(--adv-btn);background-origin:border-box;border-color:transparent;color:#fff;box-shadow:0 10px 22px -12px rgba(91,63,160,.8)}
+main nav[data-slot='pagination'] :is([data-slot='pagination-previous'],[data-slot='pagination-next']){width:40px;padding:0;border-radius:999px;border-color:rgba(122,69,160,.2);background-color:#fff;color:#4A2A7A}
+main nav[data-slot='pagination'] :is([data-slot='pagination-previous'],[data-slot='pagination-next']):not(:disabled):hover{background-color:#F4EFFB;color:#4A2A7A}
+main nav[data-slot='pagination'] :is([data-slot='pagination-previous'],[data-slot='pagination-next']) svg{width:18px;height:18px}
+html[dir='rtl'] main nav[data-slot='pagination']{direction:rtl}
+html[dir='rtl'] main nav[data-slot='pagination'] :is([data-slot='pagination-previous'],[data-slot='pagination-next']) svg{transform:scaleX(-1)}
+html[dir='rtl'] main nav[data-slot='pagination'] span[role='status']>span[aria-hidden='true']{direction:ltr;unicode-bidi:isolate}
+
+/* ===== Content card (about-us, privacy-policy, terms-and-conditions) ===== */
+main>div.gap-12>div.space-y-4:not([data-block-id]){--leading-normal:1.9;width:min(960px,calc(100% - 32px));margin-inline:auto;margin-block:clamp(28px,3.4vw,52px) clamp(0px,3.4vw - 32px,20px);padding:clamp(20px,4vw,48px);border:0 solid transparent;border-top-width:4px;border-radius:24px;background:linear-gradient(#fff,#fff) padding-box,var(--adv-grad) border-box;box-shadow:0 24px 50px -32px rgba(20,41,74,.45);color:#2A3350;font-size:clamp(16px,.14vw + 15px,17px)}
 main>div.gap-12>div.space-y-4:not([data-block-id])>h2{--leading-normal:1.4;margin-top:1.6em;font-size:clamp(20px,1.1vw + .9rem,28px);font-weight:800;color:#14294A}
-main>div.gap-12>div.space-y-4:not([data-block-id])>h2:first-child{margin-top:0}
 main>div.gap-12>div.space-y-4:not([data-block-id])>h2::after{content:'';display:block;width:56px;height:4px;margin-top:8px;border-radius:4px;background:var(--adv-grad)}
+/* the first h2 is the visible page title (the real h1 is sr-only): page-title size, gradient text (in the gradient-text block above) and accent */
+main>div.gap-12>div.space-y-4:not([data-block-id])>h2:first-child{width:fit-content;max-width:100%;margin-top:0;font-size:clamp(28px,1.6vw + 18px,40px);--leading-normal:1.3}
+main>div.gap-12>div.space-y-4:not([data-block-id])>h2:first-child::after{width:72px;height:5px;margin-top:12px;border-radius:5px}
+main>div.gap-12>div.space-y-4:not([data-block-id])>h2:first-child+p{font-size:clamp(17px,.2vw + 16px,19px);color:#1F2A44}
 main>div.gap-12>div.space-y-4:not([data-block-id]) h3{--leading-normal:1.4;font-size:1.15rem;font-weight:700;color:#14294A}
 main>div.gap-12>div.space-y-4:not([data-block-id]) :is(ul,ol){padding-inline-start:1.5em;list-style:disc}
 main>div.gap-12>div.space-y-4:not([data-block-id]) ol{list-style:decimal}
 main>div.gap-12>div.space-y-4:not([data-block-id]) li::marker{color:#7A45A0}
 main>div.gap-12>div.space-y-4:not([data-block-id]) a{color:#1E64AB;text-decoration:underline;text-underline-offset:3px}
-[data-block-id='contact-form'] section{padding:clamp(20px,4vw,44px);border:1px solid #E4DDF0;border-radius:24px;background:#fff;box-shadow:0 14px 34px -18px rgba(20,41,74,.32)}
-@media (min-width:768px){[data-block-id='contact-info']>div{border:1px solid #E4DDF0;border-radius:24px;background:var(--adv-mist)}}
+/* the editor's trailing empty <p> left 16px extra inside the bottom of the card */
+main>div.gap-12>div.space-y-4:not([data-block-id])>p:empty:last-child{display:none}
+main>div.gap-12>div.space-y-4:not([data-block-id])>:nth-last-child(2):has(+p:empty:last-child){margin-block-end:0}
+/* about page only (scoped by the active header/footer link, so privacy and terms keep normal bullets): the two short lists become 2-column tiles */
+:root:has(:is([data-block-id='header'],[data-block-id='footer']) a[aria-current='page'][href$='/about-us']) main>div.gap-12>div.space-y-4:not([data-block-id])>ul{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;padding-inline-start:0;list-style:none}
+@media (min-width:768px){:root:has(:is([data-block-id='header'],[data-block-id='footer']) a[aria-current='page'][href$='/about-us']) main>div.gap-12>div.space-y-4:not([data-block-id])>ul{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}}
+:root:has(:is([data-block-id='header'],[data-block-id='footer']) a[aria-current='page'][href$='/about-us']) main>div.gap-12>div.space-y-4:not([data-block-id])>ul>li{position:relative;display:flex;align-items:center;min-height:60px;padding:12px 16px;padding-inline-start:54px;border:1px solid #E6E0F2;border-radius:14px;background:#fff;box-shadow:0 10px 22px -18px rgba(20,41,74,.5);color:#1F2A44;--leading-normal:1.7}
+:root:has(:is([data-block-id='header'],[data-block-id='footer']) a[aria-current='page'][href$='/about-us']) main>div.gap-12>div.space-y-4:not([data-block-id])>ul>li::before{content:'';position:absolute;inset-inline-start:15px;top:50%;width:26px;height:26px;margin-top:-13px;border-radius:50%;background:var(--adv-grad-tile);box-shadow:0 4px 10px -4px rgba(91,63,160,.6)}
+:root:has(:is([data-block-id='header'],[data-block-id='footer']) a[aria-current='page'][href$='/about-us']) main>div.gap-12>div.space-y-4:not([data-block-id])>ul>li::after{content:'';position:absolute;inset-inline-start:24.5px;top:50%;width:6px;height:11px;margin-top:-8px;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(45deg)}
+/* business details (second list): calm credential tiles with a gradient edge bar, no tick */
+:root:has(:is([data-block-id='header'],[data-block-id='footer']) a[aria-current='page'][href$='/about-us']) main>div.gap-12>div.space-y-4:not([data-block-id])>ul:last-of-type:not(:first-of-type)>li{padding-inline-start:32px;border-color:rgba(122,69,160,.16);background:var(--adv-mist);box-shadow:none;color:#14294A;font-variant-numeric:tabular-nums}
+:root:has(:is([data-block-id='header'],[data-block-id='footer']) a[aria-current='page'][href$='/about-us']) main>div.gap-12>div.space-y-4:not([data-block-id])>ul:last-of-type:not(:first-of-type)>li::before{inset-inline-start:14px;top:14px;bottom:14px;width:4px;height:auto;margin:0;border-radius:4px;background:var(--adv-grad-v);box-shadow:none}
+:root:has(:is([data-block-id='header'],[data-block-id='footer']) a[aria-current='page'][href$='/about-us']) main>div.gap-12>div.space-y-4:not([data-block-id])>ul:last-of-type:not(:first-of-type)>li::after{content:none}
+@media (max-width:639.98px){:root:has(:is([data-block-id='header'],[data-block-id='footer']) a[aria-current='page'][href$='/about-us']) main>div.gap-12>div.space-y-4:not([data-block-id])>ul>li{padding:12px 14px;padding-inline-start:48px}:root:has(:is([data-block-id='header'],[data-block-id='footer']) a[aria-current='page'][href$='/about-us']) main>div.gap-12>div.space-y-4:not([data-block-id])>ul>li::before{inset-inline-start:12px;width:24px;height:24px;margin-top:-12px}:root:has(:is([data-block-id='header'],[data-block-id='footer']) a[aria-current='page'][href$='/about-us']) main>div.gap-12>div.space-y-4:not([data-block-id])>ul>li::after{inset-inline-start:20.5px;width:5.5px;height:10px;margin-top:-7px}:root:has(:is([data-block-id='header'],[data-block-id='footer']) a[aria-current='page'][href$='/about-us']) main>div.gap-12>div.space-y-4:not([data-block-id])>ul:last-of-type:not(:first-of-type)>li{padding-inline-start:30px}:root:has(:is([data-block-id='header'],[data-block-id='footer']) a[aria-current='page'][href$='/about-us']) main>div.gap-12>div.space-y-4:not([data-block-id])>ul:last-of-type:not(:first-of-type)>li::before{inset-inline-start:13px;width:4px;height:auto;margin:0}}
+
+/* ===== Contact page ===== */
+/* form card: same gradient-edged panel as the search box and content pages; its title is the visible page title, so it gets the page-title accent (72x5) */
+[data-block-id='contact-form'] section{row-gap:clamp(22px,2.4vw,30px);padding:clamp(20px,4vw,44px);border:1px solid transparent;border-top-width:4px;border-radius:24px;background:linear-gradient(#fff,#fff) padding-box,var(--adv-grad) border-box;box-shadow:0 24px 50px -32px rgba(20,41,74,.45)}
+[data-block-id='contact-form'] section>div:first-child p{line-height:1.3}
+[data-block-id='contact-form'] section>div:first-child::after{content:'';display:block;width:72px;height:5px;margin-top:12px;border-radius:5px;background:var(--adv-grad)}
+/* fields: 48px / 12px like the search box, bold navy labels, a real message box, branded focus */
+[data-block-id='contact-form'] form{row-gap:22px}
+[data-block-id='contact-form'] label{font-weight:700;color:#14294A}
+[data-block-id='contact-form'] label>span.text-muted-foreground{font-weight:400}
+[data-block-id='contact-form'] :is(input[data-slot='form-control'],button[data-slot='popover-trigger'],button[data-slot='sheet-trigger']){height:48px;border-radius:12px}
+[data-block-id='contact-form'] input[data-slot='form-control']{padding-inline:14px}
+[data-block-id='contact-form'] textarea{min-height:140px;padding:12px 14px;border-radius:12px;line-height:1.7}
+[data-block-id='contact-form'] :is(input[data-slot='form-control'],textarea,button[data-slot='popover-trigger'],button[data-slot='sheet-trigger']):not([aria-invalid='true']):hover{border-color:#6F5FA6}
+[data-block-id='contact-form'] :is(input,textarea):focus-visible{border-color:#7A45A0;box-shadow:0 0 0 3px rgba(122,69,160,.22)}
+[data-block-id='contact-form'] :is(input,textarea)[aria-invalid='true']{border-color:var(--destructive)}
+[data-block-id='contact-form'] button:is([data-slot='popover-trigger'],[data-slot='sheet-trigger']):focus-visible{outline:2px solid #3070B8;outline-offset:2px;box-shadow:none}
+/* send: a full-size CTA (phones keep the theme's full-width button) */
+[data-block-id='contact-form'] form button[type='submit']{height:50px;border-radius:12px;padding-inline:32px;font-size:16px;font-weight:800}
+@media (min-width:768px){[data-block-id='contact-form'] form button[type='submit']{min-width:200px}}
+/* details: label/value pairs on white tiles with the brand accent edge; map framed like the tiles (theme draws an inline grey 1px / 5px border) */
+@media (min-width:768px){[data-block-id='contact-info']>div{padding:18px;column-gap:24px;border:1px solid #E4DDF0;border-radius:24px;background:var(--adv-mist);box-shadow:0 18px 40px -30px rgba(20,41,74,.45)}}
+[data-block-id='contact-info']>div>div:has(>div>p.text-xs){gap:12px;padding-block:0}
+[data-block-id='contact-info'] div:has(>p.text-xs:first-child){position:relative;padding:14px 18px;padding-inline-start:22px;border:1px solid #E4DDF0;border-radius:14px;background:#fff;box-shadow:0 10px 24px -20px rgba(20,41,74,.5)}
+[data-block-id='contact-info'] div:has(>p.text-xs:first-child)::before{content:'';position:absolute;inset-block:14px;inset-inline-start:0;width:4px;border-radius:4px;background:var(--adv-grad-v)}
+[data-block-id='contact-info'] div:has(>p.text-xs:first-child)>p.text-xs{font-size:13px;font-weight:700;color:#6B3FA0}
+[data-block-id='contact-info'] div:has(>p.text-xs:first-child)>p.text-xs::first-letter{text-transform:uppercase}
+[data-block-id='contact-info'] div:has(>p.text-xs:first-child)>p:last-child{line-height:1.8;color:#2A3350}
+[data-block-id='contact-info'] div:has(>p.text-xs:first-child)>a{width:fit-content;font-weight:700;color:#14294A}
+[data-block-id='contact-info'] div:has(>p.text-xs:first-child)>a:hover{color:#5B3FA0;text-decoration:underline;text-underline-offset:3px}
+[data-block-id='contact-info'] iframe{border:0!important;border-radius:14px!important;background:#E9EEF6;box-shadow:0 0 0 1px rgba(122,69,160,.2),0 14px 30px -22px rgba(20,41,74,.6)}
+/* details first, map last (phones scrolled past a 288px map to reach WhatsApp and e-mail) */
+[data-block-id='contact-info']>div>div:has(>iframe){order:1}
+/* phones: the theme's hairline under the framed form card is redundant */
+@media (max-width:767.98px){[data-block-id='contact-info']>div{border-top:0;padding-top:0;row-gap:20px}}
+/* >=1024: form and details side by side, details above the fold; the map fills the rest of the sidebar */
+@media (min-width:1024px){main div:has(>[data-block-id='contact-form']):has(>[data-block-id='contact-info']){display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,.62fr);column-gap:clamp(24px,2.4vw,36px);max-width:none;padding-bottom:clamp(8px,2vw,24px)}[data-block-id='contact-info']>div{height:100%;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(260px,1fr);row-gap:16px}}
+
+/* ===== Breadcrumb ===== */
 [data-slot='breadcrumb-page']{color:#6B3FA0;font-weight:700}
 [data-slot='breadcrumb-link']:hover{color:#1E64AB}
+[data-slot='breadcrumb-link']::first-letter{text-transform:uppercase}
+/* breadcrumb was glued to the WhatsApp strip (hotels, hotel, blog, contact); city uses .mt-4 (16px) */
+main .container.mb-6>nav[data-slot='breadcrumb']{padding-top:clamp(12px,1.2vw,16px)}
+
+/* ===== Footer ===== */
 [data-block-id='footer']>div:first-child{border-top:4px solid transparent;border-image:var(--adv-grad) 1;background-image:radial-gradient(40rem 20rem at var(--adv-e) 0,rgba(122,69,160,.28),transparent 70%),linear-gradient(160deg,#14294A 0%,#182E5C 50%,#2A2560 100%)}
 [data-block-id='footer']>div:nth-child(2){border-top-color:rgba(255,255,255,.14)!important;background-image:linear-gradient(var(--adv-dir),#11223F,#221C4C)}
-[data-block-id='footer'] section>nav>span{display:inline-block;padding-bottom:6px;border-bottom:2px solid transparent;border-image:var(--adv-grad) 1}
+/* every column heading: one line, gradient text over a gradient rule */
+[data-block-id='footer'] section>nav>span{display:inline-block;padding-bottom:6px;border-bottom:2px solid transparent;border-image:var(--adv-grad) 1;white-space:nowrap}
 @supports ((-webkit-background-clip:text) or (background-clip:text)){@media (forced-colors:none){[data-block-id='footer'] section>nav>span{background:var(--adv-grad-soft);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}}}
 [data-block-id='footer'] section>nav a:hover{color:#9FDDF3!important}
+[data-block-id='footer'] section>nav a[aria-current='page']{color:#8EDCF2!important}
+/* "شركة مرخصة" is a normal column; its items use the same label/value style as "معلومات الشركة" */
+[data-block-id='footer'] section>nav:is(.order-4,.order-6) li p:first-child{opacity:.72;font-weight:500!important;font-size:12.5px!important}
+[data-block-id='footer'] section>nav:is(.order-4,.order-6) li p:last-child{color:#fff!important;font-weight:700!important;letter-spacing:.3px;margin-top:2px}
+/* e-mail may wrap below 1024 instead of pushing the page sideways */
+[data-block-id='footer'] section>nav li>a[href^='mailto:']{max-width:100%}
+[data-block-id='footer'] section>nav li>a[href^='mailto:']>span{min-width:0;overflow-wrap:anywhere}
+/* >=1024: links, policies, company info, contact and licensed company in one row of five columns */
+@media (min-width:1024px){[data-block-id='footer'] section{grid-template-columns:repeat(5,auto);justify-content:space-between;column-gap:24px}[data-block-id='footer'] section>nav li>a[href^='mailto:']>span{white-space:nowrap;overflow-wrap:normal}}
+/* 768-1279: brand block (logo, language, social) as one row above the columns instead of a centred or narrow stack beside an empty area */
+@media (min-width:768px) and (max-width:1279.98px){[data-block-id='footer']>div:first-child>div.container{flex-direction:column;gap:40px}[data-block-id='footer']>div:first-child>div.container>div:first-child{flex-direction:row;flex-wrap:wrap;align-items:center;column-gap:28px;row-gap:16px;max-width:none}[data-block-id='footer']>div:first-child>div.container>div:first-child>div:last-child{margin-top:0;margin-inline-start:auto}}
+/* 768-1023: columns three-up (theme 2-up left the fifth column alone) */
+@media (min-width:768px) and (max-width:1023.98px){[data-block-id='footer'] section{grid-template-columns:repeat(3,minmax(0,1fr));column-gap:24px}}
+/* >=1280: the brand block gives up 24px of gap so all five columns fit their values on one line */
+@media (min-width:1280px){[data-block-id='footer']>div:first-child>div.container{column-gap:40px}[data-block-id='footer']>div:first-child>div.container>div:first-child{max-width:17.5rem}}
+/* base bar: keep the payment marks, copyright and SBC seal clear of the floating buttons at the end of the page.
+   The bar's content sits above the "ask the assistant" pill (bottom 16-72px, inline end); from 768 the payment marks keep 96px (112px from 1024) from the
+   inline-start screen edge so the WhatsApp disc (bottom 80-136px, inline start) never covers them; wide gutters already give that room.
+   The footer is the .container itself, so this replaces its 20px inset (96px is the most the 768 bar allows before the EN copyright wraps); --adv-cmax = the theme container's max-width at each breakpoint. */
+[data-block-id='footer']>div:nth-child(2)>footer{padding-bottom:84px}
+@media (min-width:768px){[data-block-id='footer']>div:nth-child(2)>footer{--adv-cmax:768px;--adv-wa:96px;padding-inline-start:max(20px,calc(var(--adv-wa) - (100vw - var(--adv-cmax))/2))}}
+@media (min-width:1024px){[data-block-id='footer']>div:nth-child(2)>footer{--adv-cmax:1024px;--adv-wa:112px}}
+@media (min-width:1280px){[data-block-id='footer']>div:nth-child(2)>footer{--adv-cmax:1280px}}
+@media (min-width:1536px){[data-block-id='footer']>div:nth-child(2)>footer{--adv-cmax:1536px}}
+/* phones: the four payment marks on one centred row (theme grid-cols-3 left Mastercard alone on a second row) */
+@media (max-width:767.98px){[data-block-id='footer']>div:nth-child(2)>footer>div:first-child:has(>img){display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px 18px}}
+
+/* ===== Phones ===== */
 @media (max-width:767.98px){[data-block-id='booking-step'] .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:32px 14px}[data-block-id='booking-step'] .grid>div{gap:14px}[data-block-id='booking-step'] .grid svg{width:72px;height:72px;padding:16px;border-radius:22px}[data-block-id='newsletter'] section>div.rounded-2xl{padding-inline:20px}}
+
+/* ===== Motion (only when the visitor allows it) ===== */
 @media (prefers-reduced-motion:no-preference){[data-block-id='header'] nav a::after{transition:transform .25s ease}:is(main,[data-block-id],[data-block-id='header']+div) [data-slot='button'].bg-primary{transition:background-position .4s ease,box-shadow .25s ease}main [data-slot='accordion-item']{transition:box-shadow .2s ease,border-color .2s ease}main [data-slot='accordion-item']::before{transition:opacity .2s ease}}
 @media (hover:hover){[data-block-id='header'] nav a:hover::after{transform:scaleX(1)}}
 @media (hover:hover) and (prefers-reduced-motion:no-preference){main a[href*='/cities/']>div.relative,main a.bg-card[href*='/hotels/'],main .grid>a[href*='/hotels/']>div.rounded-xl,[data-block-id^='city-'] article,[data-block-id^='blog-more'] section>div.grid>a.group{transition:transform .3s ease,box-shadow .3s ease}main a[href*='/cities/']>div.relative img,main a.bg-card[href*='/hotels/']>div:first-child img,main .grid>a[href*='/hotels/']>div>div:first-child img{transition:transform .6s ease}main a[href*='/cities/']:hover>div.relative{transform:translateY(-4px);box-shadow:0 22px 40px -22px rgba(74,42,122,.7)}main a[href*='/cities/']:hover>div.relative img{transform:scale(1.06)}main a.bg-card[href*='/hotels/']:hover,main .grid>a[href*='/hotels/']:hover>div.rounded-xl{transform:translateY(-6px);box-shadow:0 26px 44px -24px rgba(74,42,122,.55)}main a.bg-card[href*='/hotels/']:hover>div:first-child img,main .grid>a[href*='/hotels/']:hover>div>div:first-child img{transform:scale(1.05)}[data-block-id^='city-'] article:hover{transform:translateY(-4px);box-shadow:0 20px 40px -24px rgba(74,42,122,.5)}[data-block-id^='blog-more'] section>div.grid>a.group:hover{transform:translateY(-4px);box-shadow:0 24px 44px -24px rgba(74,42,122,.55)}}
-/* ===== QA patch 1, append after advisor-brand-v1.css ===== */
-
-/* H1 - Cities carousel (home AR/EN): v1 hid the Riyadh slide with display:none and Embla then measured no scroll room, so phones and tablets were stuck on Makkah.
-   Keep the slide in the track at zero width instead. Better long-term: remove Riyadh from the cities block in the CMS, then drop both rules. */
-[data-block-id^="cities-section"] [data-slot="carousel-item"]:has(>a[href$="/cities/riyadh"]){display:block;flex:0 0 0;width:0;min-width:0;padding:0;margin:0;overflow:hidden;visibility:hidden}
-
-/* M1 - Disabled carousel arrows: hide them instead of leaving 40%-opacity ghost discs over the photos (all carousels in main). */
-main :is([data-slot='carousel-previous'],[data-slot='carousel-next']):disabled{visibility:hidden}
-
-/* M2 - Home search band CTA: warm fill that stands out from the cool navy/purple band (white text 6.0:1 to 4.7:1). */
-[data-block-id^='hero-section'] [data-block-id='hotel-search'] .dark-form form button[type='submit']{background-image:linear-gradient(90deg,#B0306F 0%,#C9482F 100%);background-size:100% 100%;box-shadow:inset 0 0 0 1px rgba(255,255,255,.4),0 12px 28px -12px rgba(232,96,74,.75)}
-[data-block-id^='hero-section'] [data-block-id='hotel-search'] .dark-form form button[type='submit']:hover{background-image:linear-gradient(90deg,#9E2A63 0%,#B33F28 100%)}
-
-/* M8 - Gradient buttons: start the background at the border edge so the magenta tile end no longer shows as a 1px stripe on the left edge. */
-:is(main,[data-block-id],[data-block-id='header']+div) [data-slot='button'].bg-primary{background-origin:border-box}
-
-
-/* M15 - Footer e-mail: let it wrap instead of pushing the page 37px sideways at ~1024px. */
-[data-block-id='footer'] section>nav li>a[href^='mailto:']{max-width:100%}
-[data-block-id='footer'] section>nav li>a[href^='mailto:']>span{min-width:0;overflow-wrap:anywhere}
-
-/* M4 - Breadcrumb glued to the WhatsApp strip (hotels, hotel, blog, contact). City uses .mt-4 (16px), so this matches it. */
-main .container.mb-6>nav[data-slot='breadcrumb']{padding-top:clamp(12px,1.2vw,16px)}
-
-/* M5 - Header: only the exact current page is highlighted (theme also gives the home link .text-primary on /about-us). */
-[data-block-id='header'] nav a.text-primary:not(.router-link-exact-active):not([aria-current='page']),
-[data-block-id='header'] nav a.text-primary:not(.router-link-exact-active):not([aria-current='page']) span{color:inherit!important}
-
-/* M6 - Mobile sheet-trigger fields (hotels search, contact country code) used the pale --border; match the other fields. Hotels destination select full width on phones. */
-main button[data-slot='sheet-trigger'].border-border{border-color:var(--input)}
-@media (max-width:767.98px){main .container.py-0>div>div:has(>[data-slot='select-trigger'])>[data-slot='select-trigger']{max-width:none}}
-
-/* M7 - Country code read as "966+" in RTL. */
-form img[alt$=' flag']+span{direction:ltr;unicode-bidi:isolate}
-
-/* M9 - One hotel-name style everywhere (bold navy, as on home and /hotels): city cards were gradient text, hotel-page "similar stays" were font-light. */
-[data-block-id^='city-search'] article h2{background:none;-webkit-text-fill-color:currentColor;color:#14294A}
-main a.bg-card[href*='/hotels/'] span.text-lg{font-weight:700;color:#14294A}
-
-/* M10 - City hotel cards: Latin names were truncated at their start ("...ers Tuwa Hotel"). */
-[data-block-id^='city-search'] article h2.truncate{unicode-bidi:plaintext}
-
-/* M11 - City tips: the block has no FAQ column, so the tips take the full width instead of leaving half the section empty. */
-@media (min-width:1024px){[data-block-id^='city-faq-tips'] section>div.grid>div:only-child{grid-column:1/-1}}
-@media (min-width:1280px){[data-block-id^='city-faq-tips'] section>div.grid>div:only-child>div.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
-
-/* M12 - City map price pins: shrink to content and centre (Leaflet's display:block made each pill 104px wide, so they piled up). */
-[data-block-id^='city-map'] .leaflet-marker-icon>span{width:max-content;margin-inline:auto;justify-content:center}
-
-/* M13 - Hotel page: "إبدأ حجزك الآن" and "وسائل الراحة" fell back to the 36px global h2; match the other section titles. */
-main div.container>h2:is(.mt-6,[class~='md:mt-14']){font-size:1.125rem;line-height:1.75rem}
-@media (min-width:768px){main div.container>h2:is(.mt-6,[class~='md:mt-14']){font-size:1.5rem;line-height:2rem}}
-
-/* M14 - Hotel page (>=1280px): keep the total / Book card in view beside the long room list instead of an empty 300px column. */
-@media (min-width:1280px){main div[class*='xl:flex-row']>div[class*='w-[300px]'][class*='h-fit']{position:sticky;top:104px;align-self:flex-start;max-height:calc(100vh - 120px);overflow-y:auto}}
-
-/* M16 - Blog thumbnails: most are 4:3 with a caption baked into the bottom; anchor the crop to the bottom so the caption is not cut in half. */
-[data-block-id^='blog-more'] section>div.grid>a.group>div.aspect-video>img{object-position:50% 100%}
-
-/* M17 - Blog pagination (data-slot markup; v1 only styled nav[aria-label=page]). */
-main nav[data-slot='pagination'] button[data-slot='pagination-item']{border-radius:999px;font-weight:700;border-color:rgba(122,69,160,.2)}
-main nav[data-slot='pagination'] button[data-slot='pagination-item'][aria-current='page']{background-image:var(--adv-btn);background-origin:border-box;border-color:transparent;color:#fff;box-shadow:0 10px 22px -12px rgba(91,63,160,.8)}
-/* Footer: "شركة مرخصة" is a normal column like the others; its items use the same label/value style as "معلومات الشركة" */
-[data-block-id='footer'] section>nav:is(.order-4,.order-6) li p:first-child{opacity:.72;font-weight:500!important;font-size:12.5px!important}
-[data-block-id='footer'] section>nav:is(.order-4,.order-6) li p:last-child{color:#fff!important;font-weight:700!important;letter-spacing:.3px;margin-top:2px}
-[data-block-id='footer'] section>nav>span{white-space:nowrap}
-@media (min-width:1024px) and (max-width:1279.98px){[data-block-id='footer']>div:first-child>div.container{flex-direction:column;gap:40px}}
-@media (min-width:1280px){[data-block-id='footer']>div:first-child>div.container>div:first-child{max-width:17.5rem}[data-block-id='footer'] section{grid-template-columns:repeat(5,auto);justify-content:space-between;column-gap:28px}[data-block-id='footer'] section>nav li>a[href^='mailto:']>span{white-space:nowrap;overflow-wrap:normal}}
