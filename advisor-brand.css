@@ -1,5 +1,15 @@
 @charset "UTF-8";
-/* advisorholidays.sa brand stylesheet v4 (v3 + round-2 fixes merged).
+/* Font (owner choice 2026-11-05): Calibri, enlarged 16% because its Arabic is drawn small. Calibri is not a web font: only devices
+   that have it installed (Windows, and Office machines) show it. Phones and Macs fall back to Noto Sans Arabic, which the theme already serves
+   (also set as the CMS design font, so the site stays on Noto if this file ever fails to load). */
+@font-face{font-family:"Calibri Adj";src:local("Calibri Light"),local("Calibri-Light");font-weight:100 350;font-style:normal;size-adjust:116%}
+@font-face{font-family:"Calibri Adj";src:local("Calibri"),local("Calibri Regular"),local("Calibri-Regular");font-weight:351 550;font-style:normal;size-adjust:116%}
+@font-face{font-family:"Calibri Adj";src:local("Calibri Bold"),local("Calibri-Bold");font-weight:551 1000;font-style:normal;size-adjust:116%}
+@font-face{font-family:"Calibri Adj";src:local("Calibri Italic"),local("Calibri-Italic");font-weight:351 550;font-style:italic;size-adjust:116%}
+@font-face{font-family:"Calibri Adj";src:local("Calibri Bold Italic"),local("Calibri-BoldItalic");font-weight:551 1000;font-style:italic;size-adjust:116%}
+:root{--font-default:"Calibri Adj","Noto Sans Arabic",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif!important}
+/* advisorholidays.sa brand stylesheet v7 (v6 + font fit fixes after the Calibri switch).
+   v6 = v5 + full hero photo, French search rows, Calibri font, brand-coloured social icons.
    System: fields and buttons 48px / 12px radius, border #8E80B8 (--input); secondary actions are 44px outlined pills (1.5px #7A45A0);
    small tiles 14px; cards 18-20px; page panels 24px.
    Heading accents (gradient bar under the title, at the inline start or centred with the title): page title 72x5, section title 64x4, sub-heading inside a card 56x4. */
@@ -47,10 +57,10 @@ main a:focus-visible{outline:2px solid #3070B8;outline-offset:3px}
 [data-block-id='header']+div p{font-weight:700;text-wrap:balance}
 [data-block-id='header']+div a[data-slot='button']{min-height:40px;border-radius:999px;padding-inline:18px}
 @media (max-width:639.98px){[data-block-id='header']+div>.container{column-gap:10px;row-gap:8px}[data-block-id='header']+div p{font-size:13px}[data-block-id='header']+div a[data-slot='button']{min-height:38px;padding:6px 14px;font-size:13px}}
-/* phone menu (portalled dropdown): brand panel off the screen edge, capitalised EN labels, full-width 48px gradient sign-in button, current page marked with the vertical accent bar */
-[data-slot='dropdown-menu-content']:has(nav a[href]){margin-inline:12px;border-radius:18px;background:var(--adv-grad) top/100% 4px no-repeat,#fff;box-shadow:0 0 0 1px rgba(122,69,160,.12),0 24px 50px -20px rgba(20,41,74,.55);color:#14294A}
+/* phone menu (portalled dropdown): brand panel off the screen edge and never wider than the screen (FR subtitle made it 413px on a 390px phone), capitalised EN labels, full-width 48px gradient sign-in button, current page marked with the vertical accent bar */
+[data-slot='dropdown-menu-content']:has(nav a[href]){max-width:calc(100vw - 24px);margin-inline:12px;border-radius:18px;background:var(--adv-grad) top/100% 4px no-repeat,#fff;box-shadow:0 0 0 1px rgba(122,69,160,.12),0 24px 50px -20px rgba(20,41,74,.55);color:#14294A}
 [data-slot='dropdown-menu-content'] p.text-2xl.font-extrabold{text-transform:capitalize;color:#14294A}
-[data-slot='dropdown-menu-content'] p.text-2xl.font-extrabold+p{color:#5A5F78}
+[data-slot='dropdown-menu-content'] p.text-2xl.font-extrabold+p{color:#5A5F78;text-wrap:balance}
 [data-slot='dropdown-menu-content'] button[data-slot='button']:has(>a[href$='/login']){height:48px;padding:0;border-color:transparent;border-radius:12px;background-image:var(--adv-btn);background-origin:border-box;color:#fff;box-shadow:0 10px 22px -12px rgba(91,63,160,.8)}
 [data-slot='dropdown-menu-content'] button[data-slot='button']>a[href$='/login']{display:flex;align-items:center;justify-content:center;align-self:stretch;width:100%;border-radius:inherit;font-size:15px;font-weight:800;text-transform:capitalize}
 [data-slot='dropdown-menu-content'] button[data-slot='button']>a[href$='/login']:focus-visible{outline:2px solid #3070B8;outline-offset:2px}
@@ -100,11 +110,13 @@ main>div.gap-12:has(>[data-block-id^='hero-section'])>[data-block-id]:not([data-
 main>div.gap-12:has(>[data-block-id^='hero-section'])>:is([data-block-id^='available-hotels'],[data-block-id^='landing-latest-posts']){background:var(--adv-mist)}
 [data-block-id^='hero-section']>div:has([data-block-id='hotel-search']){margin-bottom:0}
 [data-block-id^='hero-section'] section:has([data-block-id='hotel-search']){height:auto;min-height:0;overflow:visible;padding-bottom:clamp(20px,2.6vw,36px);background-color:#14294A;background-image:radial-gradient(44rem 22rem at var(--adv-s) 100%,rgba(26,160,200,.28),transparent 70%),radial-gradient(44rem 22rem at var(--adv-e) 100%,rgba(232,96,74,.24),transparent 70%),linear-gradient(var(--adv-dir),var(--adv-deep));box-shadow:0 22px 40px -30px rgba(20,41,74,.8)}
-[data-block-id^='hero-section'] section:has([data-block-id='hotel-search'])>div.absolute:first-child{position:relative;inset:auto;flex:none;width:100%;height:var(--adv-hero-h);overflow:hidden;background-color:#14294A}
+/* Owner request 2026-11-05: show the whole hero photo (no crop); the search band and everything after it move down. Height follows the photo's own ratio (948x477 today; aspect-ratio is only the pre-load fallback). */
+[data-block-id^='hero-section'] section:has([data-block-id='hotel-search'])>div.absolute:first-child{position:relative;inset:auto;flex:none;width:100%;height:auto;overflow:hidden;background-color:#14294A}
+[data-block-id^='hero-section'] section:has([data-block-id='hotel-search'])>div.absolute:first-child>img{display:block;width:100%;height:auto;aspect-ratio:auto 948/477;object-fit:contain}
 [data-block-id^='hero-section'] section:has([data-block-id='hotel-search'])>div.absolute:first-child>img{object-position:50% 40%}
 @media (min-width:1024px){[data-block-id^='hero-section'] section:has([data-block-id='hotel-search'])>div.absolute:first-child>img{object-position:50% 35%}}
 [data-block-id^='hero-section'] section:has([data-block-id='hotel-search'])>div.absolute:first-child>div{display:none}
-[data-block-id^='hero-section'] section:has([data-block-id='hotel-search'])>div.absolute:first-child::after{content:'';position:absolute;inset:0;pointer-events:none;background:var(--adv-grad) bottom/100% 4px no-repeat,linear-gradient(to top,rgba(20,41,74,.55) 0%,rgba(20,41,74,0) 38%)}
+[data-block-id^='hero-section'] section:has([data-block-id='hotel-search'])>div.absolute:first-child::after{content:'';position:absolute;inset:0;pointer-events:none;background:var(--adv-grad) bottom/100% 4px no-repeat}
 [data-block-id^='hero-section'] section:has([data-block-id='hotel-search'])>div:empty{display:none}
 [data-block-id^='hero-section'] section:has([data-block-id='hotel-search'])>div.absolute:first-child+div{position:relative;inset:auto;z-index:1;flex:none;display:flex;justify-content:center;align-items:center;text-align:center;padding:clamp(18px,2.2vw,28px) 20px 0;color:#fff;--leading-normal:1.35}
 [data-block-id^='hero-section'] section:has([data-block-id='hotel-search'])>div.absolute:first-child+div:not(:has(:is(p,h1,h2,h3,span):not(:empty))){display:none}
@@ -131,11 +143,31 @@ main>div.gap-12:has(>[data-block-id^='hero-section'])>:is([data-block-id^='avail
 /* ===== Hotel search form (home band, hotels, city, hotel page) ===== */
 [data-block-id='hotel-search'] form>div.grid{column-gap:12px;row-gap:14px}
 [data-block-id='hotel-search'] form button[type='submit'],[data-block-id^='city-search'] aside form>button[type='submit']{height:48px;border-radius:12px;font-size:16px;font-weight:800}
-@media (max-width:639.98px){[data-block-id='hotel-search'] form>div.grid{grid-template-columns:minmax(0,2fr) minmax(0,3fr);column-gap:10px;row-gap:10px}[data-block-id='hotel-search'] form>div.grid>*{grid-column:1/-1}[data-block-id='hotel-search'] form>div.grid>div:last-of-type,[data-block-id='hotel-search'] form>div.grid>button[type='submit']{grid-column:auto}[data-block-id='hotel-search'] form label,[data-block-id^='hero-section'] [data-block-id='hotel-search'] .dark-form label{font-size:13px}}
+/* 1024-1279: the search button is one 2/12 column (125px); long labels (French "rechercher maintenant") wrap to two lines instead of spilling out of the button. */
+@media (min-width:1024px) and (max-width:1279.98px){[data-block-id='hotel-search'] form>div.grid>button[type='submit']{white-space:normal;line-height:1.15;padding-inline:10px;text-wrap:balance}[data-block-id='hotel-search'] form>div.grid>button[type='submit']:lang(fr){font-size:14px}}
+/* phones: promo code and search share the last row; the French "rechercher maintenant" (187px in Noto) is wider than the half-width button, so 15px and two balanced lines on the narrowest phones instead of spilling out */
+@media (max-width:639.98px){[data-block-id='hotel-search'] form>div.grid{grid-template-columns:minmax(0,2fr) minmax(0,3fr);column-gap:10px;row-gap:10px}[data-block-id='hotel-search'] form>div.grid>*{grid-column:1/-1}[data-block-id='hotel-search'] form>div.grid>div:last-of-type,[data-block-id='hotel-search'] form>div.grid>button[type='submit']{grid-column:auto}[data-block-id='hotel-search'] form>div.grid>button[type='submit']:lang(fr){font-size:15px;line-height:1.15;padding-inline:10px;white-space:normal;text-wrap:balance}[data-block-id='hotel-search'] form label,[data-block-id^='hero-section'] [data-block-id='hotel-search'] .dark-form label{font-size:13px}}
 @media (min-width:640px) and (max-width:1023.98px){[data-block-id='hotel-search'] form>div.grid{grid-template-columns:repeat(2,minmax(0,1fr))}[data-block-id='hotel-search'] form>div.grid>*{grid-column:auto}[data-block-id='hotel-search'] form>div.grid>button[type='submit']{grid-column:1/-1}[data-block-id='hotel-search'] form>div.grid>div:nth-child(odd):last-of-type+button[type='submit']{grid-column:auto}}
+/* home band, every width: a field's value never pushes its box into the next field (the guests trigger's nowrap text set the form-item grid's min-content:
+   at 1024 the EN guests box ran into "Promo Code"); a value that is ever too long ends in the theme's ellipsis inside its own box */
+[data-block-id^='hero-section'] [data-block-id='hotel-search'] form>div.grid [data-slot='form-item']{grid-template-columns:minmax(0,1fr)}
 /* home band 1024-1279: size the five fields by what they hold (theme 2/3/3/2/2 of 12 cut the dates and wrapped the EN destination label).
    Weights = measured needs in px at 14px inset: EN label 170, date range 295, "1 room, 2 adults, 0 children" 213, promo 108, "Search Now" 121. Home hero only: the hotel page form is a 10-col grid with 4 fields. */
-@media (min-width:1024px) and (max-width:1279.98px){[data-block-id^='hero-section'] [data-block-id='hotel-search'] form>div.grid:has(>:nth-child(5):last-child){column-gap:10px;grid-template-columns:minmax(0,172fr) minmax(0,305fr) minmax(0,217fr) minmax(0,110fr) minmax(0,123fr)}[data-block-id^='hero-section'] [data-block-id='hotel-search'] form>div.grid:has(>:nth-child(5):last-child)>*{grid-column:auto}}
+@media (min-width:1024px) and (max-width:1279.98px){[data-block-id^='hero-section'] [data-block-id='hotel-search'] form>div.grid:has(>:nth-child(5):last-child){column-gap:10px;grid-template-columns:minmax(0,172fr) minmax(0,305fr) minmax(0,217fr) minmax(0,110fr) minmax(0,123fr)}[data-block-id^='hero-section'] [data-block-id='hotel-search'] form>div.grid:has(>:nth-child(5):last-child)>*{grid-column:auto}
+/* English: "1 room, 2 adults, 0 children" is 229px (Calibri) / 237px (Noto), wider than the shared 221px guests column; re-measured needs label 171, dates 306, guests 238, promo 111, button 117 at the theme's 8px gap */
+html[dir='ltr']:not(:lang(fr)) [data-block-id^='hero-section'] [data-block-id='hotel-search'] form>div.grid:has(>:nth-child(5):last-child){column-gap:8px;grid-template-columns:minmax(0,172fr) minmax(0,307fr) minmax(0,240fr) minmax(0,110fr) minmax(0,119fr)}
+/* French labels and values are longer: two rows (destination, dates, guests / promo code, search) so nothing is cut or overlaps. */
+[data-block-id^='hero-section'] [data-block-id='hotel-search'] form>div.grid:has(>:nth-child(5):last-child):lang(fr){grid-template-columns:repeat(6,minmax(0,1fr))}[data-block-id^='hero-section'] [data-block-id='hotel-search'] form>div.grid:has(>:nth-child(5):last-child):lang(fr)>:nth-child(-n+3){grid-column:span 2}[data-block-id^='hero-section'] [data-block-id='hotel-search'] form>div.grid:has(>:nth-child(5):last-child):lang(fr)>:nth-child(n+4){grid-column:span 3}[data-block-id^='hero-section'] [data-block-id='hotel-search'] form>div.grid:has(>:nth-child(5):last-child):lang(fr)>button[type='submit']{white-space:nowrap;font-size:16px}}
+/* home band >=1280, English and French: the theme's 2/3/3/2/2 of 12 gave the dates 301px, which cut "Thu, November 05 - Fri, November 06" (Noto) and
+   "jeu., novembre 05 - ven., novembre 06" (both fonts) to an ellipsis and left "rechercher maintenant" 4-7px from its button edges. Sized by content
+   (Noto, the wider font: FR label 193, dates 312, guests 270, promo 111, button 219). Arabic fits the theme split. */
+@media (min-width:1280px){html[dir='ltr'] [data-block-id^='hero-section'] [data-block-id='hotel-search'] form>div.grid:has(>:nth-child(5):last-child){grid-template-columns:minmax(0,2fr) minmax(0,3.4fr) minmax(0,2.8fr) minmax(0,1.6fr) minmax(0,2.2fr)}html[dir='ltr'] [data-block-id^='hero-section'] [data-block-id='hotel-search'] form>div.grid:has(>:nth-child(5):last-child)>*{grid-column:auto}}
+/* hotel page (the only search in div.container>h2+section), 1024-1279: the 950px grid split 3/3/2/2 of 10 cut the check-out date (EN and FR in both fonts, AR in Noto)
+   and broke the French label in two. Four fields sized by what they hold: date range ~324, FR guests 271, promo 110, "rechercher maintenant" 179. */
+@media (min-width:1024px) and (max-width:1279.98px){main div.container>h2+section [data-block-id='hotel-search'] form>div.grid:has(>:nth-child(4):last-child){grid-template-columns:minmax(0,328fr) minmax(0,272fr) minmax(0,120fr) minmax(0,194fr)}main div.container>h2+section [data-block-id='hotel-search'] form>div.grid:has(>:nth-child(4):last-child)>*{grid-column:auto}}
+/* hotel page <1024: where the date field is narrower than the range (640-767 every language, 360-375 EN/FR) it breaks onto a second balanced line inside the 48px field
+   instead of hiding the check-out date; where it fits it stays one line exactly as before */
+@media (max-width:1023.98px){main div.container>h2+section [data-block-id='hotel-search'] form>div.grid>div:first-child [role='button']>div.h-11>span.truncate{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;padding-block:2px;white-space:normal;text-overflow:clip;line-height:1.3;text-wrap:balance}}
 /* one text inset in every field; "Stay Dates" label is a block like its neighbours so all labels sit on one line */
 [data-block-id='hotel-search'] [role='button']>div.mb-2>label{display:block}
 [data-block-id='hotel-search'] form>div.grid>div :is(button[data-slot='form-control'],button[data-slot='popover-trigger'],button[data-slot='sheet-trigger'],input[data-slot='form-control'],[role='button']>div.h-11){padding-inline:14px}
@@ -157,9 +189,15 @@ main [data-block-id='hotel-search'] .bg-card.shadow-center,[data-block-id^='city
 /* city search card: every field has a 16px purple icon at the inline start and one 14px inset (dates/promo had the icon at the far end, guests a 13px icon) */
 [data-block-id^='city-search'] aside form :is(div.h-11.border,[data-slot='form-item']>button){gap:10px;padding-inline:14px}
 [data-block-id^='city-search'] aside form div.h-11.border>svg:last-child{order:-1}
-[data-block-id^='city-search'] aside form :is(div.h-11.border,[data-slot='form-item']>button)>svg{flex:none;width:16px;height:16px;color:#7A45A0}
-/* 1024-1279 the card is 306px wide: tighter inset and a 13px date so the whole stay range fits */
-@media (min-width:1024px) and (max-width:1279.98px){[data-block-id^='city-search'] aside form :is(div.h-11.border,[data-slot='form-item']>button){gap:8px;padding-inline:12px}[data-block-id^='city-search'] aside form [role='button'] div.h-11.border>span{font-size:13px}}
+[data-block-id^='city-search'] aside form :is(div.h-11.border,[data-slot='form-item']>button)>svg,[data-block-id^='city-search'] aside form button[data-slot='sheet-trigger']>p.flex>svg{flex:none;width:16px;height:16px;color:#7A45A0}
+/* phones: the guests field is a sheet trigger with its icon inside a <p> (was 14px, theme blue, top-aligned, 4px from the text) */
+[data-block-id^='city-search'] aside form button[data-slot='sheet-trigger']>p.flex{align-items:center;column-gap:10px}
+/* stay dates and guests values take a second line instead of an ellipsis (EN/FR stay range at 1024-1279), and their one-line width no longer forces the card
+   past a 360px phone (FR page scrolled sideways) or a field past its column (FR guests with Noto at 1024-1279) */
+[data-block-id^='city-search'] aside form :is([role='button'] div.h-11.border>span,[data-slot='form-item']>button>div.truncate,button[data-slot='sheet-trigger']>p.flex>span){min-width:0;white-space:normal;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;line-height:1.3;text-wrap:balance;padding-block:1px}
+[data-block-id^='city-search'] aside form [data-slot='form-item']>button,[data-block-id^='city-search'] section>div.grid>*{min-width:0}
+/* 1024-1279 the card is 306px wide: tighter inset and 13px date and guests values */
+@media (min-width:1024px) and (max-width:1279.98px){[data-block-id^='city-search'] aside form :is(div.h-11.border,[data-slot='form-item']>button){gap:8px;padding-inline:12px}[data-block-id^='city-search'] aside form :is([role='button'] div.h-11.border>span,[data-slot='form-item']>button>div.truncate){font-size:13px}}
 @media (min-width:1024px) and (min-height:640px){[data-block-id^='city-search'] aside{position:sticky;top:104px;align-self:start}}
 form img[alt$=' flag']+span{direction:ltr;unicode-bidi:isolate}
 
@@ -173,7 +211,8 @@ main a[href*='/cities/']>div.relative>div.absolute::after{content:'';display:blo
 /* hotel cards (home, /hotels, city suggestions): white card on a 3px gradient base edge */
 main a.bg-card[href*='/hotels/'],main .grid>a[href*='/hotels/']>div.rounded-xl,[data-block-id^='city-search'] section>div.grid>div article{border-bottom:3px solid transparent;background:linear-gradient(#fff,#fff) padding-box,var(--adv-grad) border-box;box-shadow:0 12px 28px -18px rgba(20,41,74,.45)}
 main .grid>a[href*='/hotels/']>div.rounded-xl>div:last-child{padding-block:16px;border-color:transparent}
-main .grid>a[href*='/hotels/']>div.rounded-xl>div:last-child>h2{margin-top:2px}
+/* a long name gets a third line instead of an ellipsis (Noto at 768-1023 cut "Three Points ...Musalli Makkah", losing the start of a Latin name in RTL) */
+main .grid>a[href*='/hotels/']>div.rounded-xl>div:last-child>h2{margin-top:2px;-webkit-line-clamp:3;line-clamp:3}
 /* star row pinned to the card foot: stars line up across a row when one name wraps to two lines */
 main .grid>a[href*='/hotels/']>div.rounded-xl>div:last-child>span.flex:last-child{margin-top:auto}
 /* photo area: brand-mist tile while a lazy photo (infinite scroll) has not painted yet */
@@ -192,6 +231,8 @@ main nav[aria-label='page'] a.bg-primary{background-image:var(--adv-btn);border-
 [data-block-id='booking-step'] .container>header{margin-bottom:clamp(14px,2vw,28px)}
 [data-block-id='booking-step'] .grid>div span{color:#fff}
 [data-block-id='booking-step'] .grid>div>div>div:last-child span{color:rgba(255,255,255,.92)}
+/* step titles and descriptions balanced: no lone last word ("الحصرية", "الإقامة", "لمساعدتك") on the second line with the larger fonts */
+[data-block-id='booking-step'] .grid>div>div>div>p{text-wrap:balance}
 [data-block-id='booking-step'] .grid svg{box-sizing:border-box;color:#fff;padding:22px;border-radius:28px;background-image:var(--adv-grad-tile);box-shadow:0 0 0 6px rgba(255,255,255,.1),0 18px 36px -14px rgba(0,0,0,.65)}
 [data-block-id^='landing-latest-posts'] .aspect-video{aspect-ratio:16/10}
 @media (min-width:768px){[data-block-id^='landing-latest-posts'] .aspect-video{aspect-ratio:21/9}}
@@ -199,7 +240,7 @@ main nav[aria-label='page'] a.bg-primary{background-image:var(--adv-btn);border-
 [data-block-id^='landing-latest-posts'] [data-slot='carousel-item'] a>div.absolute.inset-0{background-image:linear-gradient(to top,rgba(20,41,74,.94) 0%,rgba(58,47,126,.55) 45%,rgba(20,41,74,0) 80%)}
 /* >=768 the title covers only the bottom 11-31% of the wide slide: keep the scrim dark there and let the photo show above it */
 @media (min-width:768px){[data-block-id^='landing-latest-posts'] [data-slot='carousel-item'] a>div.absolute.inset-0{background-image:linear-gradient(to top,rgba(20,41,74,.92) 0%,rgba(20,41,74,.66) 32%,rgba(36,40,100,.2) 58%,rgba(20,41,74,0) 78%)}}
-[data-block-id^='landing-latest-posts'] [data-slot='carousel-item'] a p{text-shadow:0 2px 14px rgba(10,20,40,.45)}
+[data-block-id^='landing-latest-posts'] [data-slot='carousel-item'] a p{text-shadow:0 2px 14px rgba(10,20,40,.45);text-wrap:balance}
 [data-block-id^='landing-latest-posts'] [data-slot='carousel-item'] a::after{content:'';position:absolute;inset-inline:0;bottom:0;height:4px;background:var(--adv-grad);z-index:2}
 [data-block-id^='landing-latest-posts'] section>div:first-child>span{padding:4px 14px;border-radius:999px;background:#fff;color:#4A2A7A;font-size:14px;font-weight:700;box-shadow:0 6px 16px -10px rgba(20,41,74,.5)}
 [data-block-id='newsletter'] section>div.rounded-2xl{border-radius:24px;padding-block:clamp(28px,4vw,48px);color:#fff;background-color:#3A2F7E;background-image:radial-gradient(28rem 16rem at var(--adv-s) 0,rgba(26,160,200,.3),transparent 70%),radial-gradient(28rem 16rem at var(--adv-e) 100%,rgba(232,96,74,.32),transparent 70%),linear-gradient(var(--adv-dir),#1E5FA8 0%,#5B3FA0 55%,#A3347C 100%);box-shadow:0 24px 50px -28px rgba(74,42,122,.75)}
@@ -214,6 +255,8 @@ main [data-block-id='newsletter'] form [data-slot='button'].bg-primary:hover{bac
 html[dir='rtl'] [data-block-id='newsletter'] [data-slot='form-control']>svg{inset-inline-end:auto;inset-inline-start:12px}
 [data-block-id='newsletter'] [data-slot='form-control']>svg{color:#6B3FA0}
 [data-block-id^='faq-section'] [data-slot='accordion']{width:100%;max-width:880px;margin-inline:auto}
+/* questions that wrap on phones: balanced lines instead of a lone last word ("الفنادق؟") */
+[data-block-id^='faq-section'] [data-slot='accordion-trigger']{text-wrap:balance}
 main [data-slot='accordion-item']{position:relative;border-radius:14px}
 main [data-slot='accordion-item']::before{content:'';position:absolute;inset-block:12px;inset-inline-start:0;width:4px;border-radius:4px;background:var(--adv-grad-v);opacity:0}
 main [data-slot='accordion-item'][data-state='open']{border-color:#D9CCEF;box-shadow:0 14px 30px -20px rgba(74,42,122,.45)}
@@ -358,6 +401,8 @@ html[dir='ltr'] [data-block-id^='city-search'] article h2.truncate{text-align:le
 [data-block-id^='city-search'] article h2.truncate+div{order:-1}
 /* >=1024: price column shrinks to its content (theme fixed 224px left the name/address 220px and cut addresses) */
 @media (min-width:1024px){[data-block-id^='city-search'] article div[class*='lg:w-56'][class*='lg:shrink-0']{width:auto;min-width:9.5rem}}
+/* address on up to two lines (one line cut it after a few words at every width) */
+[data-block-id^='city-search'] article p.line-clamp-1{-webkit-line-clamp:2;line-clamp:2}
 [data-block-id^='city-search'] article p.line-clamp-1+div.flex{flex-wrap:wrap;column-gap:4px}
 /* "show more results": an outlined pill under the list instead of a 14px link in the corner */
 [data-block-id^='city-search'] section>div.grid>div>h2~button{align-self:center;min-height:44px;padding:10px 26px;border:1.5px solid #7A45A0;border-radius:999px;background:#fff;color:#4A2A7A;font-size:15px;font-weight:700;text-decoration:none;box-shadow:0 10px 22px -16px rgba(74,42,122,.6)}
@@ -381,14 +426,14 @@ html[dir='ltr'] [data-block-id^='city-search'] article h2.truncate{text-align:le
 [data-block-id^='blog-more'] section>form>button[type='submit'] svg{width:20px;height:20px}
 [data-block-id^='blog-more'] section>div.flex-wrap>button{border-radius:999px;border-color:rgba(122,69,160,.25);background:#fff;color:#4A2A7A;font-size:13px;font-weight:700}
 [data-block-id^='blog-more'] section>div.flex-wrap>button:not(.bg-primary):hover{background:#F4EFFB}
-/* cards: even gutters; date pinned to the card foot over a hairline so dates line up across a row */
+/* cards: even gutters; date pinned to the card foot over a hairline so dates line up across a row; titles up to three lines (EN/FR lost their last words to a 2-line clamp) */
 [data-block-id^='blog-more'] section>div.grid{row-gap:24px}
 @media (min-width:1024px){[data-block-id^='blog-more'] section>div.grid{row-gap:32px;column-gap:32px}}
 [data-block-id^='blog-more'] section>div.grid>a.group{padding:12px 12px 18px;border-radius:20px;background:#fff;box-shadow:0 14px 34px -24px rgba(20,41,74,.5)}
 [data-block-id^='blog-more'] section>div.grid>a.group>div.rounded-lg{border-radius:14px}
 [data-block-id^='blog-more'] section>div.grid>a.group>div.aspect-video>img{object-position:50% 100%}
 [data-block-id^='blog-more'] section>div.grid>a.group>:not(div){padding-inline:6px}
-[data-block-id^='blog-more'] section>div.grid>a.group h3{font-size:18px;line-height:1.55;color:#14294A}
+[data-block-id^='blog-more'] section>div.grid>a.group h3{font-size:18px;line-height:1.55;color:#14294A;-webkit-line-clamp:3;line-clamp:3}
 @media (min-width:768px){[data-block-id^='blog-more'] section>div.grid>a.group h3{font-size:20px}}
 [data-block-id^='blog-more'] section>div.grid>a.group:hover h3{color:#5B3FA0}
 [data-block-id^='blog-more'] section>div.grid>a.group time{color:#6B3FA0;font-size:13px;font-weight:700;word-spacing:.2em}
@@ -460,7 +505,9 @@ main>div.gap-12>div.space-y-4:not([data-block-id])>:nth-last-child(2):has(+p:emp
 [data-block-id='contact-form'] label{font-weight:700;color:#14294A}
 [data-block-id='contact-form'] label>span.text-muted-foreground{font-weight:400}
 [data-block-id='contact-form'] :is(input[data-slot='form-control'],button[data-slot='popover-trigger'],button[data-slot='sheet-trigger']){height:48px;border-radius:12px}
-[data-block-id='contact-form'] input[data-slot='form-control']{padding-inline:14px}
+[data-block-id='contact-form'] input[data-slot='form-control']{padding-inline:14px;text-overflow:ellipsis}
+/* phones: next to the country code the phone field was ~186px (156px at 360) and cut the EN/FR placeholder mid-word; each takes a full row like the other fields */
+@media (max-width:639.98px){[data-block-id='contact-form'] div.flex:has(>div.grid>button:is([data-slot='popover-trigger'],[data-slot='sheet-trigger'])){flex-wrap:wrap;row-gap:22px}[data-block-id='contact-form'] div.flex:has(>div.grid>button:is([data-slot='popover-trigger'],[data-slot='sheet-trigger']))>div{flex:1 1 100%}}
 [data-block-id='contact-form'] textarea{min-height:140px;padding:12px 14px;border-radius:12px;line-height:1.7}
 [data-block-id='contact-form'] :is(input[data-slot='form-control'],textarea,button[data-slot='popover-trigger'],button[data-slot='sheet-trigger']):not([aria-invalid='true']):hover{border-color:#6F5FA6}
 [data-block-id='contact-form'] :is(input,textarea):focus-visible{border-color:#7A45A0;box-shadow:0 0 0 3px rgba(122,69,160,.22)}
@@ -508,20 +555,49 @@ main .container.mb-6>nav[data-slot='breadcrumb']{padding-top:clamp(12px,1.2vw,16
 /* e-mail may wrap below 1024 instead of pushing the page sideways */
 [data-block-id='footer'] section>nav li>a[href^='mailto:']{max-width:100%}
 [data-block-id='footer'] section>nav li>a[href^='mailto:']>span{min-width:0;overflow-wrap:anywhere}
-/* >=1024: links, policies, company info, contact and licensed company in one row of five columns */
-@media (min-width:1024px){[data-block-id='footer'] section{grid-template-columns:repeat(5,auto);justify-content:space-between;column-gap:24px}[data-block-id='footer'] section>nav li>a[href^='mailto:']>span{white-space:nowrap;overflow-wrap:normal}}
+/* >=1024: links, policies, company info, contact and licensed company in one row of five columns; links and values stay on one line
+   (EN "Travel and Tourism Agency", FR "À propos de nous" / "Contactez-nous" broke), only the small licence labels wrap, balanced */
+@media (min-width:1024px){[data-block-id='footer'] section{grid-template-columns:repeat(5,auto);justify-content:space-between;column-gap:24px}[data-block-id='footer'] section>nav li>a[href^='mailto:']>span{white-space:nowrap;overflow-wrap:normal}[data-block-id='footer'] section>nav li>a,[data-block-id='footer'] section>nav:is(.order-4,.order-6) li p:last-child{white-space:nowrap}[data-block-id='footer'] section>nav:is(.order-4,.order-6) li p:first-child{text-wrap:balance}}
+/* French 1024-1279: a 16px column gap so the five French columns fit their one-line values in the 984px row */
+@media (min-width:1024px) and (max-width:1279.98px){html:lang(fr) [data-block-id='footer'] section{column-gap:16px}}
 /* 768-1279: brand block (logo, language, social) as one row above the columns instead of a centred or narrow stack beside an empty area */
 @media (min-width:768px) and (max-width:1279.98px){[data-block-id='footer']>div:first-child>div.container{flex-direction:column;gap:40px}[data-block-id='footer']>div:first-child>div.container>div:first-child{flex-direction:row;flex-wrap:wrap;align-items:center;column-gap:28px;row-gap:16px;max-width:none}[data-block-id='footer']>div:first-child>div.container>div:first-child>div:last-child{margin-top:0;margin-inline-start:auto}}
-/* 768-1023: columns three-up (theme 2-up left the fifth column alone) */
-@media (min-width:768px) and (max-width:1023.98px){[data-block-id='footer'] section{grid-template-columns:repeat(3,minmax(0,1fr));column-gap:24px}}
+/* French 1280-1535: the French columns need ~1000px, more than the 920px beside the brand block (the 7th social badge dropped to a second row, links broke): same stacked layout. Side by side fits again from 1536. */
+@media (min-width:1280px) and (max-width:1535.98px){html:lang(fr) [data-block-id='footer']>div:first-child>div.container{flex-direction:column;gap:40px}html:lang(fr) [data-block-id='footer']>div:first-child>div.container>div:first-child{flex-direction:row;flex-wrap:wrap;align-items:center;column-gap:28px;row-gap:16px;max-width:none}html:lang(fr) [data-block-id='footer']>div:first-child>div.container>div:first-child>div:last-child{margin-top:0;margin-inline-start:auto}}
+/* 768-1023: columns three-up (theme 2-up left the fifth column alone); French: the one-line "Informations sur l'entreprise" heading (240-245px) ran past its 227px
+   column to the screen edge, so the third column takes its content width and the first two share the rest */
+@media (min-width:768px) and (max-width:1023.98px){[data-block-id='footer'] section{grid-template-columns:repeat(3,minmax(0,1fr));column-gap:24px}html:lang(fr) [data-block-id='footer'] section{grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto}}
 /* >=1280: the brand block gives up 24px of gap so all five columns fit their values on one line */
 @media (min-width:1280px){[data-block-id='footer']>div:first-child>div.container{column-gap:40px}[data-block-id='footer']>div:first-child>div.container>div:first-child{max-width:17.5rem}}
+/* Social icons (owner request 2026-11-05): round 32px badges in each network's own colour, white glyph (Snapchat and Linktree: black).
+   7 x 32px + 8px gaps = 272px, so all seven stay on one line inside the 17.5rem logo column at >=1280. */
+[data-block-id='footer'] div.flex-wrap:has(>a>svg.iconify){gap:8px}
+[data-block-id='footer'] div.flex-wrap>a:has(>svg.iconify){display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background-color:#2A3D63;box-shadow:inset 0 0 0 1px rgba(255,255,255,.16),0 8px 16px -10px rgba(0,0,0,.8);transition:transform .15s ease,box-shadow .15s ease}
+[data-block-id='footer'] div.flex-wrap>a:has(>svg.iconify)>svg{font-size:16px!important;color:#fff!important}
+[data-block-id='footer'] div.flex-wrap>a:has(>svg.iconify):hover{transform:translateY(-2px);box-shadow:inset 0 0 0 1px rgba(255,255,255,.3),0 12px 20px -10px rgba(0,0,0,.9)}
+[data-block-id='footer'] div.flex-wrap>a:has(>svg.iconify):focus-visible{outline:2px solid #8EDCF2;outline-offset:3px}
+@media (prefers-reduced-motion:reduce){[data-block-id='footer'] div.flex-wrap>a:has(>svg.iconify){transition:none}[data-block-id='footer'] div.flex-wrap>a:has(>svg.iconify):hover{transform:none}}
+[data-block-id='footer'] div.flex-wrap>a:has(>svg.iconify)[href*='instagram.com']{background:radial-gradient(circle at 30% 107%,#FDF497 0%,#FDF497 5%,#FD5949 45%,#D6249F 60%,#285AEB 90%)}
+[data-block-id='footer'] div.flex-wrap>a:has(>svg.iconify)[href*='facebook.com']{background:#1877F2}
+[data-block-id='footer'] div.flex-wrap>a:has(>svg.iconify)[href*='youtube.com']{background:#FF0000}
+[data-block-id='footer'] div.flex-wrap>a:has(>svg.iconify):is([href*='//x.com'],[href*='twitter.com']){background:#000;box-shadow:inset 0 0 0 1px rgba(255,255,255,.35),0 8px 16px -10px rgba(0,0,0,.8)}
+[data-block-id='footer'] div.flex-wrap>a:has(>svg.iconify)[href*='snapchat.com']{background:#FFFC00}
+[data-block-id='footer'] div.flex-wrap>a:has(>svg.iconify)[href*='snapchat.com']>svg{color:#000!important}
+[data-block-id='footer'] div.flex-wrap>a:has(>svg.iconify)[href*='tiktok.com']{background:#000;box-shadow:inset 0 0 0 1px rgba(255,255,255,.35),0 8px 16px -10px rgba(0,0,0,.8)}
+[data-block-id='footer'] div.flex-wrap>a:has(>svg.iconify)[href*='tiktok.com']>svg{filter:drop-shadow(-1.2px -1px 0 #25F4EE) drop-shadow(1.2px 1px 0 #FE2C55)}
+[data-block-id='footer'] div.flex-wrap>a:has(>svg.iconify)[href*='linktr.ee']{background:#43E55E}
+[data-block-id='footer'] div.flex-wrap>a:has(>svg.iconify)[href*='linktr.ee']>svg{color:#000!important}
+[data-block-id='footer'] div.flex-wrap>a:has(>svg.iconify)[href*='linkedin.com']{background:#0A66C2}
+[data-block-id='footer'] div.flex-wrap>a:has(>svg.iconify):is([href*='wa.me'],[href*='whatsapp.com']){background:#25D366}
+[data-block-id='footer'] div.flex-wrap>a:has(>svg.iconify):is([href*='t.me'],[href*='telegram']){background:#229ED9}
 /* base bar: keep the payment marks, copyright and SBC seal clear of the floating buttons at the end of the page.
    The bar's content sits above the "ask the assistant" pill (bottom 16-72px, inline end); from 768 the payment marks keep 96px (112px from 1024) from the
    inline-start screen edge so the WhatsApp disc (bottom 80-136px, inline start) never covers them; wide gutters already give that room.
    The footer is the .container itself, so this replaces its 20px inset (96px is the most the 768 bar allows before the EN copyright wraps); --adv-cmax = the theme container's max-width at each breakpoint. */
 [data-block-id='footer']>div:nth-child(2)>footer{padding-bottom:84px}
 @media (min-width:768px){[data-block-id='footer']>div:nth-child(2)>footer{--adv-cmax:768px;--adv-wa:96px;padding-inline-start:max(20px,calc(var(--adv-wa) - (100vw - var(--adv-cmax))/2))}}
+/* 768-1023: the copyright and SBC seal keep one row (the wider EN/FR copyright dropped the seal under it and left the payment marks 17px lower); the payment marks give up the few px, 16px clear of the copyright */
+@media (min-width:768px) and (max-width:1023.98px){[data-block-id='footer']>div:nth-child(2)>footer{column-gap:16px}[data-block-id='footer']>div:nth-child(2)>footer>div:last-child{flex-shrink:0;column-gap:8px}[data-block-id='footer']>div:nth-child(2)>footer>div:first-child:has(>img){min-width:0;gap:6px}[data-block-id='footer']>div:nth-child(2)>footer>div:first-child:has(>img)>img{min-width:0}}
 @media (min-width:1024px){[data-block-id='footer']>div:nth-child(2)>footer{--adv-cmax:1024px;--adv-wa:112px}}
 @media (min-width:1280px){[data-block-id='footer']>div:nth-child(2)>footer{--adv-cmax:1280px}}
 @media (min-width:1536px){[data-block-id='footer']>div:nth-child(2)>footer{--adv-cmax:1536px}}
