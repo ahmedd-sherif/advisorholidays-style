@@ -683,10 +683,21 @@ main .container.mb-6>nav[data-slot='breadcrumb']{padding-top:clamp(12px,1.2vw,16
 @media (min-width:768px) and (max-width:1023.98px){[data-block-id='footer'] section:not(:has(>nav:nth-of-type(5))){grid-template-columns:repeat(2,minmax(0,1fr))}}
 
 /* --- Footer base bar: B2B uses div.container where the main site uses <footer>, so base's bar rules missed it. Phones: the four payment marks on one centred row
-   (theme grid-cols-3 left one alone on a second row). 768-1023: copyright and marks stay on one row. --- */
-@media (max-width:767.98px){[data-block-id='footer']>div:nth-child(2)>div.container>div:first-child:has(>img){display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px 18px}}
-@media (min-width:768px) and (max-width:1023.98px){[data-block-id='footer']>div:nth-child(2)>div.container{column-gap:16px}[data-block-id='footer']>div:nth-child(2)>div.container>p{flex-shrink:0}}
-[data-block-id='footer']>div:nth-child(2)>div.container>p{color:#DCE3F0}
+   (theme grid-cols-3 left one alone on a second row). 768-1023: copyright and marks stay on one row. The bar is the footer's LAST row (since 11 Nov 2026 the
+   "download our app" band sits between the columns and the bar). --- */
+@media (max-width:767.98px){[data-block-id='footer']>div:last-child>div.container>div:first-child:has(>img){display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px 18px}}
+@media (min-width:768px) and (max-width:1023.98px){[data-block-id='footer']>div:last-child>div.container{column-gap:16px}[data-block-id='footer']>div:last-child>div.container>p{flex-shrink:0}}
+[data-block-id='footer']>div:last-child>div.container>p{color:#DCE3F0}
+
+/* --- "Download our app" band (theme footer appLinks, added 11 Nov 2026): the title in the footer's gradient text instead of the theme's flat pink, centred
+   on phones; each store badge at its own width for one 40px height (the theme boxes both at 135px, so the App Store badge looked smaller). --- */
+[data-block-id='footer']>div:has(>div.container>span[data-theme-property='appsSectionTitle'])>div.container{column-gap:20px;row-gap:14px;padding-block:22px}
+[data-block-id='footer'] span[data-theme-property='appsSectionTitle']{font-size:clamp(17px,.45vw + 14px,21px);font-weight:800;line-height:1.4;text-align:center;text-wrap:balance}
+@supports ((-webkit-background-clip:text) or (background-clip:text)){@media (forced-colors:none){[data-block-id='footer'] span[data-theme-property='appsSectionTitle']{background:var(--adv-grad-soft);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}}}
+@media (max-width:767.98px){[data-block-id='footer'] span[data-theme-property='appsSectionTitle']{flex-basis:100%}}
+[data-block-id='footer'] a:is([href*='apps.apple.com'],[href*='play.google.com'])>img{width:auto;height:40px;transition:transform .15s ease}
+[data-block-id='footer'] a:is([href*='apps.apple.com'],[href*='play.google.com']):hover>img{transform:translateY(-2px)}
+[data-block-id='footer'] a:is([href*='apps.apple.com'],[href*='play.google.com']):focus-visible{outline:2px solid #8EDCF2;outline-offset:3px;border-radius:8px}
 
 /* --- Phone dialogs and sheets with the white logo (search dialog, filter sheet, account menu, search settings) --- */
 /* phone dialog and filter sheet headers: the white logo sat on a white bar (logo text invisible); navy bar with the header's gradient edge, white close icon */
@@ -1427,3 +1438,85 @@ main div.min-h-screen:has(>[data-block-id^='blog-more']):not(:has(a[href*='/blog
 
 /* gradient text (same treatment as the main-site page titles) */
 @supports ((-webkit-background-clip:text) or (background-clip:text)){@media (forced-colors:none){main>div.gap-8>[data-block-id$='-content'].space-y-4>h2:first-child:not([style*='color']),[data-block-id^='blog-more'] section>header p>span[style*='font-size']:not([style*='color:']){background-image:var(--adv-grad-text);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;-webkit-box-decoration-break:clone;box-decoration-break:clone}}}
+
+/* ---------- texts ---------- */
+/* Texts from Jood's built-in dictionary (not in the theme editor), fixed here on 11 Nov 2026 at the owner's request; Jood support note 24 has the list.
+   Method: the built-in text gets font-size:0 and the right text is written in ::before at the element's own size (the size each element has above
+   or in the theme, measured at 390 and 1440). Only exact elements on the B2B pages are targeted, per language. When Jood fixes a string, delete its rule. */
+
+/* --- contact page (/contact-us): French title, labels and button; the "address" key in all languages --- */
+html:lang(fr) main>div.container>div.flex-col:has(>h1+form textarea[name='message'])>h1{font-size:0!important}
+html:lang(fr) main>div.container>div.flex-col:has(>h1+form textarea[name='message'])>h1::before{content:'Contactez-nous';font-size:clamp(30px,1.8vw + 20px,48px)}
+html:lang(fr) main>div.container>div.flex-col:has(>h1+form textarea[name='message']) form [data-slot='form-item']:is(:has(input[name='fullname']),:has(input[name='subject']),:has(textarea[name='message']))>label{font-size:0!important}
+html:lang(fr) main>div.container>div.flex-col:has(>h1+form textarea[name='message']) form [data-slot='form-item']:is(:has(input[name='fullname']),:has(input[name='subject']),:has(textarea[name='message']))>label::before{font-size:14px}
+html:lang(fr) main>div.container>div.flex-col:has(>h1+form textarea[name='message']) form [data-slot='form-item']:has(input[name='fullname'])>label::before{content:'Nom complet'}
+html:lang(fr) main>div.container>div.flex-col:has(>h1+form textarea[name='message']) form [data-slot='form-item']:has(input[name='subject'])>label::before{content:'Objet'}
+html:lang(fr) main>div.container>div.flex-col:has(>h1+form textarea[name='message']) form [data-slot='form-item']:has(textarea[name='message'])>label::before{content:'Votre message'}
+html:lang(fr) main>div.container>div.flex-col:has(>h1+form textarea[name='message']) form button[type='submit']{font-size:0!important}
+html:lang(fr) main>div.container>div.flex-col:has(>h1+form textarea[name='message']) form button[type='submit']::before{content:'Envoyer';font-size:16px}
+main div.grid:has(>div>iframe[src*='openstreetmap'])>div.flex-col>div.flex-col:first-child>p:first-child{font-size:0!important}
+main div.grid:has(>div>iframe[src*='openstreetmap'])>div.flex-col>div.flex-col:first-child>p:first-child::before{content:'العنوان';font-size:13px}
+html:lang(en) main div.grid:has(>div>iframe[src*='openstreetmap'])>div.flex-col>div.flex-col:first-child>p:first-child::before{content:'Address'}
+html:lang(fr) main div.grid:has(>div>iframe[src*='openstreetmap'])>div.flex-col>div.flex-col:first-child>p:first-child::before{content:'Adresse'}
+
+/* --- login and request-account pages --- */
+/* Arabic: «إسم المستخدم» -> «اسم المستخدم» (the placeholder repeats the misspelt label, so it is hidden; the label stays above the field) */
+html:lang(ar) main form [data-slot='form-item']:has(input[name='userName'])>label{font-size:0!important}
+html:lang(ar) main form [data-slot='form-item']:has(input[name='userName'])>label::before{content:'اسم المستخدم';font-size:14px}
+html:lang(ar) main form input[name='userName']::placeholder{color:transparent}
+/* login subtitle: the field is a user name, not an email; the Arabic also read «وابدا أحجز» */
+main>div.container.min-h-full>div.flex-col:has(>p.font-extrabold:first-child+p+form):has(input[name='userName']):not(:has(input[name='companyNameAr']))>p.font-extrabold:first-child+p{font-size:0!important}
+main>div.container.min-h-full>div.flex-col:has(>p.font-extrabold:first-child+p+form):has(input[name='userName']):not(:has(input[name='companyNameAr']))>p.font-extrabold:first-child+p::before{content:'أدخل اسم المستخدم وكلمة المرور وابدأ الحجز';font-size:16px}
+html:lang(en) main>div.container.min-h-full>div.flex-col:has(>p.font-extrabold:first-child+p+form):has(input[name='userName']):not(:has(input[name='companyNameAr']))>p.font-extrabold:first-child+p::before{content:'Enter your username and password to start booking'}
+html:lang(fr) main>div.container.min-h-full>div.flex-col:has(>p.font-extrabold:first-child+p+form):has(input[name='userName']):not(:has(input[name='companyNameAr']))>p.font-extrabold:first-child+p::before{content:'Saisissez votre nom d\2019 utilisateur et votre mot de passe pour commencer à réserver'}
+/* French: "Request an Account" link and the request page's English title, intro, section title and labels */
+html:lang(fr) main form a[href$='/request-account']>span{font-size:0!important}
+html:lang(fr) main form a[href$='/request-account']>span::before{content:'Demander un compte';font-size:16px}
+html:lang(fr) main>div.container.min-h-full>div.flex-col:has(>p.font-extrabold:first-child+p+form):has(input[name='companyNameAr'])>p.font-extrabold:first-child{font-size:0!important}
+html:lang(fr) main>div.container.min-h-full>div.flex-col:has(>p.font-extrabold:first-child+p+form):has(input[name='companyNameAr'])>p.font-extrabold:first-child::before{content:'Demander un compte';font-size:clamp(26px,1.6vw + 18px,36px)}
+html:lang(fr) main>div.container.min-h-full>div.flex-col:has(>p.font-extrabold:first-child+p+form):has(input[name='companyNameAr'])>p.font-extrabold:first-child+p{font-size:0!important}
+html:lang(fr) main>div.container.min-h-full>div.flex-col:has(>p.font-extrabold:first-child+p+form):has(input[name='companyNameAr'])>p.font-extrabold:first-child+p::before{content:'Présentez-vous ainsi que votre entreprise\2009; notre équipe examinera votre demande.';font-size:16px}
+@media (min-width:768px){main>div.container.min-h-full>div.flex-col:has(>p.font-extrabold:first-child+p+form):has(input[name='userName'])>p.font-extrabold:first-child+p::before{font-size:18px}}
+html:lang(fr) main form>div:has(input[name='userName'])>p.text-lg{font-size:0!important}
+html:lang(fr) main form>div:has(input[name='userName'])>p.text-lg::before{content:'Informations personnelles';font-size:clamp(18px,.4vw + 16px,21px)}
+html:lang(fr) main form [data-slot='form-item']:has(input[name='companyNameAr'])>label>span:first-child{font-size:0!important}
+html:lang(fr) main form [data-slot='form-item']:has(input[name='companyNameAr'])>label>span:first-child::before{content:'Nom de l\2019 entreprise en arabe';font-size:14px}
+html:lang(fr) main form:has(input[name='companyNameAr']) [data-slot='form-item']:has(>select)>label{font-size:0!important}
+html:lang(fr) main form:has(input[name='companyNameAr']) [data-slot='form-item']:has(>select)>label::before{content:'Pays';font-size:14px}
+
+/* --- Arabic phone menu (signed out): «سجل الدخول واحصل على الافضل العروض» --- */
+html:lang(ar) [data-slot='dropdown-menu-content'] p.text-2xl.font-extrabold+p.text-base{font-size:0!important}
+html:lang(ar) [data-slot='dropdown-menu-content'] p.text-2xl.font-extrabold+p.text-base::before{content:'سجّل الدخول واحصل على أفضل العروض';font-size:16px}
+
+/* --- French account area: "JoodBooking connection" link, tab and page; stay-dates filter label --- */
+html:lang(fr) a[href$='/user/joodbooking-connection']:not(:has(>*)){font-size:0!important}
+html:lang(fr) a[href$='/user/joodbooking-connection']:not(:has(>*))::before{content:'Connexion JoodBooking';font-size:14px}
+html:lang(fr) main a[href$='/user/joodbooking-connection']>div{font-size:0!important}
+html:lang(fr) main a[href$='/user/joodbooking-connection']>div::before{content:'Connexion JoodBooking';font-size:15px}
+html:lang(fr) main section[aria-labelledby='connection-title'] h3{visibility:hidden;line-height:0!important}
+html:lang(fr) main section[aria-labelledby='connection-title'] h3::before{content:'Connexion JoodBooking';visibility:visible;display:block;line-height:1.4}
+html:lang(fr) main section[aria-labelledby='connection-title'] :is(h3+p,[data-slot='alert-title'],[data-slot='alert-description']){font-size:0!important}
+html:lang(fr) main section[aria-labelledby='connection-title'] :is(h3+p,[data-slot='alert-title'],[data-slot='alert-description'])::before{font-size:14px}
+html:lang(fr) main section[aria-labelledby='connection-title'] h3+p::before{content:'Saisissez le mot de passe de votre compte pour demander une connexion JoodBooking pour ce site.'}
+html:lang(fr) main section[aria-labelledby='connection-title'] [data-slot='alert-title']::before{content:'Enregistrez vos identifiants de connexion'}
+html:lang(fr) main section[aria-labelledby='connection-title'] [data-slot='alert-description']::before{content:'Le jeton et la clé secrète ne s\2019 affichent qu\2019 une seule fois. Copiez-les et enregistrez-les avant de fermer cette fenêtre, de quitter ou d\2019 actualiser cette page\2009: vous ne pourrez plus les afficher. En cas de perte, vous devrez demander une nouvelle connexion.'}
+html:lang(fr) main section[aria-labelledby='connection-title'] form button[type='submit']{font-size:0!important}
+html:lang(fr) main section[aria-labelledby='connection-title'] form button[type='submit']::before{content:'Demander la connexion';font-size:15px}
+html:lang(fr) main section[aria-labelledby='connection-title'] input#connection-password::placeholder{color:transparent}
+html:lang(fr) main button[data-slot='popover-trigger'][aria-label^='تواريخ الإقامة']>span:first-child>span{font-size:0!important}
+html:lang(fr) main button[data-slot='popover-trigger'][aria-label^='تواريخ الإقامة']>span:first-child>span::before{content:'Dates de séjour';font-size:14px}
+
+/* --- French search results and hotel page --- */
+/* amenities "+3 المزيد" (the count is in the same text node, so the French reads "Voir plus") */
+html:lang(fr) main article.relative [data-slot='collapsible']>div>button[data-slot='collapsible-trigger'].underline{font-size:0!important}
+html:lang(fr) main article.relative [data-slot='collapsible']>div>button[data-slot='collapsible-trigger'].underline::before{content:'Voir plus';font-size:14px}
+/* "no results" card (contracts search) */
+html:lang(fr) main div[role='status'].rounded-2xl.bg-card{font-size:0!important}
+html:lang(fr) main div[role='status'].rounded-2xl.bg-card::before{content:'Aucun résultat';font-size:16px}
+/* hotel page booking summary: "Livre" -> "Réserver" */
+html:lang(fr) main div.bg-accent.rounded-lg.justify-between>button[data-slot='button']>span:last-child{font-size:0!important}
+html:lang(fr) main div.bg-accent.rounded-lg.justify-between>button[data-slot='button']>span:last-child::before{content:'Réserver';font-size:16px}
+
+/* --- French footer column title «اتصل بنا» (the B2B footer has no contactSectionTitle field; the server drops it) --- */
+html:lang(fr) [data-block-id='footer'] section>nav>span[data-theme-property='contactSectionTitle']{font-size:0!important}
+html:lang(fr) [data-block-id='footer'] section>nav>span[data-theme-property='contactSectionTitle']::before{content:'Contactez-nous';font-size:clamp(16px,0.19vw + 0.96rem,18px)}
