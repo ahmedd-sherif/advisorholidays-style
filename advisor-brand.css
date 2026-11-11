@@ -543,7 +543,7 @@ main .container.mb-6>nav[data-slot='breadcrumb']{padding-top:clamp(12px,1.2vw,16
 
 /* ===== Footer ===== */
 [data-block-id='footer']>div:first-child{border-top:4px solid transparent;border-image:var(--adv-grad) 1;background-image:radial-gradient(40rem 20rem at var(--adv-e) 0,rgba(122,69,160,.28),transparent 70%),linear-gradient(160deg,#14294A 0%,#182E5C 50%,#2A2560 100%)}
-[data-block-id='footer']>div:nth-child(2){border-top-color:rgba(255,255,255,.14)!important;background-image:linear-gradient(var(--adv-dir),#11223F,#221C4C)}
+[data-block-id='footer']>div:last-child{border-top-color:rgba(255,255,255,.14)!important;background-image:linear-gradient(var(--adv-dir),#11223F,#221C4C)}
 /* every column heading: one line, gradient text over a gradient rule */
 [data-block-id='footer'] section>nav>span{display:inline-block;padding-bottom:6px;border-bottom:2px solid transparent;border-image:var(--adv-grad) 1;white-space:nowrap}
 @supports ((-webkit-background-clip:text) or (background-clip:text)){@media (forced-colors:none){[data-block-id='footer'] section>nav>span{background:var(--adv-grad-soft);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}}}
@@ -594,15 +594,15 @@ main .container.mb-6>nav[data-slot='breadcrumb']{padding-top:clamp(12px,1.2vw,16
    The bar's content sits above the "ask the assistant" pill (bottom 16-72px, inline end); from 768 the payment marks keep 96px (112px from 1024) from the
    inline-start screen edge so the WhatsApp disc (bottom 80-136px, inline start) never covers them; wide gutters already give that room.
    The footer is the .container itself, so this replaces its 20px inset (96px is the most the 768 bar allows before the EN copyright wraps); --adv-cmax = the theme container's max-width at each breakpoint. */
-[data-block-id='footer']>div:nth-child(2)>footer{padding-bottom:84px}
-@media (min-width:768px){[data-block-id='footer']>div:nth-child(2)>footer{--adv-cmax:768px;--adv-wa:96px;padding-inline-start:max(20px,calc(var(--adv-wa) - (100vw - var(--adv-cmax))/2))}}
+[data-block-id='footer']>div:last-child>footer{padding-bottom:84px}
+@media (min-width:768px){[data-block-id='footer']>div:last-child>footer{--adv-cmax:768px;--adv-wa:96px;padding-inline-start:max(20px,calc(var(--adv-wa) - (100vw - var(--adv-cmax))/2))}}
 /* 768-1023: the copyright and SBC seal keep one row (the wider EN/FR copyright dropped the seal under it and left the payment marks 17px lower); the payment marks give up the few px, 16px clear of the copyright */
-@media (min-width:768px) and (max-width:1023.98px){[data-block-id='footer']>div:nth-child(2)>footer{column-gap:16px}[data-block-id='footer']>div:nth-child(2)>footer>div:last-child{flex-shrink:0;column-gap:8px}[data-block-id='footer']>div:nth-child(2)>footer>div:first-child:has(>img){min-width:0;gap:6px}[data-block-id='footer']>div:nth-child(2)>footer>div:first-child:has(>img)>img{min-width:0}}
-@media (min-width:1024px){[data-block-id='footer']>div:nth-child(2)>footer{--adv-cmax:1024px;--adv-wa:112px}}
-@media (min-width:1280px){[data-block-id='footer']>div:nth-child(2)>footer{--adv-cmax:1280px}}
-@media (min-width:1536px){[data-block-id='footer']>div:nth-child(2)>footer{--adv-cmax:1536px}}
+@media (min-width:768px) and (max-width:1023.98px){[data-block-id='footer']>div:last-child>footer{column-gap:16px}[data-block-id='footer']>div:last-child>footer>div:last-child{flex-shrink:0;column-gap:8px}[data-block-id='footer']>div:last-child>footer>div:first-child:has(>img){min-width:0;gap:6px}[data-block-id='footer']>div:last-child>footer>div:first-child:has(>img)>img{min-width:0}}
+@media (min-width:1024px){[data-block-id='footer']>div:last-child>footer{--adv-cmax:1024px;--adv-wa:112px}}
+@media (min-width:1280px){[data-block-id='footer']>div:last-child>footer{--adv-cmax:1280px}}
+@media (min-width:1536px){[data-block-id='footer']>div:last-child>footer{--adv-cmax:1536px}}
 /* phones: the four payment marks on one centred row (theme grid-cols-3 left Mastercard alone on a second row) */
-@media (max-width:767.98px){[data-block-id='footer']>div:nth-child(2)>footer>div:first-child:has(>img){display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px 18px}}
+@media (max-width:767.98px){[data-block-id='footer']>div:last-child>footer>div:first-child:has(>img){display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px 18px}}
 
 /* ===== Phones ===== */
 @media (max-width:767.98px){[data-block-id='booking-step'] .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:32px 14px}[data-block-id='booking-step'] .grid>div{gap:14px}[data-block-id='booking-step'] .grid svg{width:72px;height:72px;padding:16px;border-radius:22px}[data-block-id='newsletter'] section>div.rounded-2xl{padding-inline:20px}}
@@ -611,3 +611,56 @@ main .container.mb-6>nav[data-slot='breadcrumb']{padding-top:clamp(12px,1.2vw,16
 @media (prefers-reduced-motion:no-preference){[data-block-id='header'] nav a::after{transition:transform .25s ease}:is(main,[data-block-id],[data-block-id='header']+div) [data-slot='button'].bg-primary{transition:background-position .4s ease,box-shadow .25s ease}main [data-slot='accordion-item']{transition:box-shadow .2s ease,border-color .2s ease}main [data-slot='accordion-item']::before{transition:opacity .2s ease}}
 @media (hover:hover){[data-block-id='header'] nav a:hover::after{transform:scaleX(1)}}
 @media (hover:hover) and (prefers-reduced-motion:no-preference){main a[href*='/cities/']>div.relative,main a.bg-card[href*='/hotels/'],main .grid>a[href*='/hotels/']>div.rounded-xl,[data-block-id^='city-'] article,[data-block-id^='blog-more'] section>div.grid>a.group{transition:transform .3s ease,box-shadow .3s ease}main a[href*='/cities/']>div.relative img,main a.bg-card[href*='/hotels/']>div:first-child img,main .grid>a[href*='/hotels/']>div>div:first-child img{transition:transform .6s ease}main a[href*='/cities/']:hover>div.relative{transform:translateY(-4px);box-shadow:0 22px 40px -22px rgba(74,42,122,.7)}main a[href*='/cities/']:hover>div.relative img{transform:scale(1.06)}main a.bg-card[href*='/hotels/']:hover,main .grid>a[href*='/hotels/']:hover>div.rounded-xl{transform:translateY(-6px);box-shadow:0 26px 44px -24px rgba(74,42,122,.55)}main a.bg-card[href*='/hotels/']:hover>div:first-child img,main .grid>a[href*='/hotels/']:hover>div>div:first-child img{transform:scale(1.05)}[data-block-id^='city-'] article:hover{transform:translateY(-4px);box-shadow:0 20px 40px -24px rgba(74,42,122,.5)}[data-block-id^='blog-more'] section>div.grid>a.group:hover{transform:translateY(-4px);box-shadow:0 24px 44px -24px rgba(74,42,122,.55)}}
+
+/* ===== Footer: "download our app" strip (theme footer.appLinks, owner request 2026-11) =====
+   The strip carries on the main footer's own linear-gradient(160deg,#14294A,#182E5C 50%,#2A2560), so there is no colour step at the join;
+   a fading hairline over the content width is the only divider, and the bottom bar keeps its own band.
+   Along the 160deg line a point sits at x*sin20 + y*cos20, so from the strip's own top-left corner the three stops land at
+   -0.9397H, 0.171W-0.4698H and 0.342W (W = 100vw, H = main footer height). H only moves the colours by a few RGB units,
+   so --adv-fh is a per-breakpoint estimate (update it if the main footer grows or shrinks by more than ~200px). */
+[data-block-id='footer']>div:has(img[data-theme-image*='appLinks']){--adv-fh:1270px;--adv-soon:'Coming soon';--adv-soon-fs:12px;--adv-soon-ls:.2px;border-top-width:0;background-color:#232760!important;background-image:linear-gradient(160deg,#14294A calc(var(--adv-fh)*-.9397),#182E5C calc(17.1vw - var(--adv-fh)*.4698),#2A2560 34.2vw)}
+[data-block-id='footer']>div:has(img[data-theme-image*='appLinks']):lang(ar){--adv-soon:'قريباً';--adv-soon-fs:13px;--adv-soon-ls:0}
+[data-block-id='footer']>div:has(img[data-theme-image*='appLinks']):lang(fr){--adv-soon:'Bientôt'}
+@media (min-width:640px){[data-block-id='footer']>div:has(img[data-theme-image*='appLinks']){--adv-fh:985px}}
+@media (min-width:768px){[data-block-id='footer']>div:has(img[data-theme-image*='appLinks']){--adv-fh:760px}}
+@media (min-width:1024px){[data-block-id='footer']>div:has(img[data-theme-image*='appLinks']){--adv-fh:480px}}
+@media (min-width:1280px){[data-block-id='footer']>div:has(img[data-theme-image*='appLinks']){--adv-fh:400px}}
+@media (min-width:1280px) and (max-width:1535.98px){html:lang(fr) [data-block-id='footer']>div:has(img[data-theme-image*='appLinks']){--adv-fh:474px}}
+/* one centred row: title, the "coming soon" pill while the links are pending, then the two badges (32px after the title) */
+[data-block-id='footer']>div:has(img[data-theme-image*='appLinks'])>div{position:relative;column-gap:14px;row-gap:14px;padding-block:26px 30px}
+[data-block-id='footer']>div:has(img[data-theme-image*='appLinks'])>div::before{content:'';position:absolute;top:0;inset-inline:20px;height:1px;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.16) 22%,rgba(255,255,255,.16) 78%,rgba(255,255,255,0));pointer-events:none}
+/* title: the column-heading voice (same size clamp, weight and soft gradient text), led by a phone glyph in the gradient's end colour */
+[data-block-id='footer']>div:has(img[data-theme-image*='appLinks'])>div>span{position:relative;display:inline-flex;align-items:center;order:0;gap:10px;font-size:clamp(16px,0.19vw + 0.96rem,18px);font-weight:700;line-height:1.5;white-space:nowrap}
+[data-block-id='footer']>div:has(img[data-theme-image*='appLinks'])>div>span::before{content:'';flex:none;width:22px;height:22px;background-color:#FF8AA0;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='5.5' y='2' width='13' height='20' rx='3'/%3E%3Cpath d='M12 6.5v7M9 10.6l3 3 3-3M10.5 18.4h3'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='5.5' y='2' width='13' height='20' rx='3'/%3E%3Cpath d='M12 6.5v7M9 10.6l3 3 3-3M10.5 18.4h3'/%3E%3C/svg%3E") center/contain no-repeat}
+html[dir='ltr'] [data-block-id='footer']>div:has(img[data-theme-image*='appLinks'])>div>span::before{background-color:#5CCBEA}
+@supports ((-webkit-background-clip:text) or (background-clip:text)){@media (forced-colors:none){[data-block-id='footer']>div:has(img[data-theme-image*='appLinks'])>div>span{background:var(--adv-grad-soft);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}}}
+@media (forced-colors:active){[data-block-id='footer']>div:has(img[data-theme-image*='appLinks'])>div>span::before{background-color:CanvasText}}
+/* badges: 44px tall at their own aspect (the theme forces width=135 with object-contain); lift on hover only where hover exists and motion is welcome */
+[data-block-id='footer']>div:has(img[data-theme-image*='appLinks'])>div>a{position:relative;display:inline-flex;flex:none;order:3;border-radius:8px}
+[data-block-id='footer']>div:has(img[data-theme-image*='appLinks'])>div>a:first-of-type{margin-inline-start:18px}
+[data-block-id='footer']>div:has(img[data-theme-image*='appLinks'])>div>a>img{display:block;width:auto;height:44px;max-width:none;filter:drop-shadow(0 6px 10px rgba(6,10,30,.35))}
+@media (hover:hover){[data-block-id='footer']>div:has(img[data-theme-image*='appLinks'])>div>a[href]:not([href='']):hover>img{filter:drop-shadow(0 10px 14px rgba(6,10,30,.5))}}
+@media (hover:hover) and (prefers-reduced-motion:no-preference){[data-block-id='footer']>div:has(img[data-theme-image*='appLinks'])>div>a{transition:transform .18s ease}[data-block-id='footer']>div:has(img[data-theme-image*='appLinks'])>div>a>img{transition:filter .18s ease}[data-block-id='footer']>div:has(img[data-theme-image*='appLinks'])>div>a[href]:not([href='']):hover{transform:translateY(-2px)}}
+/* store links not given yet (empty CMS url -> href=""): the link box is hidden (no click, no tab stop) while its badge image stays visible and untouched.
+   While both are pending, one "coming soon" pill (the row's own ::after, so it never touches the badge artwork or the title gradient) follows the title;
+   with one link filled it sits under the badge still waiting. All of it keys on href="", so a filled url turns the badges into normal links by itself. */
+[data-block-id='footer']>div:has(img[data-theme-image*='appLinks'])>div>a:is([href=''],:not([href])){visibility:hidden;pointer-events:none;cursor:default}
+[data-block-id='footer']>div:has(img[data-theme-image*='appLinks'])>div>a:is([href=''],:not([href]))>img{visibility:visible}
+[data-block-id='footer']>div:has(img[data-theme-image*='appLinks'])>div:has(>a:is([href=''],:not([href]))):not(:has(>a[href]:not([href=''])))::after,
+[data-block-id='footer']>div:has(img[data-theme-image*='appLinks'])>div:has(>a[href]:not([href='']))>a:is([href=''],:not([href]))::after{content:var(--adv-soon);box-sizing:border-box;padding:0 10px;padding-inline-start:21px;border-radius:999px;background:radial-gradient(circle,#8EDCF2 0 2.4px,transparent 3px) right 9px center/8px 8px no-repeat,rgba(142,220,242,.1);box-shadow:inset 0 0 0 1px rgba(142,220,242,.42);color:#8EDCF2;font-size:var(--adv-soon-fs);font-weight:700;line-height:22px;letter-spacing:var(--adv-soon-ls);white-space:nowrap}
+html[dir='ltr'] [data-block-id='footer']>div:has(img[data-theme-image*='appLinks'])>div:has(>a:is([href=''],:not([href]))):not(:has(>a[href]:not([href=''])))::after,
+html[dir='ltr'] [data-block-id='footer']>div:has(img[data-theme-image*='appLinks'])>div:has(>a[href]:not([href='']))>a:is([href=''],:not([href]))::after{background-position:left 9px center,0 0}
+[data-block-id='footer']>div:has(img[data-theme-image*='appLinks'])>div:has(>a:is([href=''],:not([href]))):not(:has(>a[href]:not([href=''])))::after{order:1;flex:none;margin-inline-start:-4px}
+[data-block-id='footer']>div:has(img[data-theme-image*='appLinks'])>div:has(>a[href]:not([href='']))>a:is([href=''],:not([href]))::after{visibility:visible;position:absolute;top:calc(100% + 6px);left:50%;transform:translateX(-50%);line-height:18px}
+[data-block-id='footer']>div:has(img[data-theme-image*='appLinks'])>div:has(>a[href]:not([href=''])):has(>a:is([href=''],:not([href]))){padding-bottom:42px}
+/* phones: title (and pill) centred on the first line, both badges side by side under it; the row's ::before becomes the line break, so the hairline
+   moves to the strip itself. A title too long for its pill (French) puts the pill centred under it. Badges shrink only below ~350px, never wrap. */
+@media (max-width:767.98px){[data-block-id='footer']>div:has(img[data-theme-image*='appLinks'])::before{content:'';position:absolute;top:0;inset-inline:max(20px,calc(50% - 300px));height:1px;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.16) 22%,rgba(255,255,255,.16) 78%,rgba(255,255,255,0));pointer-events:none}[data-block-id='footer']>div:has(img[data-theme-image*='appLinks'])>div{flex-wrap:wrap;justify-content:center;column-gap:12px;row-gap:8px;padding-block:24px 28px}[data-block-id='footer']>div:has(img[data-theme-image*='appLinks'])>div::before{position:static;order:2;flex:0 0 100%;height:0;background:none}[data-block-id='footer']>div:has(img[data-theme-image*='appLinks'])>div>a:first-of-type{margin-inline-start:0}[data-block-id='footer']>div:has(img[data-theme-image*='appLinks'])>div:has(>a:is([href=''],:not([href]))):not(:has(>a[href]:not([href=''])))::after{margin-inline-start:-2px}[data-block-id='footer']>div:has(img[data-theme-image*='appLinks'])>div>a>img{height:min(44px,calc((100vw - 56px)/6.6))}}
+
+/* ===== Footer: payment marks (B2B colour cards, 570x343: a coloured logo on a white rounded card) =====
+   28px tall = 46.5px wide: the theme's sizes=48px srcset tops out at 96w, so they stay sharp at 2x. A drop-shadow (not box-shadow) follows the
+   PNG's own rounded corners: a crisp contact edge plus a soft lift. 768-1023: 26px with 8px gaps so the copyright and seal keep one row. */
+[data-block-id='footer']>div:last-child>footer>div:first-child:has(>img){gap:10px}
+[data-block-id='footer']>div:last-child>footer>div:first-child:has(>img)>img{height:28px;width:auto;filter:drop-shadow(0 1px 1px rgba(0,0,0,.22)) drop-shadow(0 4px 7px rgba(3,8,26,.35))}
+@media (min-width:768px) and (max-width:1023.98px){[data-block-id='footer']>div:last-child>footer>div:first-child:has(>img){gap:8px}[data-block-id='footer']>div:last-child>footer>div:first-child:has(>img)>img{height:26px}}
+@media (max-width:767.98px){[data-block-id='footer']>div:last-child>footer>div:first-child:has(>img){gap:10px 12px}}
