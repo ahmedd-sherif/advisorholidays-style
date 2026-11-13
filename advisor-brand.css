@@ -8,7 +8,7 @@
 @font-face{font-family:"Calibri Adj";src:local("Calibri Italic"),local("Calibri-Italic");font-weight:351 550;font-style:italic;size-adjust:116%}
 @font-face{font-family:"Calibri Adj";src:local("Calibri Bold Italic"),local("Calibri-BoldItalic");font-weight:551 1000;font-style:italic;size-adjust:116%}
 :root{--font-default:"Calibri Adj","Noto Sans Arabic",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif!important}
-/* advisorholidays.sa brand stylesheet v1.0.3 (v1.0.2 + new search tabs, transport/airport/services pages, template image fallbacks).
+/* advisorholidays.sa brand stylesheet v1.0.4 (v1.0.3 + readable tab row on the hotel search results; v1.0.3 = v1.0.2 + new search tabs, transport/airport/services pages, template image fallbacks).
    v1.0.2 = v7 + footer app strip and coloured payment cards; v7 = v6 + font fit fixes after the Calibri switch.
    v6 = v5 + full hero photo, French search rows, Calibri font, brand-coloured social icons.
    System: fields and buttons 48px / 12px radius, border #8E80B8 (--input); secondary actions are 44px outlined pills (1.5px #7A45A0);
@@ -721,6 +721,17 @@ main div.container>h2+section [data-block-id='hotel-search']>div>div:has(>button
 main div.container>h2+section [data-block-id='hotel-search']>div>div:has(>button[data-slot='button'])>button[data-slot='button'].bg-primary{background-color:#5B3FA0;background-image:var(--adv-btn);background-size:100% 100%;color:#fff;box-shadow:0 8px 18px -10px rgba(91,63,160,.85)}
 main div.container>h2+section [data-block-id='hotel-search']>div>div:has(>button[data-slot='button'])>button[data-slot='button'].bg-primary>svg{color:#fff}
 main div.container>h2+section [data-block-id='hotel-search']>div>div:has(>button[data-slot='button'])>button[data-slot='button']:focus-visible{outline:2px solid #3070B8;outline-offset:2px}
+/* hotel search results (/hotels/search, and any page that puts the search card in a section.md:block like /transport): the tab row as pills,
+   white for the others and the brand gradient for the active one. Without this the generic tab rule above cleared the theme's fill and the
+   active 'hotels' tab was white text on the light page (v1.0.4 fix). /transport keeps its own, more specific rules with the same look. */
+main div.container>section.md\:block>[data-block-id='hotel-search']>div>div.mb-3{display:flex;flex-wrap:wrap;gap:10px;width:auto;margin-bottom:14px;padding:0;border-radius:0;background:none;box-shadow:none}
+main div.container>section.md\:block>[data-block-id='hotel-search']>div>div.mb-3>button[data-slot='button']{width:auto;height:44px;padding-inline:18px;border-radius:999px;font-size:14.5px;font-weight:700}
+main div.container>section.md\:block>[data-block-id='hotel-search']>div>div.mb-3>button[data-slot='button']:not(.bg-primary){border:1px solid rgba(122,69,160,.28);background:#fff;color:#14294A;box-shadow:0 8px 18px -14px rgba(20,41,74,.5)}
+main div.container>section.md\:block>[data-block-id='hotel-search']>div>div.mb-3>button[data-slot='button']:not(.bg-primary):hover{border-color:#7A45A0;background:#F4EFFB;color:#4A2A7A}
+main div.container>section.md\:block>[data-block-id='hotel-search']>div>div.mb-3>button[data-slot='button']:not(.bg-primary) svg{color:#7A45A0}
+main div.container>section.md\:block>[data-block-id='hotel-search']>div>div.mb-3>button[data-slot='button'].bg-primary{border:0;background-color:#5B3FA0;background-image:var(--adv-btn);background-size:180% 100%;background-position:0 50%;color:#fff;box-shadow:0 10px 22px -12px rgba(91,63,160,.8)}
+main div.container>section.md\:block>[data-block-id='hotel-search']>div>div.mb-3>button[data-slot='button'].bg-primary svg{color:#fff}
+main div.container>section.md\:block>[data-block-id='hotel-search']>div>div.mb-3>button[data-slot='button']:focus-visible{outline:2px solid #3070B8;outline-offset:3px;box-shadow:none}
 /* home band heading follows the form on show (it said "find your hotel" on every tab); a form it does not know gets no heading */
 [data-block-id^='hero-section'] [data-block-id='hotel-search'] .dark-form>.container:has([data-theme-property*='"departurePlace"']){--adv-search-title:'Find your transport'}
 [data-block-id^='hero-section'] [data-block-id='hotel-search'] .dark-form>.container:has([data-theme-property*='"departurePlace"']):lang(ar){--adv-search-title:'ابحث عن وسيلة تنقّلك'}
