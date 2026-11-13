@@ -8,7 +8,7 @@
 @font-face{font-family:"Calibri Adj";src:local("Calibri Italic"),local("Calibri-Italic");font-weight:351 550;font-style:italic;size-adjust:116%}
 @font-face{font-family:"Calibri Adj";src:local("Calibri Bold Italic"),local("Calibri-BoldItalic");font-weight:551 1000;font-style:italic;size-adjust:116%}
 :root{--font-default:"Calibri Adj","Noto Sans Arabic",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif!important}
-/* advisorholidays.sa brand stylesheet v1.0.4 (v1.0.3 + readable tab row on the hotel search results; v1.0.3 = v1.0.2 + new search tabs, transport/airport/services pages, template image fallbacks).
+/* advisorholidays.sa brand stylesheet v1.0.5 (v1.0.4 + the optional Hotel field drawn by advisor-site.js; v1.0.4 = v1.0.3 + readable tab row on the hotel search results; v1.0.3 = v1.0.2 + new search tabs, transport/airport/services pages, template image fallbacks).
    v1.0.2 = v7 + footer app strip and coloured payment cards; v7 = v6 + font fit fixes after the Calibri switch.
    v6 = v5 + full hero photo, French search rows, Calibri font, brand-coloured social icons.
    System: fields and buttons 48px / 12px radius, border #8E80B8 (--input); secondary actions are 44px outlined pills (1.5px #7A45A0);
@@ -1321,3 +1321,93 @@ main button[data-slot='button'].fixed.rounded-full{bottom:calc(max(1rem,env(safe
 [data-block-id='whatsapp-chat']{inset-inline-start:24px;width:56px;height:56px}
 main button[data-slot='button'].fixed.rounded-full{bottom:calc(max(1rem,env(safe-area-inset-bottom)) + 68px);inset-inline-start:24px}
 }
+
+/* ===== Hotel picker: the optional "Hotel" field after the destination (advisor-site.js part 2, owner request 2026-11-13) =====
+   Markup from the script: div[data-adv-hotel][data-adv-state=ready|empty|error] > label (the destination label's classes) + div.adv-hotel-box > select,
+   inserted right after the destination cell of the hotel search grid (home band, results-page search card, results phone sheet).
+   The select is drawn exactly like the destination trigger beside it in each place (height, border, radius, shadow, hover, keyboard focus ring,
+   14px value with the same 15px inset); the chevron is the box's ::after at the inline end, the same lucide chevron at the same size and colour.
+   A long hotel name stays on one line and ends in an ellipsis. Everything here needs [data-adv-hotel]: where the field is absent
+   (other pages, the transport tabs) nothing in this block applies. Layout: one row of six fields from 1280px (the band keeps today's height; from 1536px the extra width goes to the hotel);
+   1024-1279 two rows of three in every language; 640-1023 the theme's two columns; phones the stack, the hotel under the destination. */
+[data-block-id='hotel-search'] [data-adv-hotel]:not([hidden]){display:grid;grid-template-columns:minmax(0,1fr);align-content:end;gap:8px;min-width:0}
+[data-block-id='hotel-search'] [data-adv-hotel]>label{display:block;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+[data-block-id='hotel-search'] [data-adv-hotel] .adv-hotel-box{position:relative;min-width:0;--adv-hf-h:40px;--adv-hf-r:6px;--adv-hf-ch:14px}
+/* the box: the theme's phone trigger (results phone sheet): 40px, theme border, 6px corners, white, accent on hover, offset ring on keyboard focus */
+[data-block-id='hotel-search'] [data-adv-hotel] select{-webkit-appearance:none;appearance:none;display:block;box-sizing:border-box;width:100%;min-width:0;height:var(--adv-hf-h);margin:0;padding-block:0;padding-inline:14px calc(22px + var(--adv-hf-ch));border:1px solid var(--border);border-radius:var(--adv-hf-r);background-color:var(--background);background-image:none;color:var(--foreground);box-shadow:none;outline:none;font-family:inherit;font-size:14px;font-weight:400;line-height:1.5;letter-spacing:normal;text-align:start;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;cursor:pointer}
+@media (prefers-reduced-motion:no-preference){[data-block-id='hotel-search'] [data-adv-hotel] select{transition:color .15s,background-color .15s,border-color .15s,box-shadow .15s}}
+@media (hover:hover){[data-block-id='hotel-search'] [data-adv-hotel] select:enabled:hover{background-color:var(--accent)}}
+[data-block-id='hotel-search'] [data-adv-hotel] select:focus-visible{outline:none;box-shadow:0 0 0 2px var(--background),0 0 0 4px var(--ring)}
+[data-block-id='hotel-search'] [data-adv-hotel] select option{background-color:#fff;color:#1A2238}
+/* chevron (lucide chevron-down, as in the destination trigger): 14px in the text colour on phones, 16px muted at half strength from 768 */
+[data-block-id='hotel-search'] [data-adv-hotel] .adv-hotel-box::after{content:'';position:absolute;top:50%;inset-inline-end:15px;width:var(--adv-hf-ch);height:var(--adv-hf-ch);margin-top:calc(var(--adv-hf-ch) / -2);background-color:var(--foreground);pointer-events:none;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center/100% 100% no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center/100% 100% no-repeat}
+@media (min-width:768px){
+[data-block-id='hotel-search'] [data-adv-hotel] .adv-hotel-box{--adv-hf-h:44px;--adv-hf-ch:16px}
+[data-block-id='hotel-search'] [data-adv-hotel] select{border-color:var(--input);background-color:transparent;box-shadow:0 1px 2px 0 rgba(0,0,0,.05)}
+[data-block-id='hotel-search'] [data-adv-hotel] select:enabled:hover{background-color:transparent}
+[data-block-id='hotel-search'] [data-adv-hotel] select:focus-visible{border-color:var(--ring);box-shadow:0 0 0 3px color-mix(in oklab,var(--ring) 50%,transparent),0 1px 2px 0 rgba(0,0,0,.05)}
+[data-block-id='hotel-search'] [data-adv-hotel] .adv-hotel-box::after{background-color:var(--muted-foreground);opacity:.5}}
+/* home band: the 48px white box with the soft drop shadow, lilac edge on hover, cyan ring on keyboard focus */
+[data-block-id^='hero-section'] [data-block-id='hotel-search'] .dark-form [data-adv-hotel] .adv-hotel-box{--adv-hf-h:48px;--adv-hf-r:12px}
+[data-block-id^='hero-section'] [data-block-id='hotel-search'] .dark-form [data-adv-hotel] select{border-color:#fff;background-color:#fff;color:#1A2238;box-shadow:0 10px 24px -14px rgba(0,0,0,.6)}
+[data-block-id^='hero-section'] [data-block-id='hotel-search'] .dark-form [data-adv-hotel] select:enabled:hover{border-color:#C9B6E6;background-color:#fff;color:#1A2238}
+[data-block-id^='hero-section'] [data-block-id='hotel-search'] .dark-form [data-adv-hotel] select:focus-visible{border-color:#fff;outline:3px solid #8EDCF2;outline-offset:2px;box-shadow:0 10px 24px -14px rgba(0,0,0,.6)}
+[data-block-id^='hero-section'] [data-block-id='hotel-search'] .dark-form [data-adv-hotel] .adv-hotel-box::after{background-color:#1A2238}
+@media (max-width:767.98px){[data-block-id^='hero-section'] [data-block-id='hotel-search'] .dark-form [data-adv-hotel] select:enabled:hover{background-color:#F4EFFB}}
+@media (min-width:768px){[data-block-id^='hero-section'] [data-block-id='hotel-search'] .dark-form [data-adv-hotel] .adv-hotel-box::after{background-color:#5B6478}}
+/* results-page search card (and any search card in main): the 48px purple-edged box */
+main [data-block-id='hotel-search'] .bg-card [data-adv-hotel] .adv-hotel-box{--adv-hf-h:48px;--adv-hf-r:12px}
+main [data-block-id='hotel-search'] .bg-card [data-adv-hotel] select{border-color:#8E80B8;background-color:#fff;color:#1A2238}
+main [data-block-id='hotel-search'] .bg-card [data-adv-hotel] select:enabled:hover{border-color:#6F5FA6;background-color:#fff}
+main [data-block-id='hotel-search'] .bg-card [data-adv-hotel] select:focus-visible{border-color:#8E80B8;outline:2px solid #3070B8;outline-offset:2px}
+/* no hotels in this destination / list loading: a quiet, still readable box (the theme's half opacity left the message at about 2:1 on the band) */
+[data-block-id='hotel-search'] [data-adv-hotel] select:disabled{cursor:not-allowed;border-color:var(--border);background-color:#F5F3F9;color:#5A5F78;box-shadow:none}
+[data-block-id^='hero-section'] [data-block-id='hotel-search'] .dark-form [data-adv-hotel] select:disabled{border-color:transparent;background-color:rgba(255,255,255,.8);color:#3F475E;box-shadow:none}
+main [data-block-id='hotel-search'] .bg-card [data-adv-hotel] select:disabled{border-color:#D9D2E6;background-color:#F5F3F9;color:#5A5F78;box-shadow:none}
+[data-block-id='hotel-search'] [data-adv-hotel]:not([data-adv-state='ready']) .adv-hotel-box::after{opacity:.35}
+/* Windows high contrast: the chevron is a mask on a background, which forced colours would repaint; draw it in the system text colour (grey when disabled) */
+@media (forced-colors:active){[data-block-id='hotel-search'] [data-adv-hotel] .adv-hotel-box::after{forced-color-adjust:none;background-color:CanvasText!important;opacity:1!important}[data-block-id='hotel-search'] [data-adv-hotel]:has(select:disabled) .adv-hotel-box::after{background-color:GrayText!important}}
+/* iPhone/iPad: Safari zooms the page into any field under 16px when it is tapped; the select keeps 16px there and is drawn at 14px (scale .875) */
+@supports (-webkit-touch-callout:none){
+[data-block-id='hotel-search'] [data-adv-hotel] .adv-hotel-box{height:var(--adv-hf-h)}
+[data-block-id='hotel-search'] [data-adv-hotel] select{position:absolute;top:0;inset-inline-start:0;width:calc(100% / .875);height:calc(var(--adv-hf-h) / .875);border-width:calc(1px / .875);border-radius:calc(var(--adv-hf-r) / .875);padding-inline:16px calc((22px + var(--adv-hf-ch)) / .875);font-size:16px;transform:scale(.875);transform-origin:var(--adv-s) 0}
+/* on the navy band the scaled box's white border met its white fill on a fractional pixel and let the navy show through as a grey hairline (WebKit);
+   there the border is the fill colour anyway, so it is made transparent and the fill runs to the edge */
+[data-block-id^='hero-section'] [data-block-id='hotel-search'] .dark-form [data-adv-hotel] select{border-color:transparent}}
+
+/* --- layout with the field (six cells: destination, hotel, dates, guests, promo code, search) --- */
+@media (min-width:1024px){[data-block-id='hotel-search'] form>div.grid:has(>[data-adv-hotel]:not([hidden]))>*{grid-column:auto}}
+/* 1024-1279, every language and both forms: two rows of three (destination, hotel, dates / guests, promo code, search); the third column a little wider
+   for the stay range (French 319 in Noto). Six across left the hotel 118px in Arabic (about one word of a name) and the search button 76px. */
+@media (min-width:1024px) and (max-width:1279.98px){
+[data-block-id='hotel-search'] form>div.grid:has(>[data-adv-hotel]:not([hidden])){column-gap:12px;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.2fr)}
+[data-block-id='hotel-search'] form>div.grid:has(>[data-adv-hotel]:not([hidden]))>button[type='submit']{white-space:nowrap;font-size:16px}}
+/* >=1280: one row everywhere; destination narrower, hotel medium, a compact search button (two balanced lines if a longer label is ever set) */
+@media (min-width:1280px){
+[data-block-id='hotel-search'] form>div.grid:has(>[data-adv-hotel]:not([hidden]))>button[type='submit']{padding-inline:12px;white-space:normal;line-height:1.15;text-wrap:balance}
+[data-block-id^='hero-section'] [data-block-id='hotel-search'] form>div.grid:has(>[data-adv-hotel]:not([hidden])){grid-template-columns:minmax(0,150fr) minmax(0,236fr) minmax(0,300fr) minmax(0,214fr) minmax(0,146fr) minmax(0,134fr)}
+html[dir='ltr'] [data-block-id^='hero-section'] [data-block-id='hotel-search'] form>div.grid:has(>[data-adv-hotel]:not([hidden])){grid-template-columns:minmax(0,172fr) minmax(0,160fr) minmax(0,330fr) minmax(0,248fr) minmax(0,166fr) minmax(0,104fr)}
+html[dir='ltr']:lang(fr) [data-block-id^='hero-section'] [data-block-id='hotel-search'] form>div.grid:has(>[data-adv-hotel]:not([hidden])){grid-template-columns:minmax(0,130fr) minmax(0,156fr) minmax(0,326fr) minmax(0,278fr) minmax(0,170fr) minmax(0,120fr)}
+main [data-block-id='hotel-search'] .bg-card form>div.grid:has(>[data-adv-hotel]:not([hidden])){grid-template-columns:minmax(0,146fr) minmax(0,222fr) minmax(0,298fr) minmax(0,210fr) minmax(0,140fr) minmax(0,130fr)}
+html[dir='ltr'] main [data-block-id='hotel-search'] .bg-card form>div.grid:has(>[data-adv-hotel]:not([hidden])){grid-template-columns:minmax(0,172fr) minmax(0,140fr) minmax(0,328fr) minmax(0,246fr) minmax(0,164fr) minmax(0,96fr)}
+html[dir='ltr']:lang(fr) main [data-block-id='hotel-search'] .bg-card form>div.grid:has(>[data-adv-hotel]:not([hidden])){column-gap:8px;grid-template-columns:minmax(0,130fr) minmax(0,154fr) minmax(0,310fr) minmax(0,276fr) minmax(0,192fr) minmax(0,104fr)}}
+/* >=1536 (the container grows from 1240 to 1496px: 1536 laptops, 1920 desktops): the other fields keep about their 1280 widths (a little more where
+   the French promo placeholder was cut) and the extra 256px goes to the hotel, so most names show whole (proportional shares gave the dates 400px and the hotel 190) */
+@media (min-width:1536px){
+[data-block-id^='hero-section'] [data-block-id='hotel-search'] form>div.grid:has(>[data-adv-hotel]:not([hidden])){grid-template-columns:minmax(0,160fr) minmax(0,432fr) minmax(0,310fr) minmax(0,224fr) minmax(0,156fr) minmax(0,154fr)}
+html[dir='ltr'] [data-block-id^='hero-section'] [data-block-id='hotel-search'] form>div.grid:has(>[data-adv-hotel]:not([hidden])){grid-template-columns:minmax(0,180fr) minmax(0,376fr) minmax(0,340fr) minmax(0,256fr) minmax(0,170fr) minmax(0,114fr)}
+html[dir='ltr']:lang(fr) [data-block-id^='hero-section'] [data-block-id='hotel-search'] form>div.grid:has(>[data-adv-hotel]:not([hidden])){grid-template-columns:minmax(0,140fr) minmax(0,328fr) minmax(0,340fr) minmax(0,286fr) minmax(0,214fr) minmax(0,128fr)}
+main [data-block-id='hotel-search'] .bg-card form>div.grid:has(>[data-adv-hotel]:not([hidden])){grid-template-columns:minmax(0,156fr) minmax(0,418fr) minmax(0,308fr) minmax(0,220fr) minmax(0,150fr) minmax(0,150fr)}
+html[dir='ltr'] main [data-block-id='hotel-search'] .bg-card form>div.grid:has(>[data-adv-hotel]:not([hidden])){grid-template-columns:minmax(0,180fr) minmax(0,350fr) minmax(0,338fr) minmax(0,254fr) minmax(0,172fr) minmax(0,108fr)}
+html[dir='ltr']:lang(fr) main [data-block-id='hotel-search'] .bg-card form>div.grid:has(>[data-adv-hotel]:not([hidden])){column-gap:12px;grid-template-columns:minmax(0,136fr) minmax(0,312fr) minmax(0,330fr) minmax(0,284fr) minmax(0,216fr) minmax(0,124fr)}}
+/* the hotel list could not be loaded (the field hides itself): the five fields keep exactly today's layout */
+@media (min-width:640px) and (max-width:1023.98px){[data-block-id='hotel-search'] form>div.grid:has(>[data-adv-hotel][hidden])>div:last-of-type+button[type='submit']{grid-column:1/-1}}
+@media (min-width:1024px) and (max-width:1279.98px){
+[data-block-id^='hero-section'] [data-block-id='hotel-search'] form>div.grid:has(>[data-adv-hotel][hidden]){column-gap:10px;grid-template-columns:minmax(0,172fr) minmax(0,305fr) minmax(0,217fr) minmax(0,110fr) minmax(0,123fr)}
+[data-block-id^='hero-section'] [data-block-id='hotel-search'] form>div.grid:has(>[data-adv-hotel][hidden])>*{grid-column:auto}
+html[dir='ltr']:not(:lang(fr)) [data-block-id^='hero-section'] [data-block-id='hotel-search'] form>div.grid:has(>[data-adv-hotel][hidden]){column-gap:8px;grid-template-columns:minmax(0,172fr) minmax(0,307fr) minmax(0,240fr) minmax(0,110fr) minmax(0,119fr)}
+html:lang(fr) [data-block-id^='hero-section'] [data-block-id='hotel-search'] form>div.grid:has(>[data-adv-hotel][hidden]){grid-template-columns:repeat(6,minmax(0,1fr))}
+html:lang(fr) [data-block-id^='hero-section'] [data-block-id='hotel-search'] form>div.grid:has(>[data-adv-hotel][hidden])>*{grid-column:span 2}
+html:lang(fr) [data-block-id^='hero-section'] [data-block-id='hotel-search'] form>div.grid:has(>[data-adv-hotel][hidden])>:nth-child(n+5){grid-column:span 3}
+html:lang(fr) [data-block-id^='hero-section'] [data-block-id='hotel-search'] form>div.grid:has(>[data-adv-hotel][hidden])>button[type='submit']{white-space:nowrap;font-size:16px}}
+@media (min-width:1280px){html[dir='ltr'] [data-block-id^='hero-section'] [data-block-id='hotel-search'] form>div.grid:has(>[data-adv-hotel][hidden]){grid-template-columns:minmax(0,2fr) minmax(0,3.4fr) minmax(0,2.8fr) minmax(0,1.6fr) minmax(0,2.2fr)}html[dir='ltr'] [data-block-id^='hero-section'] [data-block-id='hotel-search'] form>div.grid:has(>[data-adv-hotel][hidden])>*{grid-column:auto}}
