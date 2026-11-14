@@ -8,7 +8,7 @@
 @font-face{font-family:"Calibri Adj";src:local("Calibri Italic"),local("Calibri-Italic");font-weight:351 550;font-style:italic;size-adjust:116%}
 @font-face{font-family:"Calibri Adj";src:local("Calibri Bold Italic"),local("Calibri-BoldItalic");font-weight:551 1000;font-style:italic;size-adjust:116%}
 :root{--font-default:"Calibri Adj","Noto Sans Arabic",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif!important}
-/* advisorholidays.sa brand stylesheet v1.0.5 (v1.0.4 + the optional Hotel field drawn by advisor-site.js; v1.0.4 = v1.0.3 + readable tab row on the hotel search results; v1.0.3 = v1.0.2 + new search tabs, transport/airport/services pages, template image fallbacks).
+/* advisorholidays.sa brand stylesheet v1.0.6 (v1.0.5 + the site's own drop-down look for every list and pop-up, the site's own hotel list and a narrower hotel field from 1536px, a Done bar under the date pickers, the phone-sheet tab row on the hotel results, the content card for the new about/privacy/terms block ids and the contact Subject drop-down; v1.0.5 = v1.0.4 + the optional Hotel field drawn by advisor-site.js; v1.0.4 = v1.0.3 + readable tab row on the hotel search results; v1.0.3 = v1.0.2 + new search tabs, transport/airport/services pages, template image fallbacks).
    v1.0.2 = v7 + footer app strip and coloured payment cards; v7 = v6 + font fit fixes after the Calibri switch.
    v6 = v5 + full hero photo, French search rows, Calibri font, brand-coloured social icons.
    System: fields and buttons 48px / 12px radius, border #8E80B8 (--input); secondary actions are 44px outlined pills (1.5px #7A45A0);
@@ -1322,65 +1322,113 @@ main button[data-slot='button'].fixed.rounded-full{bottom:calc(max(1rem,env(safe
 main button[data-slot='button'].fixed.rounded-full{bottom:calc(max(1rem,env(safe-area-inset-bottom)) + 68px);inset-inline-start:24px}
 }
 
-/* ===== Hotel picker: the optional "Hotel" field after the destination (advisor-site.js part 2, owner request 2026-11-13) =====
-   Markup from the script: div[data-adv-hotel][data-adv-state=ready|empty|error] > label (the destination label's classes) + div.adv-hotel-box > select,
-   inserted right after the destination cell of the hotel search grid (home band, results-page search card, results phone sheet).
-   The select is drawn exactly like the destination trigger beside it in each place (height, border, radius, shadow, hover, keyboard focus ring,
+/* ===== Hotel picker: the optional "Hotel" field after the destination (advisor-site.js part 2, owner request 2026-11-13; v1.0.6 list and widths) =====
+   Markup from the script: div[data-adv-hotel][data-adv-state=ready|empty|error] > label (the destination label's classes) + div.adv-hotel-box >
+   button.adv-hl-trigger (role=combobox, the visible box) + a hidden select.adv-hotel-select that holds the value,
+   inserted right after the destination cell of the hotel search grid (home band, results-page search card, results phone sheet, /transport in Hotels mode).
+   The box is drawn exactly like the destination trigger beside it in each place (height, border, radius, shadow, hover, keyboard focus ring,
    14px value with the same 15px inset); the chevron is the box's ::after at the inline end, the same lucide chevron at the same size and colour.
-   A long hotel name stays on one line and ends in an ellipsis. Everything here needs [data-adv-hotel]: where the field is absent
-   (other pages, the transport tabs) nothing in this block applies. Layout: one row of six fields from 1280px (the band keeps today's height; from 1536px the extra width goes to the hotel);
-   1024-1279 two rows of three in every language; 640-1023 the theme's two columns; phones the stack, the hotel under the destination. */
+   A long hotel name stays on one line and ends in an ellipsis. Everything here needs [data-adv-hotel] or [data-adv-pop]: where the field is absent
+   (other pages, the transport tabs) nothing in this block applies.
+   v1.0.6: the browser's own drop-down (as tall as the screen, Windows blue) is replaced by the site's list (div[data-adv-pop].adv-hl-pop, see below).
+   Layout: one row of six fields from 1280px; from 1536px the hotel keeps about its 1280 width (256px) and the space it gave back becomes side margin
+   (home band: tabs, heading and form narrow together; search cards: the fields start at the card's inline start, under the tab row); 1024-1279 two rows of three in every language;
+   640-1023 the theme's two columns; phones the stack, the hotel under the destination. */
 [data-block-id='hotel-search'] [data-adv-hotel]:not([hidden]){display:grid;grid-template-columns:minmax(0,1fr);align-content:end;gap:8px;min-width:0}
 [data-block-id='hotel-search'] [data-adv-hotel]>label{display:block;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 [data-block-id='hotel-search'] [data-adv-hotel] .adv-hotel-box{position:relative;min-width:0;--adv-hf-h:40px;--adv-hf-r:6px;--adv-hf-ch:14px}
+[data-block-id='hotel-search'] [data-adv-hotel] select{display:none!important}
 /* the box: the theme's phone trigger (results phone sheet): 40px, theme border, 6px corners, white, accent on hover, offset ring on keyboard focus */
-[data-block-id='hotel-search'] [data-adv-hotel] select{-webkit-appearance:none;appearance:none;display:block;box-sizing:border-box;width:100%;min-width:0;height:var(--adv-hf-h);margin:0;padding-block:0;padding-inline:14px calc(22px + var(--adv-hf-ch));border:1px solid var(--border);border-radius:var(--adv-hf-r);background-color:var(--background);background-image:none;color:var(--foreground);box-shadow:none;outline:none;font-family:inherit;font-size:14px;font-weight:400;line-height:1.5;letter-spacing:normal;text-align:start;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;cursor:pointer}
-@media (prefers-reduced-motion:no-preference){[data-block-id='hotel-search'] [data-adv-hotel] select{transition:color .15s,background-color .15s,border-color .15s,box-shadow .15s}}
-@media (hover:hover){[data-block-id='hotel-search'] [data-adv-hotel] select:enabled:hover{background-color:var(--accent)}}
-[data-block-id='hotel-search'] [data-adv-hotel] select:focus-visible{outline:none;box-shadow:0 0 0 2px var(--background),0 0 0 4px var(--ring)}
-[data-block-id='hotel-search'] [data-adv-hotel] select option{background-color:#fff;color:#1A2238}
+[data-block-id='hotel-search'] [data-adv-hotel] .adv-hl-trigger{-webkit-appearance:none;appearance:none;display:flex;align-items:center;box-sizing:border-box;width:100%;min-width:0;height:var(--adv-hf-h);margin:0;padding-block:0;padding-inline:14px calc(22px + var(--adv-hf-ch));border:1px solid var(--border);border-radius:var(--adv-hf-r);background-color:var(--background);background-image:none;color:var(--foreground);box-shadow:none;outline:none;font-family:inherit;font-size:14px;font-weight:400;line-height:1.5;letter-spacing:normal;text-align:start;text-transform:none;white-space:nowrap;overflow:hidden;cursor:pointer;-webkit-tap-highlight-color:transparent}
+[data-block-id='hotel-search'] [data-adv-hotel] .adv-hl-value{display:block;flex:1 1 auto;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;text-align:start}
+@media (prefers-reduced-motion:no-preference){[data-block-id='hotel-search'] [data-adv-hotel] .adv-hl-trigger{transition:color .15s,background-color .15s,border-color .15s,box-shadow .15s}}
+@media (hover:hover){[data-block-id='hotel-search'] [data-adv-hotel] .adv-hl-trigger:enabled:hover{background-color:var(--accent)}}
+[data-block-id='hotel-search'] [data-adv-hotel] .adv-hl-trigger:focus-visible{outline:none;box-shadow:0 0 0 2px var(--background),0 0 0 4px var(--ring)}
 /* chevron (lucide chevron-down, as in the destination trigger): 14px in the text colour on phones, 16px muted at half strength from 768 */
 [data-block-id='hotel-search'] [data-adv-hotel] .adv-hotel-box::after{content:'';position:absolute;top:50%;inset-inline-end:15px;width:var(--adv-hf-ch);height:var(--adv-hf-ch);margin-top:calc(var(--adv-hf-ch) / -2);background-color:var(--foreground);pointer-events:none;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center/100% 100% no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center/100% 100% no-repeat}
 @media (min-width:768px){
 [data-block-id='hotel-search'] [data-adv-hotel] .adv-hotel-box{--adv-hf-h:44px;--adv-hf-ch:16px}
-[data-block-id='hotel-search'] [data-adv-hotel] select{border-color:var(--input);background-color:transparent;box-shadow:0 1px 2px 0 rgba(0,0,0,.05)}
-[data-block-id='hotel-search'] [data-adv-hotel] select:enabled:hover{background-color:transparent}
-[data-block-id='hotel-search'] [data-adv-hotel] select:focus-visible{border-color:var(--ring);box-shadow:0 0 0 3px color-mix(in oklab,var(--ring) 50%,transparent),0 1px 2px 0 rgba(0,0,0,.05)}
+[data-block-id='hotel-search'] [data-adv-hotel] .adv-hl-trigger{border-color:var(--input);background-color:transparent;box-shadow:0 1px 2px 0 rgba(0,0,0,.05)}
+[data-block-id='hotel-search'] [data-adv-hotel] .adv-hl-trigger:enabled:hover{background-color:transparent}
+[data-block-id='hotel-search'] [data-adv-hotel] .adv-hl-trigger:focus-visible{border-color:var(--ring);box-shadow:0 0 0 3px color-mix(in oklab,var(--ring) 50%,transparent),0 1px 2px 0 rgba(0,0,0,.05)}
 [data-block-id='hotel-search'] [data-adv-hotel] .adv-hotel-box::after{background-color:var(--muted-foreground);opacity:.5}}
 /* home band: the 48px white box with the soft drop shadow, lilac edge on hover, cyan ring on keyboard focus */
 [data-block-id^='hero-section'] [data-block-id='hotel-search'] .dark-form [data-adv-hotel] .adv-hotel-box{--adv-hf-h:48px;--adv-hf-r:12px}
-[data-block-id^='hero-section'] [data-block-id='hotel-search'] .dark-form [data-adv-hotel] select{border-color:#fff;background-color:#fff;color:#1A2238;box-shadow:0 10px 24px -14px rgba(0,0,0,.6)}
-[data-block-id^='hero-section'] [data-block-id='hotel-search'] .dark-form [data-adv-hotel] select:enabled:hover{border-color:#C9B6E6;background-color:#fff;color:#1A2238}
-[data-block-id^='hero-section'] [data-block-id='hotel-search'] .dark-form [data-adv-hotel] select:focus-visible{border-color:#fff;outline:3px solid #8EDCF2;outline-offset:2px;box-shadow:0 10px 24px -14px rgba(0,0,0,.6)}
+[data-block-id^='hero-section'] [data-block-id='hotel-search'] .dark-form [data-adv-hotel] .adv-hl-trigger{border-color:#fff;background-color:#fff;color:#1A2238;box-shadow:0 10px 24px -14px rgba(0,0,0,.6)}
+[data-block-id^='hero-section'] [data-block-id='hotel-search'] .dark-form [data-adv-hotel] .adv-hl-trigger:enabled:hover{border-color:#C9B6E6;background-color:#fff;color:#1A2238}
+[data-block-id^='hero-section'] [data-block-id='hotel-search'] .dark-form [data-adv-hotel] .adv-hl-trigger:focus-visible{border-color:#fff;outline:3px solid #8EDCF2;outline-offset:2px;box-shadow:0 10px 24px -14px rgba(0,0,0,.6)}
 [data-block-id^='hero-section'] [data-block-id='hotel-search'] .dark-form [data-adv-hotel] .adv-hotel-box::after{background-color:#1A2238}
-@media (max-width:767.98px){[data-block-id^='hero-section'] [data-block-id='hotel-search'] .dark-form [data-adv-hotel] select:enabled:hover{background-color:#F4EFFB}}
+@media (max-width:767.98px){[data-block-id^='hero-section'] [data-block-id='hotel-search'] .dark-form [data-adv-hotel] .adv-hl-trigger:enabled:hover{background-color:#F4EFFB}}
 @media (min-width:768px){[data-block-id^='hero-section'] [data-block-id='hotel-search'] .dark-form [data-adv-hotel] .adv-hotel-box::after{background-color:#5B6478}}
 /* results-page search card (and any search card in main): the 48px purple-edged box */
 main [data-block-id='hotel-search'] .bg-card [data-adv-hotel] .adv-hotel-box{--adv-hf-h:48px;--adv-hf-r:12px}
-main [data-block-id='hotel-search'] .bg-card [data-adv-hotel] select{border-color:#8E80B8;background-color:#fff;color:#1A2238}
-main [data-block-id='hotel-search'] .bg-card [data-adv-hotel] select:enabled:hover{border-color:#6F5FA6;background-color:#fff}
-main [data-block-id='hotel-search'] .bg-card [data-adv-hotel] select:focus-visible{border-color:#8E80B8;outline:2px solid #3070B8;outline-offset:2px}
+main [data-block-id='hotel-search'] .bg-card [data-adv-hotel] .adv-hl-trigger{border-color:#8E80B8;background-color:#fff;color:#1A2238}
+main [data-block-id='hotel-search'] .bg-card [data-adv-hotel] .adv-hl-trigger:enabled:hover{border-color:#6F5FA6;background-color:#fff}
+main [data-block-id='hotel-search'] .bg-card [data-adv-hotel] .adv-hl-trigger:focus-visible{border-color:#8E80B8;outline:2px solid #3070B8;outline-offset:2px}
+/* list open: the box keeps its hover edge while the pointer and focus are in the list */
+[data-block-id='hotel-search'] [data-adv-hotel][data-adv-open] .adv-hl-trigger{border-color:var(--ring)}
+[data-block-id^='hero-section'] [data-block-id='hotel-search'] .dark-form [data-adv-hotel][data-adv-open] .adv-hl-trigger{border-color:#C9B6E6}
+main [data-block-id='hotel-search'] .bg-card [data-adv-hotel][data-adv-open] .adv-hl-trigger{border-color:#6F5FA6}
 /* no hotels in this destination / list loading: a quiet, still readable box (the theme's half opacity left the message at about 2:1 on the band) */
-[data-block-id='hotel-search'] [data-adv-hotel] select:disabled{cursor:not-allowed;border-color:var(--border);background-color:#F5F3F9;color:#5A5F78;box-shadow:none}
-[data-block-id^='hero-section'] [data-block-id='hotel-search'] .dark-form [data-adv-hotel] select:disabled{border-color:transparent;background-color:rgba(255,255,255,.8);color:#3F475E;box-shadow:none}
-main [data-block-id='hotel-search'] .bg-card [data-adv-hotel] select:disabled{border-color:#D9D2E6;background-color:#F5F3F9;color:#5A5F78;box-shadow:none}
+[data-block-id='hotel-search'] [data-adv-hotel] .adv-hl-trigger:disabled{cursor:not-allowed;border-color:var(--border);background-color:#F5F3F9;color:#5A5F78;box-shadow:none}
+[data-block-id^='hero-section'] [data-block-id='hotel-search'] .dark-form [data-adv-hotel] .adv-hl-trigger:disabled{border-color:transparent;background-color:rgba(255,255,255,.8);color:#3F475E;box-shadow:none}
+main [data-block-id='hotel-search'] .bg-card [data-adv-hotel] .adv-hl-trigger:disabled{border-color:#D9D2E6;background-color:#F5F3F9;color:#5A5F78;box-shadow:none}
 [data-block-id='hotel-search'] [data-adv-hotel]:not([data-adv-state='ready']) .adv-hotel-box::after{opacity:.35}
 /* Windows high contrast: the chevron is a mask on a background, which forced colours would repaint; draw it in the system text colour (grey when disabled) */
-@media (forced-colors:active){[data-block-id='hotel-search'] [data-adv-hotel] .adv-hotel-box::after{forced-color-adjust:none;background-color:CanvasText!important;opacity:1!important}[data-block-id='hotel-search'] [data-adv-hotel]:has(select:disabled) .adv-hotel-box::after{background-color:GrayText!important}}
-/* iPhone/iPad: Safari zooms the page into any field under 16px when it is tapped; the select keeps 16px there and is drawn at 14px (scale .875) */
-@supports (-webkit-touch-callout:none){
-[data-block-id='hotel-search'] [data-adv-hotel] .adv-hotel-box{height:var(--adv-hf-h)}
-[data-block-id='hotel-search'] [data-adv-hotel] select{position:absolute;top:0;inset-inline-start:0;width:calc(100% / .875);height:calc(var(--adv-hf-h) / .875);border-width:calc(1px / .875);border-radius:calc(var(--adv-hf-r) / .875);padding-inline:16px calc((22px + var(--adv-hf-ch)) / .875);font-size:16px;transform:scale(.875);transform-origin:var(--adv-s) 0}
-/* on the navy band the scaled box's white border met its white fill on a fractional pixel and let the navy show through as a grey hairline (WebKit);
-   there the border is the fill colour anyway, so it is made transparent and the fill runs to the edge */
-[data-block-id^='hero-section'] [data-block-id='hotel-search'] .dark-form [data-adv-hotel] select{border-color:transparent}}
+@media (forced-colors:active){[data-block-id='hotel-search'] [data-adv-hotel] .adv-hotel-box::after{forced-color-adjust:none;background-color:CanvasText!important;opacity:1!important}[data-block-id='hotel-search'] [data-adv-hotel]:has(.adv-hl-trigger:disabled) .adv-hotel-box::after{background-color:GrayText!important}[data-block-id='hotel-search'] [data-adv-hotel] .adv-hl-trigger:disabled{color:GrayText}}
+
+/* --- the hotel list (div[data-adv-pop].adv-hl-pop, put in <body> or in the open sheet and positioned under the field by the script) ---
+   The site's drop-down look: white panel, lilac edge, 12px corners, soft navy shadow, above the sticky header and the floating buttons; a search box;
+   rows of 14px navy text with a lilac hover and keyboard highlight; the chosen hotel tinted, semibold, with a purple check at the inline end;
+   at most 320px of rows (phones: also half the screen) with an always-visible 8px brand scrollbar; the page does not scroll with the list. */
+[data-adv-pop].adv-hl-pop{position:fixed;z-index:1000;top:0;left:0;display:flex;flex-direction:column;gap:6px;box-sizing:border-box;width:max-content;max-width:calc(100vw - 16px);margin:0;padding:6px;border:1px solid #E3D9F2;border-radius:12px;background:#fff;color:#14294A;box-shadow:0 12px 32px rgba(20,41,74,.18),0 2px 6px rgba(20,41,74,.08);font-size:14px;font-weight:400;font-style:normal;line-height:1.35;letter-spacing:normal;text-align:start;text-transform:none;pointer-events:auto;-webkit-text-size-adjust:100%}
+[data-adv-pop].adv-hl-pop *,[data-adv-pop].adv-hl-pop *::before,[data-adv-pop].adv-hl-pop *::after{box-sizing:border-box}
+@media (prefers-reduced-motion:no-preference){[data-adv-pop].adv-hl-pop{animation:adv-hl-in .12s ease-out}}
+@keyframes adv-hl-in{from{opacity:0}to{opacity:1}}
+/* search box: 40px, lilac edge, 10px corners, magnifier at the inline start, 2px purple ring on focus */
+[data-adv-pop].adv-hl-pop .adv-hl-search{position:relative;flex:none}
+[data-adv-pop].adv-hl-pop .adv-hl-ico{position:absolute;top:50%;inset-inline-start:12px;width:16px;height:16px;margin-top:-8px;color:#8A86A0;pointer-events:none}
+[data-adv-pop].adv-hl-pop .adv-hl-q{-webkit-appearance:none;appearance:none;display:block;width:100%;height:40px;margin:0;padding-block:0;padding-inline:36px 12px;border:1px solid #E3D9F2;border-radius:10px;background:#fff;color:#14294A;box-shadow:none;outline:none;font-family:inherit;font-size:14px;font-weight:400;line-height:normal;text-align:start}
+[data-adv-pop].adv-hl-pop .adv-hl-q::placeholder{color:#8A86A0;opacity:1}
+[data-adv-pop].adv-hl-pop .adv-hl-q:focus{border-color:#8E80B8;outline:2px solid #8E80B8;outline-offset:-1px}
+/* iPhone/iPad zoom into any field under 16px when it is tapped */
+@supports (-webkit-touch-callout:none){[data-adv-pop].adv-hl-pop .adv-hl-q{font-size:16px}}
+/* the rows: scroll inside the panel with a visible scrollbar (WebKit/Blink rules; Firefox gets the standard thin bar in the same colours) */
+[data-adv-pop].adv-hl-pop .adv-hl-list{position:relative;flex:0 1 auto;min-height:0;max-height:320px;margin:0;padding:0;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;outline:none}
+[data-adv-pop].adv-hl-pop .adv-hl-list[data-scroll]{padding-inline-end:4px}
+[data-adv-pop].adv-hl-pop .adv-hl-list::-webkit-scrollbar{width:8px;height:8px}
+[data-adv-pop].adv-hl-pop .adv-hl-list::-webkit-scrollbar-track{border-radius:8px;background:#F4EFFB}
+[data-adv-pop].adv-hl-pop .adv-hl-list::-webkit-scrollbar-thumb{border-radius:8px;background:#B9A3DB}
+[data-adv-pop].adv-hl-pop .adv-hl-list::-webkit-scrollbar-thumb:hover{background:#6B3FA0}
+@supports not selector(::-webkit-scrollbar){[data-adv-pop].adv-hl-pop .adv-hl-list{scrollbar-width:thin;scrollbar-color:#B9A3DB #F4EFFB}}
+[data-adv-pop].adv-hl-pop .adv-hl-opt{position:relative;display:flex;align-items:center;min-height:36px;margin:0;padding:9px 12px;padding-inline-end:36px;border-radius:8px;color:#14294A;font-size:14px;font-weight:400;line-height:1.35;text-align:start;overflow-wrap:anywhere;cursor:pointer;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+[data-adv-pop].adv-hl-pop .adv-hl-txt{min-width:0}
+[data-adv-pop].adv-hl-pop .adv-hl-opt[data-active]{background:#F4EFFB;color:#4A2A7A}
+[data-adv-pop].adv-hl-pop .adv-hl-opt[aria-selected='true']{background:#EDE5F8;color:#4A2A7A;font-weight:600}
+[data-adv-pop].adv-hl-pop .adv-hl-opt[aria-selected='true'][data-active]{background:#EDE5F8}
+[data-adv-pop].adv-hl-pop .adv-hl-opt[aria-selected='true']::after{content:'';position:absolute;top:50%;inset-inline-end:12px;width:16px;height:16px;margin-top:-8px;background-color:#6B3FA0;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center/100% 100% no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center/100% 100% no-repeat}
+/* "All hotels" first, a hairline under it */
+[data-adv-pop].adv-hl-pop .adv-hl-all{margin-bottom:7px}
+[data-adv-pop].adv-hl-pop .adv-hl-all::before{content:'';position:absolute;bottom:-4px;inset-inline:12px;height:1px;background:#EEE8F6;pointer-events:none}
+[data-adv-pop].adv-hl-pop .adv-hl-none{display:flex;align-items:center;min-height:36px;padding:9px 12px;color:#5A5F78;font-size:14px;line-height:1.35;cursor:default}
+@media (pointer:coarse){[data-adv-pop].adv-hl-pop .adv-hl-opt,[data-adv-pop].adv-hl-pop .adv-hl-none{min-height:44px}}
+/* Windows high contrast: system colours for the edge, the highlight and the check */
+@media (forced-colors:active){
+[data-adv-pop].adv-hl-pop{border-color:CanvasText}
+[data-adv-pop].adv-hl-pop .adv-hl-list::-webkit-scrollbar-thumb{forced-color-adjust:none;background:CanvasText}
+[data-adv-pop].adv-hl-pop .adv-hl-list::-webkit-scrollbar-track{forced-color-adjust:none;background:Canvas}
+[data-adv-pop].adv-hl-pop .adv-hl-q:focus{outline-color:Highlight}
+[data-adv-pop].adv-hl-pop .adv-hl-opt[data-active]{forced-color-adjust:none;background:Highlight;color:HighlightText}
+[data-adv-pop].adv-hl-pop .adv-hl-opt[aria-selected='true']::after{forced-color-adjust:none;background-color:CanvasText}
+[data-adv-pop].adv-hl-pop .adv-hl-opt[aria-selected='true'][data-active]::after{background-color:HighlightText}
+[data-adv-pop].adv-hl-pop .adv-hl-none{color:GrayText}}
 
 /* --- layout with the field (six cells: destination, hotel, dates, guests, promo code, search) --- */
 @media (min-width:1024px){[data-block-id='hotel-search'] form>div.grid:has(>[data-adv-hotel]:not([hidden]))>*{grid-column:auto}}
 /* 1024-1279, every language and both forms: two rows of three (destination, hotel, dates / guests, promo code, search); the third column a little wider
    for the stay range (French 319 in Noto). Six across left the hotel 118px in Arabic (about one word of a name) and the search button 76px. */
 @media (min-width:1024px) and (max-width:1279.98px){
-[data-block-id='hotel-search'] form>div.grid:has(>[data-adv-hotel]:not([hidden])){column-gap:12px;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.2fr)}
+[data-block-id='hotel-search'] form>div.grid:has(>[data-adv-hotel]:not([hidden])){column-gap:12px;--adv-hcols:minmax(0,1fr) minmax(0,1fr) minmax(0,1.2fr);grid-template-columns:var(--adv-hcols)}
 [data-block-id='hotel-search'] form>div.grid:has(>[data-adv-hotel]:not([hidden]))>button[type='submit']{white-space:nowrap;font-size:16px}}
 /* >=1280: one row everywhere; destination narrower, hotel medium, a compact search button (two balanced lines if a longer label is ever set) */
 @media (min-width:1280px){
@@ -1388,19 +1436,44 @@ main [data-block-id='hotel-search'] .bg-card [data-adv-hotel] select:disabled{bo
 [data-block-id^='hero-section'] [data-block-id='hotel-search'] form>div.grid:has(>[data-adv-hotel]:not([hidden])){grid-template-columns:minmax(0,150fr) minmax(0,236fr) minmax(0,300fr) minmax(0,214fr) minmax(0,146fr) minmax(0,134fr)}
 html[dir='ltr'] [data-block-id^='hero-section'] [data-block-id='hotel-search'] form>div.grid:has(>[data-adv-hotel]:not([hidden])){grid-template-columns:minmax(0,172fr) minmax(0,160fr) minmax(0,330fr) minmax(0,248fr) minmax(0,166fr) minmax(0,104fr)}
 html[dir='ltr']:lang(fr) [data-block-id^='hero-section'] [data-block-id='hotel-search'] form>div.grid:has(>[data-adv-hotel]:not([hidden])){grid-template-columns:minmax(0,130fr) minmax(0,156fr) minmax(0,326fr) minmax(0,278fr) minmax(0,170fr) minmax(0,120fr)}
-main [data-block-id='hotel-search'] .bg-card form>div.grid:has(>[data-adv-hotel]:not([hidden])){grid-template-columns:minmax(0,146fr) minmax(0,222fr) minmax(0,298fr) minmax(0,210fr) minmax(0,140fr) minmax(0,130fr)}
-html[dir='ltr'] main [data-block-id='hotel-search'] .bg-card form>div.grid:has(>[data-adv-hotel]:not([hidden])){grid-template-columns:minmax(0,172fr) minmax(0,140fr) minmax(0,328fr) minmax(0,246fr) minmax(0,164fr) minmax(0,96fr)}
-html[dir='ltr']:lang(fr) main [data-block-id='hotel-search'] .bg-card form>div.grid:has(>[data-adv-hotel]:not([hidden])){column-gap:8px;grid-template-columns:minmax(0,130fr) minmax(0,154fr) minmax(0,310fr) minmax(0,276fr) minmax(0,192fr) minmax(0,104fr)}}
-/* >=1536 (the container grows from 1240 to 1496px: 1536 laptops, 1920 desktops): the other fields keep about their 1280 widths (a little more where
-   the French promo placeholder was cut) and the extra 256px goes to the hotel, so most names show whole (proportional shares gave the dates 400px and the hotel 190) */
+main [data-block-id='hotel-search'] .bg-card form>div.grid:has(>[data-adv-hotel]:not([hidden])){--adv-hcols:minmax(0,146fr) minmax(0,222fr) minmax(0,298fr) minmax(0,210fr) minmax(0,140fr) minmax(0,130fr);grid-template-columns:var(--adv-hcols)}
+html[dir='ltr'] main [data-block-id='hotel-search'] .bg-card form>div.grid:has(>[data-adv-hotel]:not([hidden])){--adv-hcols:minmax(0,172fr) minmax(0,140fr) minmax(0,328fr) minmax(0,246fr) minmax(0,164fr) minmax(0,96fr);grid-template-columns:var(--adv-hcols)}
+html[dir='ltr']:lang(fr) main [data-block-id='hotel-search'] .bg-card form>div.grid:has(>[data-adv-hotel]:not([hidden])){--adv-hgap:8px;column-gap:var(--adv-hgap);--adv-hcols:minmax(0,130fr) minmax(0,154fr) minmax(0,310fr) minmax(0,276fr) minmax(0,192fr) minmax(0,104fr);grid-template-columns:var(--adv-hcols)}}
+/* >=1536 (the container grows from 1240 to 1496px: 1536 laptops, 1920 desktops, and 1920 screens at 125%): the hotel keeps about its 1280 width (256px,
+   room for "All hotels" and about 25 letters of a name), the other fields keep their v1.0.5 widths here (the French promo placeholder whole), and nothing
+   else grows: the width the hotel gave back becomes side margin.
+   Home band: tabs row, heading and form narrow together to what the six fields need and stay centred (on every tab, so the row never jumps when a tab is
+   clicked; the transport forms get the room they have at 1280-1535 or more). */
 @media (min-width:1536px){
-[data-block-id^='hero-section'] [data-block-id='hotel-search'] form>div.grid:has(>[data-adv-hotel]:not([hidden])){grid-template-columns:minmax(0,160fr) minmax(0,432fr) minmax(0,310fr) minmax(0,224fr) minmax(0,156fr) minmax(0,154fr)}
-html[dir='ltr'] [data-block-id^='hero-section'] [data-block-id='hotel-search'] form>div.grid:has(>[data-adv-hotel]:not([hidden])){grid-template-columns:minmax(0,180fr) minmax(0,376fr) minmax(0,340fr) minmax(0,256fr) minmax(0,170fr) minmax(0,114fr)}
-html[dir='ltr']:lang(fr) [data-block-id^='hero-section'] [data-block-id='hotel-search'] form>div.grid:has(>[data-adv-hotel]:not([hidden])){grid-template-columns:minmax(0,140fr) minmax(0,328fr) minmax(0,340fr) minmax(0,286fr) minmax(0,214fr) minmax(0,128fr)}
-main [data-block-id='hotel-search'] .bg-card form>div.grid:has(>[data-adv-hotel]:not([hidden])){grid-template-columns:minmax(0,156fr) minmax(0,418fr) minmax(0,308fr) minmax(0,220fr) minmax(0,150fr) minmax(0,150fr)}
-html[dir='ltr'] main [data-block-id='hotel-search'] .bg-card form>div.grid:has(>[data-adv-hotel]:not([hidden])){grid-template-columns:minmax(0,180fr) minmax(0,350fr) minmax(0,338fr) minmax(0,254fr) minmax(0,172fr) minmax(0,108fr)}
-html[dir='ltr']:lang(fr) main [data-block-id='hotel-search'] .bg-card form>div.grid:has(>[data-adv-hotel]:not([hidden])){column-gap:12px;grid-template-columns:minmax(0,136fr) minmax(0,312fr) minmax(0,330fr) minmax(0,284fr) minmax(0,216fr) minmax(0,124fr)}}
-/* the hotel list could not be loaded (the field hides itself): the five fields keep exactly today's layout */
+[data-block-id^='hero-section'] [data-block-id='hotel-search']{--adv-hb-w:1320px}
+html[dir='ltr'] [data-block-id^='hero-section'] [data-block-id='hotel-search']{--adv-hb-w:1376px}
+html[dir='ltr']:lang(fr) [data-block-id^='hero-section'] [data-block-id='hotel-search']{--adv-hb-w:1424px}
+[data-block-id^='hero-section'] [data-block-id='hotel-search'] .dark-form>.container{max-width:calc(var(--adv-hb-w) + 40px)}
+[data-block-id^='hero-section'] [data-block-id='hotel-search']>div>div:has(>button[data-slot='button']){--adv-tab-half:calc(var(--adv-hb-w) / 2)}
+[data-block-id^='hero-section'] [data-block-id='hotel-search'] form>div.grid:has(>[data-adv-hotel]:not([hidden])){grid-template-columns:minmax(0,160fr) minmax(0,256fr) minmax(0,310fr) minmax(0,224fr) minmax(0,156fr) minmax(0,154fr)}
+html[dir='ltr'] [data-block-id^='hero-section'] [data-block-id='hotel-search'] form>div.grid:has(>[data-adv-hotel]:not([hidden])){grid-template-columns:minmax(0,180fr) minmax(0,256fr) minmax(0,340fr) minmax(0,256fr) minmax(0,170fr) minmax(0,114fr)}
+html[dir='ltr']:lang(fr) [data-block-id^='hero-section'] [data-block-id='hotel-search'] form>div.grid:has(>[data-adv-hotel]:not([hidden])){grid-template-columns:minmax(0,140fr) minmax(0,256fr) minmax(0,340fr) minmax(0,286fr) minmax(0,214fr) minmax(0,128fr)}
+/* search cards (results page, /transport in Hotels mode): the card stays as wide as the breadcrumb, tab row and results around it (the page's
+   column); the six fields keep their widths and start at its inline start, so the destination stays under the Hotels tab as in v1.0.5, and the
+   width the hotel gave back is left at the card's inline end (fix: centred, the fields had moved 98px (Arabic) / 64px (English) in from the tab) */
+main [data-block-id='hotel-search'] .bg-card form>div.grid:has(>[data-adv-hotel]:not([hidden])){max-width:1300px;margin-inline:0 auto;--adv-hcols:minmax(0,156fr) minmax(0,256fr) minmax(0,308fr) minmax(0,220fr) minmax(0,150fr) minmax(0,150fr);grid-template-columns:var(--adv-hcols)}
+html[dir='ltr'] main [data-block-id='hotel-search'] .bg-card form>div.grid:has(>[data-adv-hotel]:not([hidden])){max-width:1368px;--adv-hcols:minmax(0,180fr) minmax(0,256fr) minmax(0,338fr) minmax(0,254fr) minmax(0,172fr) minmax(0,108fr);grid-template-columns:var(--adv-hcols)}
+html[dir='ltr']:lang(fr) main [data-block-id='hotel-search'] .bg-card form>div.grid:has(>[data-adv-hotel]:not([hidden])){max-width:1406px;--adv-hgap:12px;column-gap:var(--adv-hgap);--adv-hcols:minmax(0,136fr) minmax(0,256fr) minmax(0,330fr) minmax(0,284fr) minmax(0,216fr) minmax(0,124fr);grid-template-columns:var(--adv-hcols)}}
+/* French 1280-1535 (one row of six in a 1240px container): in the search cards the stay range is 9px wider than its box in Noto (Macs, phones) and the
+   promo placeholder longer than its box in both fonts; that was so on /hotels/search in v1.0.5 and /transport now has the same card. The range takes a
+   second balanced line inside the 48px box when it does not fit (one line as before in Calibri), and a placeholder that does not fit ends in an ellipsis. */
+@media (min-width:1280px) and (max-width:1535.98px){
+html:lang(fr) main [data-block-id='hotel-search'] .bg-card form>div.grid:has(>[data-adv-hotel]:not([hidden]))>div [role='button']>div.h-11>span.truncate{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;padding-block:2px;white-space:normal;text-overflow:clip;line-height:1.3;text-wrap:balance}
+html:lang(fr) [data-block-id='hotel-search'] form>div.grid:has(>[data-adv-hotel]:not([hidden])) input[data-slot='form-control']{text-overflow:ellipsis}}
+/* /transport in Hotels mode: the transport card's own grid (sized for the transport forms, and more specific) was also laid on the hotel form there:
+   the stay dates were cut (Arabic and English 1280-1920) and French stacked into five full-width rows from 1280. The hotel form gets the search card's
+   layout of /hotels/search at every width (the columns come from the less specific rules above through --adv-hcols / --adv-hgap, which change nothing
+   else; 768-1023 the theme's two columns); the transport forms are untouched. */
+@media (min-width:768px) and (max-width:1023.98px){[data-block-id='hotel-search'] form>div.grid:has(>[data-adv-hotel]:not([hidden])){--adv-hcols:repeat(2,minmax(0,1fr))}}
+@media (min-width:768px){
+main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>section>[data-block-id='hotel-search'] form>div.grid:has(>[data-adv-hotel]:not([hidden])){grid-template-columns:var(--adv-hcols);column-gap:var(--adv-hgap,12px);row-gap:14px}
+main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>section>[data-block-id='hotel-search'] form>div.grid:has(>[data-adv-hotel]:not([hidden]))>*{grid-column:auto}}
+/* the hotel list could not be loaded (the field hides itself): the five fields keep the layout they had before the field (from 1536px inside the narrowed home band) */
 @media (min-width:640px) and (max-width:1023.98px){[data-block-id='hotel-search'] form>div.grid:has(>[data-adv-hotel][hidden])>div:last-of-type+button[type='submit']{grid-column:1/-1}}
 @media (min-width:1024px) and (max-width:1279.98px){
 [data-block-id^='hero-section'] [data-block-id='hotel-search'] form>div.grid:has(>[data-adv-hotel][hidden]){column-gap:10px;grid-template-columns:minmax(0,172fr) minmax(0,305fr) minmax(0,217fr) minmax(0,110fr) minmax(0,123fr)}
@@ -1411,3 +1484,327 @@ html:lang(fr) [data-block-id^='hero-section'] [data-block-id='hotel-search'] for
 html:lang(fr) [data-block-id^='hero-section'] [data-block-id='hotel-search'] form>div.grid:has(>[data-adv-hotel][hidden])>:nth-child(n+5){grid-column:span 3}
 html:lang(fr) [data-block-id^='hero-section'] [data-block-id='hotel-search'] form>div.grid:has(>[data-adv-hotel][hidden])>button[type='submit']{white-space:nowrap;font-size:16px}}
 @media (min-width:1280px){html[dir='ltr'] [data-block-id^='hero-section'] [data-block-id='hotel-search'] form>div.grid:has(>[data-adv-hotel][hidden]){grid-template-columns:minmax(0,2fr) minmax(0,3.4fr) minmax(0,2.8fr) minmax(0,1.6fr) minmax(0,2.2fr)}html[dir='ltr'] [data-block-id^='hero-section'] [data-block-id='hotel-search'] form>div.grid:has(>[data-adv-hotel][hidden])>*{grid-column:auto}}
+
+/* ===== Pop-ups in the site's colours (v1.0.6, owner request 2026-11-13: "all these drop-downs: set their colours to the site's design") =====
+   One look for every list and pop-up a visitor opens. They are portalled to <body>, outside div.theme-vars-root, so most kept Jood's grey and
+   black defaults (6px corners, no shadow, black "+" buttons, flat blue apply buttons, blue chosen days). Shared look: white panel, 1px lilac edge
+   #E3D9F2, 12px corners, soft navy shadow; rows 14px navy, lilac on hover, the chosen row tinted with its purple tick at the inline end; lists stop
+   at 320px (about 8 rows) with a visible lilac scrollbar; calendars with purple chosen days on a lilac stay band; a «تم / Done / Valider» bar under
+   each date picker (advisor-site.js part 3). Every rule needs a pop-up data-slot (select-content, popover-content, dropdown-menu-content, the
+   sheet-content / dialog-content of phone pickers) or the script's own [data-adv-cal-foot], so nothing on the page changes while pop-ups are closed.
+   The hotel field's own list (advisor-site.js part 2: [data-adv-pop], .adv-hl-*) has its own rules and is not touched here. */
+
+/* --- panels: white, lilac edge, 12px corners, soft navy shadow (also replaces the v1.0.3 gradient top line of the single-date pop-up and the
+       phone menu, so every pop-up reads as one family) --- */
+:is([data-slot='select-content'],[data-slot='popover-content'],[data-slot='dropdown-menu-content']):not([data-adv-pop]),
+:root:has(input[name='passengers'],main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='select-content'],
+[data-slot='popover-content']:has(>[data-slot='calendar']),
+[data-slot='dropdown-menu-content']:has(nav a[href]){border:1px solid #E3D9F2;border-radius:12px;background:#fff;color:#14294A;box-shadow:0 12px 32px rgba(20,41,74,.18),0 2px 6px rgba(20,41,74,.08)}
+/* 6px from the trigger (the theme leaves 4px): 2px more on the trigger side; the pop-up wrapper is fixed-positioned, so the margin counts in its size */
+:is([data-slot='select-content'],[data-slot='popover-content'],[data-slot='dropdown-menu-content']):not([data-adv-pop])[data-side='bottom']{margin-top:2px}
+:is([data-slot='select-content'],[data-slot='popover-content'],[data-slot='dropdown-menu-content']):not([data-adv-pop])[data-side='top']{margin-bottom:2px}
+:is([data-slot='select-content'],[data-slot='popover-content'],[data-slot='dropdown-menu-content']):not([data-adv-pop])[data-side='left']{margin-right:2px}
+:is([data-slot='select-content'],[data-slot='popover-content'],[data-slot='dropdown-menu-content']):not([data-adv-pop])[data-side='right']{margin-left:2px}
+
+/* --- select lists (destination, transport places and stations, sort, city filter, language): 6px inset; at least the trigger's width and up to
+       360px for long names; 320px tall at most and never more than the room left on screen minus 12px; the tick at the inline end --- */
+[data-slot='select-content']{min-width:max(8rem,var(--reka-select-trigger-width,0px));max-width:max(var(--reka-select-trigger-width,0px),min(360px,calc(100vw - 24px)));max-height:min(320px,calc(var(--reka-select-content-available-height,100vh) - 12px))}
+[data-slot='select-content'] [data-reka-select-viewport]{padding:6px}
+[data-slot='select-content'] [data-reka-select-viewport]::-webkit-scrollbar-track{margin:6px 0}
+[data-slot='select-content'] :is([data-slot='select-scroll-up-button'],[data-slot='select-scroll-down-button']){display:none}
+[data-slot='select-content'] [data-slot='select-item'],
+:root:has(input[name='passengers'],main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='select-content'] [data-slot='select-item']{min-height:36px;padding-block:9px;padding-inline:12px 36px;border-radius:8px;font-family:inherit;font-size:14px;font-weight:400;line-height:1.35;color:#14294A;white-space:normal;cursor:pointer}
+[data-slot='select-content'] [data-slot='select-item'][data-highlighted],
+:root:has(input[name='passengers'],main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='select-content'] [data-slot='select-item'][data-highlighted]{background:#F4EFFB;color:#4A2A7A;outline:none}
+[data-slot='select-content'] [data-slot='select-item'][data-state='checked'],
+:root:has(input[name='passengers'],main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='select-content'] [data-slot='select-item'][data-state='checked']{background:#EDE5F8;color:#4A2A7A;font-weight:600}
+[data-slot='select-content'] [data-slot='select-item'][data-disabled]{color:#9A95AE;cursor:default}
+[data-slot='select-content'] [data-slot='select-item']>span.absolute{inset-inline-end:12px;inset-inline-start:auto;width:16px;height:16px}
+[data-slot='select-content'] [data-slot='select-item'] svg{width:16px;height:16px;color:#6B3FA0}
+[data-slot='select-content'] [data-slot='select-label']{padding:8px 12px 4px;font-size:12px;font-weight:600;color:#6B3FA0}
+[data-slot='select-content'] [data-slot='select-separator']{margin:4px 6px;background:#EEE8F6}
+
+/* --- small menus (results sort on phones): same rows; the current choice carries the theme's tick. The phone navigation menu is one big item
+       (welcome, sign-in, language, links) with its own v1.0.2 look and is left as it is. --- */
+[data-slot='dropdown-menu-content']:not(:has(nav)){min-width:max(8rem,var(--reka-dropdown-menu-trigger-width,0px));max-height:min(320px,calc(var(--reka-dropdown-menu-content-available-height,100vh) - 12px));padding:6px}
+[data-slot='dropdown-menu-content']:not(:has(nav)) [data-slot='dropdown-menu-item']{min-height:36px;padding:9px 12px;gap:10px;border-radius:8px;font-size:14px;color:#14294A;cursor:pointer}
+[data-slot='dropdown-menu-content']:not(:has(nav)) [data-slot='dropdown-menu-item']>span{font-size:14px;font-weight:400}
+[data-slot='dropdown-menu-content']:not(:has(nav)) [data-slot='dropdown-menu-item']:is([data-highlighted],:focus){background:#F4EFFB;color:#4A2A7A;outline:none}
+[data-slot='dropdown-menu-content']:not(:has(nav)) [data-slot='dropdown-menu-item']:has(>svg.lucide-check){background:#EDE5F8;color:#4A2A7A}
+[data-slot='dropdown-menu-content']:not(:has(nav)) [data-slot='dropdown-menu-item']:has(>svg.lucide-check)>span{font-weight:600}
+[data-slot='dropdown-menu-content']:not(:has(nav)) [data-slot='dropdown-menu-item']>svg{color:#6B3FA0}
+[data-slot='dropdown-menu-content']:not(:has(nav)) [data-slot='dropdown-menu-item'][data-disabled]{color:#9A95AE}
+[data-slot='dropdown-menu-content']:not(:has(nav)) [data-slot='dropdown-menu-label']{font-size:12px;font-weight:600;color:#6B3FA0}
+@media (pointer:coarse){[data-slot='select-content'] [data-slot='select-item'],:root:has(input[name='passengers'],main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='select-content'] [data-slot='select-item'],[data-slot='dropdown-menu-content']:not(:has(nav)) [data-slot='dropdown-menu-item']{min-height:44px}}
+
+/* --- searchable lists (hotel name on /hotels and the results page, country code on the contact page; desktop pop-up and phone screen):
+       a 40px search box with the magnifier at the inline start, then 8px-cornered rows; the chosen country tinted with its tick --- */
+:is([data-slot='popover-content'],[data-slot='sheet-content']) input[data-slot='input']:has(+span svg.lucide-search){height:40px;padding-inline:38px 12px;border:1px solid #E3D9F2;border-radius:10px;background:#fff;color:#14294A;font-size:14px;box-shadow:none}
+@media (max-width:767.98px){[data-slot='sheet-content'] input[data-slot='input']:has(+span svg.lucide-search){font-size:16px}}
+:is([data-slot='popover-content'],[data-slot='sheet-content']) input[data-slot='input']:has(+span svg.lucide-search)::placeholder{color:#8A86A0;opacity:1}
+:is([data-slot='popover-content'],[data-slot='sheet-content']) input[data-slot='input']:has(+span svg.lucide-search):focus-visible{border-color:#8E80B8;outline:2px solid #8E80B8;outline-offset:0;box-shadow:none}
+:is([data-slot='popover-content'],[data-slot='sheet-content']) input[data-slot='input']+span:has(>svg.lucide-search){inset-inline-start:0;inset-inline-end:auto;width:38px;padding:0;pointer-events:none}
+:is([data-slot='popover-content'],[data-slot='sheet-content']) input[data-slot='input']+span>svg.lucide-search{color:#6B3FA0}
+[data-slot='popover-content']:has(input[data-slot='input']+span svg.lucide-search){padding:6px;max-width:calc(100vw - 24px)}
+[data-slot='popover-content']:has(input[data-slot='input']+span svg.lucide-search) div.border-b:has(input[data-slot='input']){margin-bottom:4px;border-bottom:0}
+[data-slot='popover-content']:has(input[data-slot='input']+span svg.lucide-search) div.border-b:not(:has(input)){padding:6px 8px;border-bottom:0}
+:is([data-slot='popover-content'],[data-slot='sheet-content']):has(input[data-slot='input']+span svg.lucide-search) div:has(>span.text-sm.font-bold+span>svg.lucide-sparkles)>span.text-sm.font-bold{font-size:12px;font-weight:600;color:#6B3FA0}
+:is([data-slot='popover-content'],[data-slot='sheet-content']):has(input[data-slot='input']+span svg.lucide-search) div:has(>span.text-sm.font-bold+span>svg.lucide-sparkles)>span:last-child{color:#5A5F78}
+/* country code: wide enough for "+966  Saudi Arabia" (the 114px trigger width cut the names), up to 320px of list */
+[data-slot='popover-content']:has(input[data-slot='input']+span svg.lucide-search):has(img[alt$=' flag']){min-width:min(280px,calc(100vw - 24px))}
+[data-slot='popover-content']:has(input[data-slot='input']+span svg.lucide-search):has(img[alt$=' flag']) div.overflow-auto{max-height:min(320px,calc(var(--reka-popover-content-available-height,100vh) - 70px))}
+/* rows */
+[data-slot='popover-content']:has(input[data-slot='input']+span svg.lucide-search) div.overflow-auto button{border-radius:8px;color:#14294A}
+[data-slot='popover-content']:has(input[data-slot='input']+span svg.lucide-search) div.overflow-auto button:has(img[alt$=' flag']){min-height:36px;padding:9px 12px;font-size:14px}
+/* hotel-name rows (thumbnail, 14px name, 12px address and stars, each sized by its own class): the shared row box too (fix) */
+[data-slot='popover-content']:has(input[data-slot='input']+span svg.lucide-search) div.overflow-auto button:not(:has(img[alt$=' flag'])){min-height:36px;padding:9px 12px;font-size:14px}
+[data-slot='popover-content']:has(input[data-slot='input']+span svg.lucide-search) div.overflow-auto button:is(:hover,:focus-visible){background:#F4EFFB;color:#4A2A7A;outline:none}
+[data-slot='popover-content']:has(input[data-slot='input']+span svg.lucide-search) div.overflow-auto button:focus-visible{box-shadow:inset 0 0 0 2px #8E80B8}
+[data-slot='popover-content']:has(input[data-slot='input']+span svg.lucide-search) div.overflow-auto button:has(svg.lucide-check){background:#EDE5F8;color:#4A2A7A;font-weight:600}
+:is([data-slot='popover-content'],[data-slot='sheet-content']):has(input[data-slot='input']+span svg.lucide-search) :is(button,[data-slot='sheet-close']) svg.lucide-check{color:#6B3FA0}
+:is([data-slot='popover-content'],[data-slot='sheet-content']):has(input[data-slot='input']+span svg.lucide-search) button span.text-sm.font-bold.truncate{color:#14294A}
+:is([data-slot='popover-content'],[data-slot='sheet-content']):has(input[data-slot='input']+span svg.lucide-search) button:hover span.text-sm.font-bold.truncate{color:#4A2A7A}
+:is([data-slot='popover-content'],[data-slot='sheet-content']):has(input[data-slot='input']+span svg.lucide-search) button>span.rounded-full.border-primary{border-color:#C9B6E6;background:#F8F5FD;color:#4A2A7A;font-weight:600}
+/* phone screens of the same lists: lilac-edged tiles */
+[data-slot='sheet-content']:has(input[data-slot='input']+span svg.lucide-search) :is(button.rounded-lg.border,[data-slot='sheet-close'].rounded-lg.border){border-color:#E3D9F2;border-radius:12px;background:#fff;color:#14294A}
+[data-slot='sheet-content']:has(input[data-slot='input']+span svg.lucide-search) :is(button.rounded-lg.border,[data-slot='sheet-close'].rounded-lg.border):hover{border-color:#B9A3DB;background:#F4EFFB}
+[data-slot='sheet-content']:has(input[data-slot='input']+span svg.lucide-search) [data-slot='sheet-close'].rounded-lg.border:has(svg.lucide-check){border-color:#6B3FA0;background:#EDE5F8;color:#4A2A7A}
+[data-slot='sheet-content']:has(input[data-slot='input']+span svg.lucide-search) [data-slot='sheet-close'].rounded-lg.border:has(svg.lucide-check) .font-mono{font-weight:700}
+[data-slot='sheet-content']:has(input[data-slot='input']+span svg.lucide-search) div.border-b:has(>div>input[data-slot='input']){border-color:#EEE8F6}
+
+/* --- phone place pickers (destination, transport places): the v1.0.3 tiles of /transport and the home band, now on every page, chosen tile in
+       the shared "chosen" tint --- */
+[data-slot='sheet-content'] [role='radiogroup']>div.border{min-height:52px;padding:12px 14px;column-gap:12px;border-color:#E3D9F2;border-radius:12px;background:#fff}
+[data-slot='sheet-content'] [role='radiogroup']>div.border:hover,
+:root:has(input[name='passengers'],main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='sheet-content'] [role='radiogroup']>div.border:hover{border-color:#B9A3DB;background:#F4EFFB}
+[data-slot='sheet-content'] [role='radiogroup']>div.border:has(>button[data-state='checked']),
+:root:has(input[name='passengers'],main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='sheet-content'] [role='radiogroup']>div.border:has(>button[data-state='checked']){border-color:#6B3FA0;background:#EDE5F8;box-shadow:none}
+[data-slot='sheet-content'] [role='radiogroup']>div.border>button[role='radio']{width:20px;height:20px;border:1.5px solid #8E80B8;background:#fff;box-shadow:none;color:#6B3FA0}
+[data-slot='sheet-content'] [role='radiogroup']>div.border>button[data-state='checked']{border-color:#6B3FA0}
+[data-slot='sheet-content'] [role='radiogroup']>div.border>button svg{fill:#6B3FA0;color:#6B3FA0}
+[data-slot='sheet-content'] [role='radiogroup']>div.border>label{font-size:15px;font-weight:600;line-height:1.4;color:#14294A}
+[data-slot='sheet-content'] [role='radiogroup']>div.border:has(>button[data-state='checked'])>label{font-weight:700;color:#4A2A7A}
+/* phone screens: navy titles, a purple close cross, brand primary buttons (the hotel filters' "close" and the guests' "add room" were flat theme blue) */
+[data-slot='sheet-content'] [data-slot='sheet-title']{font-size:20px;font-weight:800;color:#14294A}
+[data-slot='sheet-content']>button.absolute:not([data-slot]){color:#4A2A7A;opacity:1}
+[data-slot='sheet-content']>button.absolute:not([data-slot])>svg{width:24px;height:24px}
+[data-slot='sheet-content']>button.absolute:not([data-slot]):focus-visible{outline:2px solid #8E80B8;outline-offset:2px;box-shadow:none}
+:is([data-slot='sheet-content'],[data-slot='dialog-content'],[data-slot='popover-content']) button[data-slot='button'].bg-primary:not([data-adv-wait]):not(:where([data-block-id='hotel-search']>div>div>button)){border-color:transparent;border-radius:10px;background:var(--adv-btn) border-box;color:#fff;font-weight:600;box-shadow:0 8px 18px -12px rgba(91,63,160,.8)}
+:is([data-slot='sheet-content'],[data-slot='dialog-content'],[data-slot='popover-content']) button[data-slot='button'].bg-primary:not([data-adv-wait]):not(:where([data-block-id='hotel-search']>div>div>button)):hover{background:var(--adv-btn-bright) border-box}
+:is([data-slot='sheet-content'],[data-slot='dialog-content'],[data-slot='popover-content']) button[data-slot='button'].bg-primary:not(:where([data-block-id='hotel-search']>div>div>button)):focus-visible{outline:2px solid #8E80B8;outline-offset:2px}
+
+/* --- guests and rooms (desktop pop-up, phone screen, city card): the desktop pop-up was the trigger's 214px, where the - and + buttons covered the
+       number; 320px shows it. Purple "+", lilac "-", a quiet outlined delete, lilac room card --- */
+[data-slot='popover-content']:has([data-slot='increment']){min-width:min(320px,calc(100vw - 24px));max-height:min(560px,calc(var(--reka-popover-content-available-height,100vh) - 12px))}
+:is([data-slot='popover-content'],[data-slot='sheet-content']) div.rounded-xl.border:has([data-slot='increment']){border-color:#E3D9F2;border-radius:12px}
+:is([data-slot='popover-content'],[data-slot='sheet-content']) div.rounded-xl.border:has([data-slot='increment'])>div.border-b{border-color:#EEE8F6;background:#F8F5FD;border-start-start-radius:11px;border-start-end-radius:11px}
+:is([data-slot='popover-content'],[data-slot='sheet-content']) div.rounded-xl.border:has([data-slot='increment'])>div.border-b>p{font-size:16px;font-weight:700;color:#14294A}
+:is([data-slot='popover-content'],[data-slot='sheet-content']) div.rounded-xl.border:has([data-slot='increment'])>div.border-b>button[data-slot='button']{width:32px;height:32px;padding:0;border:1px solid #F1C9D3;border-radius:8px;background:#fff;color:#B0306F;box-shadow:none}
+:is([data-slot='popover-content'],[data-slot='sheet-content']) div.rounded-xl.border:has([data-slot='increment'])>div.border-b>button[data-slot='button']:hover{background:#FDF0F4}
+:is([data-slot='popover-content'],[data-slot='sheet-content']) div.rounded-xl.border:has([data-slot='increment'])>div.border-b>button[data-slot='button']:focus-visible{outline:2px solid #8E80B8;outline-offset:2px}
+:is([data-slot='popover-content'],[data-slot='sheet-content']) [data-slot='form-item']:has([data-slot='increment']) label{font-size:13px;font-weight:600;line-height:1.3;color:#14294A}
+:is([data-slot='popover-content'],[data-slot='sheet-content']) :is([data-slot='increment'],[data-slot='decrement']){border-radius:8px}
+:is([data-slot='popover-content'],[data-slot='sheet-content']) [data-slot='increment']{background:#6B3FA0;color:#fff}
+:is([data-slot='popover-content'],[data-slot='sheet-content']) [data-slot='increment']:not(:disabled):hover{background:#4A2A7A}
+:is([data-slot='popover-content'],[data-slot='sheet-content']) [data-slot='decrement']{background:#F4EFFB;color:#4A2A7A}
+:is([data-slot='popover-content'],[data-slot='sheet-content']) [data-slot='decrement']:not(:disabled):hover{background:#EDE5F8}
+:is([data-slot='popover-content'],[data-slot='sheet-content']) :is([data-slot='increment'],[data-slot='decrement']):focus-visible{outline:2px solid #8E80B8;outline-offset:1px}
+:is([data-slot='popover-content'],[data-slot='sheet-content']) input[role='spinbutton'][data-slot='form-control']{border-color:#E3D9F2;border-radius:8px;color:#14294A;font-weight:600;box-shadow:none}
+
+/* --- visible scrollbar on every list that overflows: 8px lilac thumb on a mist track (Chrome, Edge, Safari: ::-webkit-scrollbar; Firefox:
+       scrollbar-color). Chrome ignores ::-webkit-scrollbar once scrollbar-width or -color is set, so those stay "auto" outside Firefox (reka hides
+       the select's scrollbar with scrollbar-width:none; the phone screens use the theme's .no-scrollbar). The page never scrolls with a list.
+       Phone screens: only the list screens (places, hotel names, country codes), not the filter or search forms. --- */
+[data-slot='select-content'] [data-reka-select-viewport],
+[data-slot='popover-content'] :is(.overflow-auto,.overflow-y-auto),[data-slot='sheet-content']:has([role='radiogroup'],input[data-slot='input']+span svg.lucide-search) :is(.overflow-auto,.overflow-y-auto),
+[data-slot='dropdown-menu-content']{scrollbar-width:auto;scrollbar-color:auto;overscroll-behavior:contain}
+:is([data-slot='select-content'] [data-reka-select-viewport],[data-slot='popover-content'] :is(.overflow-auto,.overflow-y-auto),[data-slot='sheet-content']:has([role='radiogroup'],input[data-slot='input']+span svg.lucide-search) :is(.overflow-auto,.overflow-y-auto),[data-slot='dropdown-menu-content'])::-webkit-scrollbar{display:block;width:8px;height:8px}
+:is([data-slot='select-content'] [data-reka-select-viewport],[data-slot='popover-content'] :is(.overflow-auto,.overflow-y-auto),[data-slot='sheet-content']:has([role='radiogroup'],input[data-slot='input']+span svg.lucide-search) :is(.overflow-auto,.overflow-y-auto),[data-slot='dropdown-menu-content'])::-webkit-scrollbar-track{border-radius:8px;background:#F4EFFB}
+:is([data-slot='select-content'] [data-reka-select-viewport],[data-slot='popover-content'] :is(.overflow-auto,.overflow-y-auto),[data-slot='sheet-content']:has([role='radiogroup'],input[data-slot='input']+span svg.lucide-search) :is(.overflow-auto,.overflow-y-auto),[data-slot='dropdown-menu-content'])::-webkit-scrollbar-thumb{border-radius:8px;background:#B9A3DB}
+:is([data-slot='select-content'] [data-reka-select-viewport],[data-slot='popover-content'] :is(.overflow-auto,.overflow-y-auto),[data-slot='sheet-content']:has([role='radiogroup'],input[data-slot='input']+span svg.lucide-search) :is(.overflow-auto,.overflow-y-auto),[data-slot='dropdown-menu-content'])::-webkit-scrollbar-thumb:hover{background:#6B3FA0}
+@supports not selector(::-webkit-scrollbar){[data-slot='select-content'] [data-reka-select-viewport],[data-slot='popover-content'] :is(.overflow-auto,.overflow-y-auto),[data-slot='sheet-content']:has([role='radiogroup'],input[data-slot='input']+span svg.lucide-search) :is(.overflow-auto,.overflow-y-auto),[data-slot='dropdown-menu-content']{scrollbar-width:thin;scrollbar-color:#B9A3DB #F4EFFB}}
+
+/* --- calendars: the stay range (hotel search everywhere) and the single date (transport, airport, services, packages); desktop pop-up and phone
+       screen. Month title navy 600, lilac-edged month arrows, purple weekday initials, today ringed, past days greyed, check-in and check-out (or
+       the single date) filled purple, the nights between on a lilac band --- */
+:is([data-slot='range-calendar'],[data-slot='calendar']){color:#14294A}
+:is([data-slot='range-calendar-heading'],[data-slot='calendar'] [data-slot='calendar-heading']){font-size:15px;font-weight:600;color:#14294A}
+:is([data-slot='range-calendar-prev-button'],[data-slot='range-calendar-next-button'],[data-slot='calendar'] [data-slot='calendar-prev-button'],[data-slot='calendar'] [data-slot='calendar-next-button']){border:1px solid #E3D9F2;border-radius:8px;background:#fff;color:#4A2A7A;opacity:1;box-shadow:none}
+:is([data-slot='range-calendar-prev-button'],[data-slot='range-calendar-next-button'],[data-slot='calendar'] [data-slot='calendar-prev-button'],[data-slot='calendar'] [data-slot='calendar-next-button']):not(:disabled):hover{border-color:#E3D9F2;background:#F4EFFB;color:#4A2A7A}
+:is([data-slot='range-calendar-prev-button'],[data-slot='range-calendar-next-button'],[data-slot='calendar'] [data-slot='calendar-prev-button'],[data-slot='calendar'] [data-slot='calendar-next-button']):disabled{opacity:.4}
+:is([data-slot='range-calendar-prev-button'],[data-slot='range-calendar-next-button'],[data-slot='calendar'] [data-slot='calendar-prev-button'],[data-slot='calendar'] [data-slot='calendar-next-button']):focus-visible{outline:2px solid #8E80B8;outline-offset:2px;box-shadow:none}
+:is([data-slot='range-calendar-head-cell'],[data-slot='calendar'] [data-slot='calendar-head-cell']){font-size:12px;font-weight:600;color:#6B3FA0}
+:is([data-slot='range-calendar-trigger'],[data-slot='calendar'] [data-slot='calendar-cell-trigger']){border:0;border-radius:8px;font-size:14px;font-weight:400;color:#14294A;font-variant-numeric:tabular-nums;box-shadow:none}
+:is([data-slot='range-calendar-trigger'],[data-slot='calendar'] [data-slot='calendar-cell-trigger']):not([data-selected]):not([data-disabled]):not([data-unavailable]):hover{background:#F4EFFB;color:#4A2A7A}
+:is([data-slot='range-calendar-trigger'],[data-slot='calendar'] [data-slot='calendar-cell-trigger'])[data-today]:not([data-selected]):not([data-disabled]){background:#fff;box-shadow:inset 0 0 0 1.5px #8E80B8;color:#4A2A7A;font-weight:600}
+:is([data-slot='range-calendar-trigger'],[data-slot='calendar'] [data-slot='calendar-cell-trigger']):is([data-disabled],[data-unavailable]){color:#B8B3C7;opacity:1}
+:is([data-slot='range-calendar-trigger'],[data-slot='calendar'] [data-slot='calendar-cell-trigger']):focus-visible{outline:2px solid #8E80B8;outline-offset:1px;box-shadow:none}
+:is([data-slot='range-calendar-trigger']:is([data-selection-start],[data-selection-end]),[data-slot='calendar'] [data-slot='calendar-cell-trigger'][data-selected]),
+:is([data-slot='range-calendar-trigger']:is([data-selection-start],[data-selection-end]),[data-slot='calendar'] [data-slot='calendar-cell-trigger'][data-selected]):is(:hover,:focus){border-color:transparent;background:#6B3FA0;color:#fff;font-weight:600;box-shadow:none}
+[data-slot='range-calendar-trigger'][data-selected]:not([data-selection-start]):not([data-selection-end]){background:transparent;color:#4A2A7A}
+[data-slot='range-calendar-trigger'][data-selected]:not([data-selection-start]):not([data-selection-end]):hover{background:#EDE5F8}
+/* the band: logical corners (the theme's rounded-l / rounded-r put the band's round end on the wrong side in Arabic) */
+[data-slot='range-calendar-cell']{border-radius:0}
+[data-slot='range-calendar-cell']:has([data-selected]:not([data-outside-view])){background:#F4EFFB}
+[data-slot='range-calendar-cell']:has([data-selected][data-outside-view]){background:transparent}
+[data-slot='range-calendar-cell']:is(:first-child:has([data-selected]),:has([data-selection-start])){border-start-start-radius:8px;border-end-start-radius:8px}
+[data-slot='range-calendar-cell']:is(:last-child:has([data-selected]),:has([data-selection-end])){border-start-end-radius:8px;border-end-end-radius:8px}
+/* only the check-in day chosen: no band yet; the days up to the one under the pointer are previewed on it */
+[data-slot='range-calendar']:not(:has([data-selection-end])):not(:has([data-selected]:not([data-selection-start]))) [data-slot='range-calendar-cell']:has([data-selection-start]){background:transparent}
+[data-slot='range-calendar-cell']:has([data-highlighted]:not([data-selected]):not([data-outside-view])){background:#F4EFFB}
+[data-slot='range-calendar-trigger'][data-highlighted]:not([data-selected]){color:#4A2A7A}
+[data-slot='popover-content']:has(>[data-slot='calendar']){overflow:hidden}
+
+/* --- the Done bar under a date picker (advisor-site.js part 3): the stay and its nights, then «تم / Done / Valider». On phones the theme's own
+       full-width «تطبيق» stays the button (brand gradient like the other phone-screen buttons) and the stay line sits above it --- */
+[data-adv-cal-foot]{display:flex;align-items:center;justify-content:flex-end;gap:12px;margin:0;padding:10px 12px 12px;border-top:1px solid #EEE8F6;font-family:inherit}
+[data-adv-cal-foot='theme']{padding:0 0 10px;border-top:0}
+.adv-cal-sum{flex:1 1 auto;min-width:0;margin:0;font-size:14px;font-weight:600;line-height:1.4;color:#14294A;text-align:start}
+.adv-cal-sum .adv-cal-dates{unicode-bidi:isolate}
+.adv-cal-sum .adv-cal-sep{color:#8A86A0}
+.adv-cal-sum .adv-cal-n{color:#6B3FA0;white-space:nowrap}
+[data-adv-cal-foot][data-wait] .adv-cal-sum{font-weight:500;color:#5A5F78}
+.adv-cal-done{flex:none;min-width:96px;height:40px;margin:0;padding:0 20px;border:0;border-radius:10px;background:var(--adv-btn);color:#fff;font-family:inherit;font-size:14px;font-weight:600;line-height:1;cursor:pointer;box-shadow:0 8px 18px -12px rgba(91,63,160,.8)}
+.adv-cal-done:hover{background:var(--adv-btn-bright)}
+.adv-cal-done:focus-visible{outline:2px solid #8E80B8;outline-offset:2px}
+.adv-cal-done:disabled{background:#EDE5F8;color:#8A86A0;box-shadow:none;cursor:not-allowed}
+/* (the same 48px button as the other phone screens' «تطبيق / apply» in v1.0.5: 14px, 700, the label as the CMS writes it) */
+[data-slot='dialog-content']:has([data-slot='range-calendar']) button[data-slot='dialog-close']{height:48px;border:0;border-radius:12px;background:var(--adv-btn) border-box;color:#fff;font-size:14px;font-weight:700;box-shadow:0 10px 22px -12px rgba(91,63,160,.8)}
+:is([data-slot='dialog-content']:has([data-slot='range-calendar']),[data-slot='dialog-content']:has([data-slot='calendar'])) button[data-slot='dialog-close']:focus-visible{outline:2px solid #8E80B8;outline-offset:2px}
+/* waiting for the check-out day: greyed like the desktop Done (the second selector outranks the gradient rules above and the v1.0.5 sheet button) */
+:is([data-slot='dialog-content'],[data-slot='sheet-content']) button[data-adv-wait],
+:is([data-slot='dialog-content'],[data-slot='sheet-content'],[data-slot='drawer-content']) button:is([data-slot='dialog-close'],[data-slot='sheet-close'],[data-slot='drawer-close'])[data-adv-cal-done][data-adv-wait]{background:#EDE5F8;color:#8A86A0;box-shadow:none;cursor:not-allowed}
+[data-slot='dialog-content']:has([data-slot='range-calendar'])>button:not([data-slot]){color:#4A2A7A;opacity:1}
+[data-slot='dialog-content']:has([data-slot='range-calendar'])>button:not([data-slot])>svg{width:24px;height:24px}
+@media (prefers-reduced-motion:no-preference){.adv-cal-done{transition:background-color .15s ease}}
+
+/* --- Windows high contrast: chosen days and rows keep a system highlight, the Done button an outline --- */
+@media (forced-colors:active){
+.adv-cal-done,:is([data-slot='dialog-content'],[data-slot='sheet-content']) button[data-adv-wait],:is([data-slot='dialog-content'],[data-slot='sheet-content'],[data-slot='drawer-content']) button:is([data-slot='dialog-close'],[data-slot='sheet-close'],[data-slot='drawer-close'])[data-adv-cal-done][data-adv-wait]{border:1px solid ButtonText}
+.adv-cal-done:disabled,:is([data-slot='dialog-content'],[data-slot='sheet-content']) button[data-adv-wait],:is([data-slot='dialog-content'],[data-slot='sheet-content'],[data-slot='drawer-content']) button:is([data-slot='dialog-close'],[data-slot='sheet-close'],[data-slot='drawer-close'])[data-adv-cal-done][data-adv-wait]{border-color:GrayText;color:GrayText}
+:is([data-slot='range-calendar-trigger']:is([data-selection-start],[data-selection-end]),[data-slot='calendar'] [data-slot='calendar-cell-trigger'][data-selected]){forced-color-adjust:none;background:Highlight;color:HighlightText}
+:is([data-slot='select-content'] [data-slot='select-item'],[data-slot='dropdown-menu-content'] [data-slot='dropdown-menu-item']):is([data-highlighted],[data-state='checked']){outline:1px solid Highlight;outline-offset:-1px}}
+
+/* ===== Product tabs: phones' "edit search" sheet on the hotel results, and the tab row while its page is loading (advisor-site.js part 4, 2026-11-13) =====
+   Below 768px the hotel results put the search (with its tab row) in a sheet portalled to <body>. No rule styled that row, so the generic tab rule
+   cleared the theme's fill and the active tab was white text on white (invisible), edge to edge with no side margin. Same look as the hotel page's
+   "book now" track: a white track lined up with the form's 16px inset, the active tab in the brand gradient. */
+[data-slot='sheet-content'] [data-block-id='hotel-search']>div>div:has(>button[data-slot='button']){margin-block:12px 14px;margin-inline:16px;background:#fff;box-shadow:inset 0 0 0 1px #E2DCEE,0 10px 22px -18px rgba(20,41,74,.5)}
+[data-slot='sheet-content'] [data-block-id='hotel-search']>div>div:has(>button[data-slot='button'])>button[data-slot='button']{color:#14294A}
+[data-slot='sheet-content'] [data-block-id='hotel-search']>div>div:has(>button[data-slot='button'])>button[data-slot='button']>svg{color:#7A45A0}
+[data-slot='sheet-content'] [data-block-id='hotel-search']>div>div:has(>button[data-slot='button'])>button[data-slot='button']:not(.bg-primary):hover{background:#F4EFFB;color:#4A2A7A}
+[data-slot='sheet-content'] [data-block-id='hotel-search']>div>div:has(>button[data-slot='button'])>button[data-slot='button'].bg-primary{background-color:#5B3FA0;background-image:var(--adv-btn);background-size:100% 100%;color:#fff;box-shadow:0 8px 18px -10px rgba(91,63,160,.85)}
+[data-slot='sheet-content'] [data-block-id='hotel-search']>div>div:has(>button[data-slot='button'])>button[data-slot='button'].bg-primary>svg{color:#fff}
+[data-slot='sheet-content'] [data-block-id='hotel-search']>div>div:has(>button[data-slot='button'])>button[data-slot='button']:focus-visible{outline:2px solid #3070B8;outline-offset:2px}
+@media (forced-colors:active){[data-slot='sheet-content'] [data-block-id='hotel-search']>div>div:has(>button[data-slot='button'])>button[data-slot='button'].bg-primary{outline:2px solid Highlight}}
+/* while a tab opens its page (advisor-site.js marks the row aria-busy for that half second) */
+[data-block-id='hotel-search']>div>div[aria-busy='true']>button[data-slot='button']{cursor:progress}
+
+/* ===== v1.0.6 patch "pages": content pages (about-us, privacy-policy, terms-and-conditions) + the contact page Subject (owner request 2026-11-13) ===== */
+
+/* --- Content card, again (about-us, privacy-policy, terms-and-conditions) ---
+   The card above (v1.0.5, "Content card") found these pages by their block having no data-block-id. A Jood update gave the blocks ids
+   (html-content on about-us, privacy-policy-content, terms-and-conditions-content), so none of it matched any more and the text ran from the
+   screen edge to the screen edge with the theme's raw 36px headings. The same rules again for the new markup (same specificity: :is() of one
+   attribute = the :not() of one attribute), with two changes: the card keeps the site container's 20px side gutter on phones and tablets
+   (the header, breadcrumb, footer and the contact card all sit 20px in), not 16px; and it is 880px wide, not 960: about the site's own article
+   column (blog posts: max-w-4xl, 896px), so a full line holds about 95 characters in English and French and 110 in Arabic, as in a blog post
+   (102 there); the raw pages ran 180-250 at 1440-1920. */
+main>div.gap-12>div.space-y-4:is([data-block-id='html-content'],[data-block-id='privacy-policy-content'],[data-block-id='terms-and-conditions-content']){--leading-normal:1.9;width:min(880px,calc(100% - 40px));margin-inline:auto;margin-block:clamp(28px,3.4vw,52px) clamp(0px,3.4vw - 32px,20px);padding:clamp(20px,4vw,48px);border:0 solid transparent;border-top-width:4px;border-radius:24px;background:linear-gradient(#fff,#fff) padding-box,var(--adv-grad) border-box;box-shadow:0 24px 50px -32px rgba(20,41,74,.45);color:#2A3350;font-size:clamp(16px,.14vw + 15px,17px)}
+main>div.gap-12>div.space-y-4:is([data-block-id='html-content'],[data-block-id='privacy-policy-content'],[data-block-id='terms-and-conditions-content'])>h2{--leading-normal:1.4;margin-top:1.6em;font-size:clamp(20px,1.1vw + .9rem,28px);font-weight:800;color:#14294A}
+main>div.gap-12>div.space-y-4:is([data-block-id='html-content'],[data-block-id='privacy-policy-content'],[data-block-id='terms-and-conditions-content'])>h2::after{content:'';display:block;width:56px;height:4px;margin-top:8px;border-radius:4px;background:var(--adv-grad)}
+/* the first h2 is the visible page title (the real h1 is sr-only): page-title size, gradient text (in the gradient-text block above) and accent */
+main>div.gap-12>div.space-y-4:is([data-block-id='html-content'],[data-block-id='privacy-policy-content'],[data-block-id='terms-and-conditions-content'])>h2:first-child{width:fit-content;max-width:100%;margin-top:0;font-size:clamp(28px,1.6vw + 18px,40px);--leading-normal:1.3}
+main>div.gap-12>div.space-y-4:is([data-block-id='html-content'],[data-block-id='privacy-policy-content'],[data-block-id='terms-and-conditions-content'])>h2:first-child::after{width:72px;height:5px;margin-top:12px;border-radius:5px}
+main>div.gap-12>div.space-y-4:is([data-block-id='html-content'],[data-block-id='privacy-policy-content'],[data-block-id='terms-and-conditions-content'])>h2:first-child+p{font-size:clamp(17px,.2vw + 16px,19px);color:#1F2A44}
+main>div.gap-12>div.space-y-4:is([data-block-id='html-content'],[data-block-id='privacy-policy-content'],[data-block-id='terms-and-conditions-content']) h3{--leading-normal:1.4;font-size:1.15rem;font-weight:700;color:#14294A}
+main>div.gap-12>div.space-y-4:is([data-block-id='html-content'],[data-block-id='privacy-policy-content'],[data-block-id='terms-and-conditions-content']) :is(ul,ol){padding-inline-start:1.5em;list-style:disc}
+main>div.gap-12>div.space-y-4:is([data-block-id='html-content'],[data-block-id='privacy-policy-content'],[data-block-id='terms-and-conditions-content']) ol{list-style:decimal}
+main>div.gap-12>div.space-y-4:is([data-block-id='html-content'],[data-block-id='privacy-policy-content'],[data-block-id='terms-and-conditions-content']) li::marker{color:#7A45A0}
+main>div.gap-12>div.space-y-4:is([data-block-id='html-content'],[data-block-id='privacy-policy-content'],[data-block-id='terms-and-conditions-content']) a{color:#1E64AB;text-decoration:underline;text-underline-offset:3px}
+/* the editor's trailing empty <p> left 16px extra inside the bottom of the card */
+main>div.gap-12>div.space-y-4:is([data-block-id='html-content'],[data-block-id='privacy-policy-content'],[data-block-id='terms-and-conditions-content'])>p:empty:last-child{display:none}
+main>div.gap-12>div.space-y-4:is([data-block-id='html-content'],[data-block-id='privacy-policy-content'],[data-block-id='terms-and-conditions-content'])>:nth-last-child(2):has(+p:empty:last-child){margin-block-end:0}
+/* about page only (scoped by the active header/footer link, so privacy and terms keep normal bullets): the two short lists become 2-column tiles */
+:root:has(:is([data-block-id='header'],[data-block-id='footer']) a[aria-current='page'][href$='/about-us']) main>div.gap-12>div.space-y-4:is([data-block-id='html-content'],[data-block-id='privacy-policy-content'],[data-block-id='terms-and-conditions-content'])>ul{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;padding-inline-start:0;list-style:none}
+@media (min-width:768px){:root:has(:is([data-block-id='header'],[data-block-id='footer']) a[aria-current='page'][href$='/about-us']) main>div.gap-12>div.space-y-4:is([data-block-id='html-content'],[data-block-id='privacy-policy-content'],[data-block-id='terms-and-conditions-content'])>ul{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}}
+:root:has(:is([data-block-id='header'],[data-block-id='footer']) a[aria-current='page'][href$='/about-us']) main>div.gap-12>div.space-y-4:is([data-block-id='html-content'],[data-block-id='privacy-policy-content'],[data-block-id='terms-and-conditions-content'])>ul>li{position:relative;display:flex;align-items:center;min-height:60px;padding:12px 16px;padding-inline-start:54px;border:1px solid #E6E0F2;border-radius:14px;background:#fff;box-shadow:0 10px 22px -18px rgba(20,41,74,.5);color:#1F2A44;--leading-normal:1.7}
+:root:has(:is([data-block-id='header'],[data-block-id='footer']) a[aria-current='page'][href$='/about-us']) main>div.gap-12>div.space-y-4:is([data-block-id='html-content'],[data-block-id='privacy-policy-content'],[data-block-id='terms-and-conditions-content'])>ul>li::before{content:'';position:absolute;inset-inline-start:15px;top:50%;width:26px;height:26px;margin-top:-13px;border-radius:50%;background:var(--adv-grad-tile);box-shadow:0 4px 10px -4px rgba(91,63,160,.6)}
+:root:has(:is([data-block-id='header'],[data-block-id='footer']) a[aria-current='page'][href$='/about-us']) main>div.gap-12>div.space-y-4:is([data-block-id='html-content'],[data-block-id='privacy-policy-content'],[data-block-id='terms-and-conditions-content'])>ul>li::after{content:'';position:absolute;inset-inline-start:24.5px;top:50%;width:6px;height:11px;margin-top:-8px;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(45deg)}
+/* business details (second list): calm credential tiles with a gradient edge bar, no tick */
+:root:has(:is([data-block-id='header'],[data-block-id='footer']) a[aria-current='page'][href$='/about-us']) main>div.gap-12>div.space-y-4:is([data-block-id='html-content'],[data-block-id='privacy-policy-content'],[data-block-id='terms-and-conditions-content'])>ul:last-of-type:not(:first-of-type)>li{padding-inline-start:32px;border-color:rgba(122,69,160,.16);background:var(--adv-mist);box-shadow:none;color:#14294A;font-variant-numeric:tabular-nums}
+:root:has(:is([data-block-id='header'],[data-block-id='footer']) a[aria-current='page'][href$='/about-us']) main>div.gap-12>div.space-y-4:is([data-block-id='html-content'],[data-block-id='privacy-policy-content'],[data-block-id='terms-and-conditions-content'])>ul:last-of-type:not(:first-of-type)>li::before{inset-inline-start:14px;top:14px;bottom:14px;width:4px;height:auto;margin:0;border-radius:4px;background:var(--adv-grad-v);box-shadow:none}
+:root:has(:is([data-block-id='header'],[data-block-id='footer']) a[aria-current='page'][href$='/about-us']) main>div.gap-12>div.space-y-4:is([data-block-id='html-content'],[data-block-id='privacy-policy-content'],[data-block-id='terms-and-conditions-content'])>ul:last-of-type:not(:first-of-type)>li::after{content:none}
+@media (max-width:639.98px){:root:has(:is([data-block-id='header'],[data-block-id='footer']) a[aria-current='page'][href$='/about-us']) main>div.gap-12>div.space-y-4:is([data-block-id='html-content'],[data-block-id='privacy-policy-content'],[data-block-id='terms-and-conditions-content'])>ul>li{padding:12px 14px;padding-inline-start:48px}:root:has(:is([data-block-id='header'],[data-block-id='footer']) a[aria-current='page'][href$='/about-us']) main>div.gap-12>div.space-y-4:is([data-block-id='html-content'],[data-block-id='privacy-policy-content'],[data-block-id='terms-and-conditions-content'])>ul>li::before{inset-inline-start:12px;width:24px;height:24px;margin-top:-12px}:root:has(:is([data-block-id='header'],[data-block-id='footer']) a[aria-current='page'][href$='/about-us']) main>div.gap-12>div.space-y-4:is([data-block-id='html-content'],[data-block-id='privacy-policy-content'],[data-block-id='terms-and-conditions-content'])>ul>li::after{inset-inline-start:20.5px;width:5.5px;height:10px;margin-top:-7px}:root:has(:is([data-block-id='header'],[data-block-id='footer']) a[aria-current='page'][href$='/about-us']) main>div.gap-12>div.space-y-4:is([data-block-id='html-content'],[data-block-id='privacy-policy-content'],[data-block-id='terms-and-conditions-content'])>ul:last-of-type:not(:first-of-type)>li{padding-inline-start:30px}:root:has(:is([data-block-id='header'],[data-block-id='footer']) a[aria-current='page'][href$='/about-us']) main>div.gap-12>div.space-y-4:is([data-block-id='html-content'],[data-block-id='privacy-policy-content'],[data-block-id='terms-and-conditions-content'])>ul:last-of-type:not(:first-of-type)>li::before{inset-inline-start:13px;width:4px;height:auto;margin:0}}
+/* the page title in the brand gradient text, as in the heading block of v1.0.5 */
+@supports ((-webkit-background-clip:text) or (background-clip:text)){@media (forced-colors:none){main>div.gap-12>div.space-y-4:is([data-block-id='html-content'],[data-block-id='privacy-policy-content'],[data-block-id='terms-and-conditions-content'])>h2:first-child{background-image:var(--adv-grad-text);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;-webkit-box-decoration-break:clone;box-decoration-break:clone}}}
+
+/* --- Contact page: Subject drop-down, "Other" text and the optional hotel (advisor-site.js part 5) ---
+   Markup from the script, inside the theme's Subject form item (marked [data-adv-subject]; the theme's own label and input stay there, hidden,
+   for validation and sending): div.adv-cf > div.adv-cf-grid > three cells (label + field): subject (button.adv-cf-trigger), hotel
+   (div.adv-cf-combo > input + button.adv-cf-clear), other (input). The two inputs carry the theme's input classes and data-slot=form-control,
+   so the contact-page field rules above draw them exactly like Name and Email; the trigger copies the same classes and gets the same box here.
+   Phones and narrow form columns: one field per row. When the form column is 540px or wider (desktop, tablet), once a subject is chosen the
+   hotel sits beside it; "Other" takes the full row under both. */
+[data-block-id='contact-form'] [data-adv-subject]>label[data-slot='form-label'],[data-block-id='contact-form'] [data-adv-subject]>input[name='subject']{display:none}
+[data-block-id='contact-form'] .adv-cf{min-width:0;container:adv-cf/inline-size}
+[data-block-id='contact-form'] .adv-cf-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:22px 20px}
+[data-block-id='contact-form'] .adv-cf-cell{display:grid;grid-template-columns:minmax(0,1fr);align-content:start;gap:8px;min-width:0}
+[data-block-id='contact-form'] .adv-cf-cell[hidden]{display:none}
+@container adv-cf (min-width:540px){[data-block-id='contact-form'] .adv-cf[data-chosen] .adv-cf-grid{grid-template-columns:repeat(2,minmax(0,1fr))}[data-block-id='contact-form'] .adv-cf-other{grid-column:1/-1}}
+/* the subject box: the contact inputs' 48px / 12px box, value at 14px (16px on phones, from the copied classes) with the same 14px inset, chevron at the inline end */
+[data-block-id='contact-form'] button.adv-cf-trigger{position:relative;display:flex;align-items:center;width:100%;height:48px;margin:0;padding-block:0;padding-inline:14px 42px;border-radius:12px;text-align:start;cursor:pointer;-webkit-tap-highlight-color:transparent}
+[data-block-id='contact-form'] .adv-cf-trigger>.adv-cf-val{flex:1 1 auto;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+[data-block-id='contact-form'] .adv-cf-trigger[data-empty]>.adv-cf-val{color:var(--muted-foreground)}
+[data-block-id='contact-form'] .adv-cf-trigger::after,[data-block-id='contact-form'] .adv-cf-combo:not([data-filled])::after{content:'';position:absolute;top:50%;inset-inline-end:14px;width:16px;height:16px;margin-top:-8px;background-color:#5A5F78;pointer-events:none;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center/100% 100% no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center/100% 100% no-repeat}
+[data-block-id='contact-form'] .adv-cf-trigger[aria-expanded='true']::after{transform:rotate(180deg)}
+[data-block-id='contact-form'] .adv-cf-trigger:not([aria-invalid='true']):hover{border-color:#6F5FA6}
+[data-block-id='contact-form'] .adv-cf-trigger:focus-visible,[data-block-id='contact-form'] .adv-cf-trigger[aria-expanded='true']:not([aria-invalid='true']){outline:none;border-color:#7A45A0;box-shadow:0 0 0 3px rgba(122,69,160,.22)}
+/* "Other" chosen and nothing typed: the Other field shows its own message (p.adv-cf-msg, the theme's message classes) in place of the theme's
+   "Subject is required", which is hidden while the script marks the item [data-adv-other-msg] */
+[data-block-id='contact-form'] [data-adv-subject][data-adv-other-msg]>[data-slot='form-message']{display:none}
+[data-block-id='contact-form'] .adv-cf-msg[hidden]{display:none}
+[data-block-id='contact-form'] .adv-cf-trigger[aria-invalid='true']{border-color:var(--destructive)}
+[data-block-id='contact-form'] .adv-cf-trigger[aria-invalid='true']:focus-visible{box-shadow:0 0 0 3px color-mix(in srgb,var(--destructive) 22%,transparent)}
+/* hotel: room for the chevron / clear button at the inline end */
+[data-block-id='contact-form'] .adv-cf-combo{position:relative;min-width:0}
+[data-block-id='contact-form'] .adv-cf-combo>input[data-slot='form-control']{padding-inline-end:44px}
+[data-block-id='contact-form'] .adv-cf-clear{position:absolute;top:50%;inset-inline-end:8px;display:flex;align-items:center;justify-content:center;width:32px;height:32px;margin:-16px 0 0;padding:0;border:0;border-radius:8px;background:transparent;color:#5A5F78;cursor:pointer}
+[data-block-id='contact-form'] .adv-cf-clear[hidden]{display:none}
+[data-block-id='contact-form'] .adv-cf-clear::before{content:'';width:16px;height:16px;background-color:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 6 6 18M6 6l12 12'/%3E%3C/svg%3E") center/100% 100% no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 6 6 18M6 6l12 12'/%3E%3C/svg%3E") center/100% 100% no-repeat}
+[data-block-id='contact-form'] .adv-cf-clear:hover{background:#F4EFFB;color:#4A2A7A}
+[data-block-id='contact-form'] .adv-cf-clear:focus-visible{outline:2px solid #8E80B8;outline-offset:0}
+@media (pointer:coarse){[data-block-id='contact-form'] .adv-cf-clear{inset-inline-end:2px;width:44px;height:44px;margin-top:-22px}}
+
+/* --- the pop-up lists (portalled to <body>; shared drop-down look): white panel, lilac hairline, 12px corners, soft navy shadow, 6px inside,
+   above the sticky header (z 30), WhatsApp disc (20) and assistant pill (40); max 320px tall with a visible 8px brand scrollbar ---
+   The script places it 6px under its field (above only when there is no room below), at least the field's width and up to 360px. */
+.adv-cf-pop[data-adv-pop]{position:fixed;z-index:50;box-sizing:border-box;width:max-content;max-height:320px;margin:0;padding:6px;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;border:1px solid #E3D9F2;border-radius:12px;background:#fff;box-shadow:0 12px 32px rgba(20,41,74,.18),0 2px 6px rgba(20,41,74,.08);font-family:var(--font-default);font-size:14px;line-height:1.4;color:#14294A;text-align:start;outline:none}
+.adv-cf-pop[data-adv-pop][hidden]{display:none}
+/* (the theme already gives every scrollbar 8px with a white track and a #E2DCEE thumb, barely visible; these make the list's bar the brand one) */
+.adv-cf-pop[data-adv-pop]::-webkit-scrollbar{width:8px}
+.adv-cf-pop[data-adv-pop]::-webkit-scrollbar-track{margin:6px 0;border-radius:8px;background:#F4EFFB}
+.adv-cf-pop[data-adv-pop]::-webkit-scrollbar-thumb{border-radius:8px;background:#B9A3DB}
+.adv-cf-pop[data-adv-pop]::-webkit-scrollbar-thumb:hover{background:#6B3FA0}
+/* Firefox only: in Chrome 121+ a scrollbar-width / scrollbar-color value switches the ::-webkit-scrollbar rules off (Windows would get an 11px
+   system bar, and Mac an overlay bar that hides), so the standard properties are kept for the browser that needs them */
+@supports (-moz-appearance:none){.adv-cf-pop[data-adv-pop]{scrollbar-width:thin;scrollbar-color:#B9A3DB #F4EFFB}}
+.adv-cf-pop .adv-cf-opt{position:relative;display:flex;align-items:center;box-sizing:border-box;min-height:36px;padding:9px 12px;padding-inline-end:36px;border-radius:8px;font-size:14px;font-weight:400;line-height:1.35;color:#14294A;cursor:pointer;overflow-wrap:anywhere;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+.adv-cf-pop .adv-cf-opt[data-active]{background:#F4EFFB;color:#4A2A7A}
+.adv-cf-pop .adv-cf-opt[aria-selected='true']{padding-inline-end:36px;background:#EDE5F8;color:#4A2A7A;font-weight:600}
+.adv-cf-pop .adv-cf-opt[aria-selected='true'][data-active]{background:#EDE5F8}
+.adv-cf-pop .adv-cf-opt[aria-selected='true']::after{content:'';position:absolute;top:50%;inset-inline-end:12px;width:16px;height:16px;margin-top:-8px;background-color:#6B3FA0;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center/100% 100% no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center/100% 100% no-repeat}
+.adv-cf-pop .adv-cf-opt[aria-disabled='true']{color:#9A95AE;cursor:default}
+.adv-cf-pop .adv-cf-note[aria-disabled='true']{color:#5A5F78;line-height:1.5}
+.adv-cf-pop .adv-cf-grp{padding:10px 12px 4px;font-size:12px;font-weight:600;line-height:1.3;color:#6B3FA0}
+.adv-cf-pop [role='group']:first-child>.adv-cf-grp{padding-top:4px}
+@media (pointer:coarse){.adv-cf-pop .adv-cf-opt{min-height:44px}}
+/* Windows high contrast: the tints are dropped there, so the highlighted row gets a system-colour frame and the tick is drawn in the text colour;
+   the scrollbar thumb would be repainted in the window colour (invisible, as every theme scrollbar there), so it is drawn in the text colour */
+@media (forced-colors:active){
+.adv-cf-pop[data-adv-pop]{border-color:CanvasText}
+.adv-cf-pop[data-adv-pop]::-webkit-scrollbar-thumb{forced-color-adjust:none;background:CanvasText}
+.adv-cf-pop[data-adv-pop]::-webkit-scrollbar-track{forced-color-adjust:none;background:Canvas}
+.adv-cf-pop .adv-cf-opt[data-active]{outline:2px solid Highlight;outline-offset:-2px}
+.adv-cf-pop .adv-cf-opt[aria-selected='true']::after,[data-block-id='contact-form'] .adv-cf-trigger::after,[data-block-id='contact-form'] .adv-cf-combo:not([data-filled])::after,[data-block-id='contact-form'] .adv-cf-clear::before{forced-color-adjust:none;background-color:CanvasText}
+.adv-cf-pop .adv-cf-opt[aria-disabled='true']{color:GrayText}}
