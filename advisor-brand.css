@@ -8,7 +8,7 @@
 @font-face{font-family:"Calibri Adj";src:local("Calibri Italic"),local("Calibri-Italic");font-weight:351 550;font-style:italic;size-adjust:116%}
 @font-face{font-family:"Calibri Adj";src:local("Calibri Bold Italic"),local("Calibri-BoldItalic");font-weight:551 1000;font-style:italic;size-adjust:116%}
 :root{--font-default:"Calibri Adj","Noto Sans Arabic",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif!important}
-/* advisorholidays.sa brand stylesheet v1.0.6 (v1.0.5 + the site's own drop-down look for every list and pop-up, the site's own hotel list and a narrower hotel field from 1536px, a Done bar under the date pickers, the phone-sheet tab row on the hotel results, the content card for the new about/privacy/terms block ids and the contact Subject drop-down; v1.0.5 = v1.0.4 + the optional Hotel field drawn by advisor-site.js; v1.0.4 = v1.0.3 + readable tab row on the hotel search results; v1.0.3 = v1.0.2 + new search tabs, transport/airport/services pages, template image fallbacks).
+/* advisorholidays.sa brand stylesheet v1.0.7 (v1.0.6 + home tabs navigate, capitalised sheet labels: EN/FR button labels in pop-ups and phone sheets start with a capital; the tabs themselves are in advisor-site.js; a spinner on a tab and a dimmed form while the tab's page loads). v1.0.6 = (v1.0.5 + the site's own drop-down look for every list and pop-up, the site's own hotel list and a narrower hotel field from 1536px, a Done bar under the date pickers, the phone-sheet tab row on the hotel results, the content card for the new about/privacy/terms block ids and the contact Subject drop-down; v1.0.5 = v1.0.4 + the optional Hotel field drawn by advisor-site.js; v1.0.4 = v1.0.3 + readable tab row on the hotel search results; v1.0.3 = v1.0.2 + new search tabs, transport/airport/services pages, template image fallbacks).
    v1.0.2 = v7 + footer app strip and coloured payment cards; v7 = v6 + font fit fixes after the Calibri switch.
    v6 = v5 + full hero photo, French search rows, Calibri font, brand-coloured social icons.
    System: fields and buttons 48px / 12px radius, border #8E80B8 (--input); secondary actions are 44px outlined pills (1.5px #7A45A0);
@@ -1260,7 +1260,7 @@ html:lang(fr):has(link[rel='canonical'][href*='/packages/']) main div.container>
 [data-slot='calendar'] [data-slot='calendar-cell-trigger'][data-selected]{border-color:transparent;background:var(--adv-btn) border-box;color:#fff;font-weight:800;box-shadow:0 8px 16px -8px rgba(91,63,160,.85)}
 [data-slot='calendar'] [data-slot='calendar-cell-trigger'][data-disabled]{color:#9AA0B4}
 [data-slot='calendar'] [data-slot='calendar-cell-trigger']:focus-visible{outline:2px solid #3070B8;outline-offset:1px;box-shadow:none}
-[data-slot='dialog-content']:has([data-slot='calendar']) button[data-slot='dialog-close']{text-transform:capitalize;height:48px;border-color:transparent;border-radius:12px;background:var(--adv-btn) border-box;color:#fff;font-size:16px;font-weight:800;box-shadow:0 10px 22px -12px rgba(91,63,160,.8)}
+[data-slot='dialog-content']:has([data-slot='calendar']) button[data-slot='dialog-close']{height:48px;border-color:transparent;border-radius:12px;background:var(--adv-btn) border-box;color:#fff;font-size:16px;font-weight:800;box-shadow:0 10px 22px -12px rgba(91,63,160,.8)}
 [data-slot='dialog-content']:has([data-slot='calendar']) button[data-slot='dialog-close']:focus-visible{outline:2px solid #3070B8;outline-offset:2px}
 [data-slot='dialog-content']:has([data-slot='calendar'])>button:not([data-slot]){color:#4A2A7A;opacity:1}
 [data-slot='dialog-content']:has([data-slot='calendar'])>button:not([data-slot])>svg{width:24px;height:24px}
@@ -1697,8 +1697,21 @@ html:lang(fr) [data-block-id^='hero-section'] [data-block-id='hotel-search'] for
 [data-slot='sheet-content'] [data-block-id='hotel-search']>div>div:has(>button[data-slot='button'])>button[data-slot='button'].bg-primary>svg{color:#fff}
 [data-slot='sheet-content'] [data-block-id='hotel-search']>div>div:has(>button[data-slot='button'])>button[data-slot='button']:focus-visible{outline:2px solid #3070B8;outline-offset:2px}
 @media (forced-colors:active){[data-slot='sheet-content'] [data-block-id='hotel-search']>div>div:has(>button[data-slot='button'])>button[data-slot='button'].bg-primary{outline:2px solid Highlight}}
-/* while a tab opens its page (advisor-site.js marks the row aria-busy for that half second) */
+/* while a tab opens its page (advisor-site.js marks the row aria-busy until the new page is drawn, however slow) */
 [data-block-id='hotel-search']>div>div[aria-busy='true']>button[data-slot='button']{cursor:progress}
+/* ...and shows it without a mouse pointer (phones; the first visit to /transport can take 15 s): the clicked tab (data-adv-tab-going) gets a
+   spinner in place of its icon (same 16px box, so nothing moves), white on the gradient pills, brand purple on the home band's white pill;
+   the form under the row (data-adv-tab-wait, also aria-busy and inert) is dimmed and takes no taps, so nothing is typed into a form that is
+   about to go. Reduced motion: the ring stands still. Windows high contrast: system colours. advisor-site.js removes both marks when the new
+   page shows, the navigation fails or is cancelled, Back is pressed or another navigation wins. */
+[data-block-id='hotel-search']>div>div>button[data-slot='button'][data-adv-tab-going]>svg{display:none}
+[data-block-id='hotel-search']>div>div>button[data-slot='button'][data-adv-tab-going]::before{content:'';flex:none;box-sizing:border-box;width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:adv-tab-spin .8s linear infinite}
+[data-block-id^='hero-section'] [data-block-id='hotel-search']>div>div>button[data-slot='button'][data-adv-tab-going]::before{border-color:rgba(122,69,160,.25);border-top-color:#7A45A0}
+[data-block-id='hotel-search']>div>[data-adv-tab-wait]{opacity:.45;pointer-events:none;user-select:none;-webkit-user-select:none}
+@keyframes adv-tab-spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:no-preference){[data-block-id='hotel-search']>div>[data-adv-tab-wait]{transition:opacity .2s ease}}
+@media (prefers-reduced-motion:reduce){[data-block-id='hotel-search']>div>div>button[data-slot='button'][data-adv-tab-going]::before{animation:none}}
+@media (forced-colors:active){[data-block-id='hotel-search']>div>div>button[data-slot='button'][data-adv-tab-going]::before,[data-block-id^='hero-section'] [data-block-id='hotel-search']>div>div>button[data-slot='button'][data-adv-tab-going]::before{forced-color-adjust:none;border-color:GrayText;border-top-color:Highlight}}
 
 /* ===== v1.0.6 patch "pages": content pages (about-us, privacy-policy, terms-and-conditions) + the contact page Subject (owner request 2026-11-13) ===== */
 
@@ -1808,3 +1821,18 @@ main>div.gap-12>div.space-y-4:is([data-block-id='html-content'],[data-block-id='
 .adv-cf-pop .adv-cf-opt[data-active]{outline:2px solid Highlight;outline-offset:-2px}
 .adv-cf-pop .adv-cf-opt[aria-selected='true']::after,[data-block-id='contact-form'] .adv-cf-trigger::after,[data-block-id='contact-form'] .adv-cf-combo:not([data-filled])::after,[data-block-id='contact-form'] .adv-cf-clear::before{forced-color-adjust:none;background-color:CanvasText}
 .adv-cf-pop .adv-cf-opt[aria-disabled='true']{color:GrayText}}
+
+/* ===== v1.0.7: capitalised labels in pop-ups and phone sheets (owner request 2026-11-14) =====
+   Some English and French button labels arrive in lower case from the CMS translations: "apply" / "appliquer" (destination and guests sheets,
+   every calendar's phone button), "add room" / "ajouter une chambre" (guests sheet and desktop pop-up), "rate your stay" / "évaluez votre
+   séjour" (hotel page comment dialog), "rechercher maintenant" and "rechercher hôtel" (French filter sheets). The first letter is drawn as a
+   capital and the rest stays as written (not every word). Arabic is untouched (no rule applies under html:lang(ar)).
+   ::first-letter only reaches a block container: the labels held in a <span> (display:block) take it directly; a label that is the button's
+   own text sits in an inline-flex box, where ::first-letter does not apply, so those text-only buttons become inline-block with the text
+   centred the same way (align-content and text-align; inline-block keeps them on their footer's line exactly as inline-flex did).
+   Remove a line once the CMS translation itself starts with a capital (no harm if left). */
+html:not(:lang(ar)) :is([data-slot='sheet-content'] button[data-slot='sheet-close'].bg-primary,[data-slot='dialog-content']:is(:has([data-slot='range-calendar']),:has([data-slot='calendar'])) button[data-slot='dialog-close'],[data-slot='sheet-content'] button[data-slot='button'].bg-primary.w-full):not(:has(*)){display:inline-block;align-content:center;text-align:center}
+html:not(:lang(ar)) :is([data-slot='sheet-content'] button[data-slot='sheet-close'].bg-primary,[data-slot='dialog-content']:is(:has([data-slot='range-calendar']),:has([data-slot='calendar'])) button[data-slot='dialog-close'],[data-slot='sheet-content'] button[data-slot='button'].bg-primary.w-full):not(:has(*))::first-letter,
+html:not(:lang(ar)) :is([data-slot='popover-content'],[data-slot='sheet-content']):has([data-slot='increment']) button[data-slot='button'].bg-primary>span:first-child::first-letter,
+html:not(:lang(ar)):not(:has(main>div.container>div.mt-8>section.h-fit.shadow-center)) [data-slot='dialog-content'] form button[type='submit'][data-slot='button']>span::first-letter,
+html:not(:lang(ar)) [data-slot='sheet-content'] button[data-slot='sheet-trigger']>span.text-muted-foreground:first-child::first-letter{text-transform:uppercase}

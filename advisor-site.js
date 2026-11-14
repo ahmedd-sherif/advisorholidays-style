@@ -2,8 +2,12 @@
    1. WhatsApp: every WhatsApp link opens the chat with the ready message in the page language (12 Nov 2026).
    2. Hotel picker: an optional "Hotel" field after the destination in the hotel search (13 Nov 2026; the site's own list v1.0.6).
    3. Date pickers: a Done bar (the chosen stay and its nights + «تم / Done / Valider») under every calendar pop-up (13 Nov 2026).
-   4. Product tabs: on the results pages (/hotels/search, /transport) and hotel pages a tab for another product opens that product's page (13 Nov 2026).
+   4. Product tabs: on every page that shows the search band (home, results pages, hotel pages) a tab for another product opens that product's
+      page (13 Nov 2026; the home page since 14 Nov 2026).
    5. Contact page: the Subject becomes a drop-down with an "Other" text and an optional hotel (13 Nov 2026).
+   v1.0.7 (v1.0.6 + home tabs navigate, capitalised sheet labels): part 4 also on the home page (and any other page with the band), and it
+   stays busy until a slow navigation resolves (the capitalised labels are in advisor-brand.css). The busy tab shows a spinner and the form
+   under it waits (dimmed, inert); a later navigation (Services, a link, Back) ends the busy look at once. Part 2: WebKit viewport-scroll fix.
    v1.0.6 = v1.0.5 + the site's own hotel list in part 2 + parts 3, 4 and 5 (window flags __advPopups, __advTabs, __advPages).
    Each part checks its own preconditions and does nothing if the page changed under it; the site keeps working without this file. */
 
@@ -264,9 +268,10 @@
     } catch (e) {}
     c.onDown = function (e) { if (cur === c && !pop.contains(e.target) && !trig.contains(e.target)) close(false); };
     c.onFocus = function (e) { if (cur === c && e.target !== document && e.target !== window && !pop.contains(e.target) && !trig.contains(e.target)) close(false); };
-    // page or sheet scrolled, window resized: follow the field (once per frame)
+    // page or sheet scrolled, window resized: follow the field (once per frame). A visualViewport 'scroll' (the phone keyboard moved the
+    // visual viewport) has the VisualViewport as its target, not a node: WebKit throws on pop.contains() of it, so only elements are tested.
     c.onMove = function (e) {
-      if (cur !== c || (e && e.type === 'scroll' && (e.target === c.list || pop.contains(e.target)))) return;
+      if (cur !== c || (e && e.type === 'scroll' && (e.target === c.list || (e.target && e.target.nodeType === 1 && pop.contains(e.target))))) return;
       if (e && e.type === 'resize') c.pend = 'resize'; else if (!c.pend) c.pend = 'scroll';
       if (c.raf) return;
       c.raf = (window.requestAnimationFrame || setTimeout)(function () { var m = c.pend; c.raf = 0; c.pend = ''; guard(function () { if (cur === c) place(c, m); }); });
@@ -702,20 +707,29 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
 })();
 
-/* ---------- 4. Product tabs open their own page on the results pages ----------
-   The search block has a row of product tabs (hotels / transportation / airport transfer / services). The theme switches the form in place,
-   which is right on the home page and the hotel page (a search widget on a content page), but on a results page the page stayed what it was:
-   on /transport, "Hotels" showed the hotel form above "0 vehicles available" with "Transport" in the breadcrumb (owner report 2026-11-13).
-   On the two results pages (/hotels/search and /transport, any language prefix) a tab for another product now opens that product's page:
+/* ---------- 4. Product tabs open their own page, on every page that shows the search band ----------
+   The search band has a row of product tabs (hotels / transportation / airport transfer / services). The theme switches the form in place.
+   v1.0.6 (owner report 2026-11-13): on /transport, "Hotels" showed the hotel form above "0 vehicles available" with "Transport" in the
+   breadcrumb; on the results pages (/hotels/search, /transport) and on hotel pages (/hotels/<slug>) a tab for another product opened that
+   product's page. v1.0.7 (owner request 2026-11-14): the same on every page that shows the band, the home page included (/, /en, /fr).
+   In Nov 2026 the band with its tab row is on the home page, /hotels/search, /transport and the hotel pages; /cities/<city> and /hotels have
+   a search card without tabs. Any other page that shows the band later (a CMS page) gets the same rule, its own product being Hotels, the
+   theme's own default there (the tab the theme shows as chosen is not used: a tap before this script started may have switched the form in
+   place; Transportation/Airport still open /transport and Hotels brings the hotel form back in place).
      Hotels                -> /hotels/search with the city, dates and rooms of the hotel search (the URL's, else this tab's last hotel search,
                               else the hotel form's defaults: first city, today -> tomorrow, 1 room 2 adults)
-     Transportation/Airport -> /transport?mode=transportation|airport (from the hotel results: this tab's last search of that mode;
-                              between the two modes on /transport: the same date, passengers and promo code, the places belong to the mode)
-     Services              -> unchanged (the theme already opens /services)
-   A hotel's own page (/hotels/<slug>) is treated the same way (v1.0.6 fix: its "Start your booking now" block switched to a transport form in
-   place while the page and the breadcrumb stayed the hotel's): its booking form is the Hotels tab, and Transportation / Airport open /transport.
-   The page's own tab does nothing. The home page (the search band is the page's hub) and every other page keep the theme's in-place switch.
-   SPA navigation through the Vue router (Back/Forward work as for any page), one navigation at a time, the clicked tab shows as chosen at once. */
+     Transportation/Airport -> /transport?mode=transportation|airport (from any page but /transport: this browser tab's last search of that
+                              mode, else none; between the two modes on /transport: the same date, passengers and promo code, the places
+                              belong to the mode)
+     Services              -> unchanged (the theme's own button already opens /services, from every page)
+   The page's own tab does nothing (Hotels on the home page, a hotel page and /hotels/search; the chosen mode on /transport).
+   SPA navigation through the Vue router: Back returns to the page the tab was clicked on. One navigation at a time: the clicked tab looks
+   chosen at once with a spinner in place of its icon, the row is aria-busy and the form under it dimmed and inert (nothing typed into it is
+   lost; advisor-brand.css draws it) until the router has resolved and the old page is gone, or the navigation failed or was cancelled (then
+   the old tab look comes back). No timer gives up while the router is still on its way (v1.0.6 put the old tab look back after 12 s even
+   when a slow page was still coming). Another navigation started meanwhile (Services, a link, Back) wins: the busy look ends at once, the
+   clicked tab keeps its look while that navigation loads, and gets the old look back only if the visitor ends up staying on this page.
+   Keyboard: focus goes to the new page's chosen tab, else (phones' /transport has no tab row) its search form, heading or breadcrumb. */
 (function () {
   if (window.__advTabs) return;
   window.__advTabs = 1;
@@ -723,7 +737,7 @@
   // optional language prefix (/en, /fr) + the page; nothing else may come before it (e.g. a service called "transport")
   var RESULTS = /^((?:\/[a-z]{2}(?:-[a-z]{2})?)?)\/(hotels\/search|transport)\/?$/i, HOTEL = /^((?:\/[a-z]{2}(?:-[a-z]{2})?)?)\/hotels\/([^\/]+)\/?$/i;
   var HQ = ['city', 'promoCode', 'checkIn', 'checkOut', 'rooms'], TQ = ['from', 'to', 'passengers', 'promoCode', 'dateFrom'];
-  var started = false, busy = null, city0 = null;
+  var started = false, busy = null, city0 = null, last = ''; // last: the newest navigation the router started (its fullPath)
 
   function app() { var el = document.querySelector('#__nuxt'); return el ? el.__vue_app__ : null; }
   function router() { var a = app(); return a && a.config.globalProperties.$router; }
@@ -752,6 +766,14 @@
   function hotelPageOf(route) {
     var m = HOTEL.exec(route && route.path || '');
     return m && m[2] !== 'search' ? { prefix: m[1], product: 'hotels' } : null;
+  }
+  // any other page that shows the band (the home page, a CMS page): {prefix, product: 'hotels'}
+  // The prefix is the path's first segment when it is the page language (/en, /fr); the default language (Arabic) has none.
+  // The product is the theme's own default for the path (Hotels unless the path has '/transport'), not the tab it shows as chosen: a tap
+  // before this script started switches the form in place, and that tab must still open its page (and Hotels bring the hotel form back).
+  function otherOf(route, row) {
+    var p = route && route.path || '', m = /^\/([a-z]{2}(?:-[a-z]{2})?)(?=\/|$)/i.exec(p);
+    return { prefix: m && m[1].slice(0, 2).toLowerCase() === lang() ? '/' + m[1] : '', product: /\/transport/.test(p) && activeOf(row) || 'hotels' };
   }
   // which product a tab button is: its CMS label key, else its icon
   function tabOf(btn) {
@@ -831,30 +853,53 @@
     return q;
   }
 
-  // the clicked tab looks chosen at once (the theme's own active/inactive classes swapped), the row is busy until the page changes
+  // the clicked tab looks chosen at once (the theme's own active/inactive classes swapped) and gets a spinner in place of its icon; the row is
+  // busy and the form under it (the row's siblings) dimmed, inert and aria-busy until the page changes (advisor-brand.css draws the look)
   function mark(row, btn) {
-    var act = kids(row).filter(function (b) { return /\bbg-primary\b/.test(b.className); })[0], s = { row: row, btn: btn };
+    var act = kids(row).filter(function (b) { return /\bbg-primary\b/.test(b.className); })[0], s = { row: row, btn: btn, wait: [] };
     if (act && act !== btn) { s.act = act; s.a = act.className; s.b = btn.className; act.className = s.b; btn.className = s.a; }
     row.setAttribute('aria-busy', 'true');
     btn.setAttribute('data-adv-tab-going', '');
+    Array.prototype.forEach.call(row.parentElement.children, function (el) {
+      if (el === row || el.hasAttribute('data-adv-tab-wait')) return;
+      el.setAttribute('data-adv-tab-wait', '');
+      el.setAttribute('aria-busy', 'true');
+      el.setAttribute('inert', '');
+      s.wait.push(el);
+    });
     return s;
   }
   function unmark(s, restore) {
     try {
       s.row.removeAttribute('aria-busy');
       s.btn.removeAttribute('data-adv-tab-going');
+      s.wait.forEach(function (el) { el.removeAttribute('data-adv-tab-wait'); el.removeAttribute('aria-busy'); el.removeAttribute('inert'); });
       if (restore && s.act && s.btn.className === s.a) { s.act.className = s.a; s.btn.className = s.b; }
     } catch (e) {}
   }
-  // keyboard users keep their place: focus the new page's chosen tab
+  // keyboard users keep their place: focus the new page's chosen tab. A page without a visible tab row (phones' /transport) gets its search
+  // form's first control, else its visible main heading, else its breadcrumb's current page (focusable with tabindex=-1); never scrolls.
+  function shown(x) { var b = x.getBoundingClientRect(); return b.width > 1 && b.height > 1 && getComputedStyle(x).visibility !== 'hidden'; }
+  function first(sel, ok) { return Array.prototype.filter.call(document.querySelectorAll(sel), ok)[0]; }
   function refocus() {
-    var b = Array.prototype.filter.call(document.querySelectorAll(BLOCK + ' button.bg-primary'), function (x) { return x.offsetParent && rowOf(x); })[0];
-    if (b) { try { b.focus({ preventScroll: true }); } catch (e) {} }
+    try {
+      var b = first(BLOCK + ' button.bg-primary', function (x) { return x.offsetParent && rowOf(x); }) ||
+        first([BLOCK + ' form input', BLOCK + ' form button', BLOCK + ' form select', BLOCK + ' form textarea', BLOCK + ' form [tabindex="0"]'].join(','), function (x) { return !x.disabled && x.type !== 'hidden' && shown(x); }) ||
+        first("main h1, main [role='heading'][aria-level='1']", shown) ||
+        first("main [data-slot='breadcrumb-page'], main [aria-current='page']", shown);
+      if (!b) return;
+      if (!b.hasAttribute('tabindex') && !/^(A|BUTTON|INPUT|SELECT|TEXTAREA)$/.test(b.tagName)) {
+        b.setAttribute('tabindex', '-1');
+        b.addEventListener('blur', function () { b.removeAttribute('tabindex'); }, { once: true });
+      }
+      b.focus({ preventScroll: true });
+    } catch (e) {}
   }
 
   function navigate(r, row, btn, to, route, pg, own) {
-    var s = mark(row, btn), from = route.fullPath, kbd = false, settled = false;
+    var s = mark(row, btn), kbd = false, settled = false, want = pg.prefix + (to === 'hotels' ? '/hotels/search' : '/transport');
     try { kbd = btn.matches(':focus-visible'); } catch (e) {}
+    try { want = r.resolve(want).path; } catch (e) {}
     busy = s;
     function end(ok) {
       if (settled) return;
@@ -862,24 +907,47 @@
       busy = null;
       unmark(s, !ok);
     }
-    // the route changes before the new page is drawn (it waits for its data): stay busy until the old row is gone.
+    // the router's guard (go()) asks for every navigation it starts while this one is busy: ours (or its redirect), or another one
+    s.mine = function (t) { return t.path === want || !!(t.redirectedFrom && t.redirectedFrom.path === want); };
+    // a link to the page already shown (the logo, Home on the home page) runs no beforeEach, but the router has already cancelled ours
+    // (it reports that only when ours wakes up, after the new page's code loads): the visitor stays here, so the old look returns now
+    s.dup = function () { end(false); };
+    // another navigation started first (Services, a link, Back/Forward): it wins. The busy look ends now; the clicked tab keeps its look while
+    // that navigation loads (no flip back), and the old look returns only if the newest navigation leaves the visitor on this page.
+    s.drop = function () {
+      if (settled) return;
+      settled = true;
+      busy = null;
+      unmark(s, false);
+      var off = r.afterEach(function (t) {
+        if (t.fullPath !== last) return; // an older navigation (ours, cancelled) reporting: wait for the newest
+        if (off) off();
+        if (row.isConnected && r.currentRoute.value.path === route.path) unmark(s, true);
+      });
+    };
+    // the router resolves before the new page is drawn (it waits for its data): stay busy until the old row is gone.
     // Between the two transport modes the page and its row stay; the focused tab is then already the chosen one.
-    function arrived(path) {
-      var n = 0;
-      if (path === route.path) { end(true); return; }
+    // If the visitor goes elsewhere first (Back, a link), stop: back on the old page its old tab look returns.
+    function arrived() {
+      var t0 = Date.now(), dest = r.currentRoute.value.path; // where the router landed (after any redirect)
+      if (dest === route.path) { end(true); return; }
       (function look() {
-        if (!row.isConnected || ++n > 50) { end(true); if (kbd && !row.isConnected) refocus(); return; }
+        var now = r.currentRoute.value.path, mine = !settled;
+        if (!row.isConnected) { end(true); if (kbd && mine) refocus(); return; }
+        if (now !== dest) { end(now !== route.path); return; }
+        if (Date.now() - t0 > 60000) { end(true); return; } // drawn without replacing this row: stop looking
         setTimeout(look, 100);
       })();
     }
+    // no time limit before the router answers: push() always settles (resolved, failed, or cancelled by a later navigation)
     function push(path, query) {
+      if (settled) return; // another navigation won while the hotel query was being prepared
       try {
-        r.push({ path: path, query: query }).then(function (fail) { if (fail) end(false); else arrived(path); }, function () { end(false); });
+        r.push({ path: path, query: query }).then(function (fail) { if (fail) end(false); else arrived(); }, function () { end(false); });
       } catch (e) {
         end(false);
       }
     }
-    setTimeout(function () { if (!settled) end(r.currentRoute.value.fullPath !== from); }, 12000);
     if (to === 'hotels') hotelQuery(route, function (q) { push(pg.prefix + '/hotels/search', q); });
     else push(pg.prefix + '/transport', transportQuery(route, own, to));
   }
@@ -892,8 +960,9 @@
       if (!row) return;
       var to = tabOf(btn);
       if (!to || to === 'services') return; // services: the theme opens /services itself
-      var r = router(), route = r && r.currentRoute && r.currentRoute.value, pg = pageOf(route) || hotelPageOf(route);
-      if (!pg) return; // home and the rest: the theme switches the form in place
+      var r = router(), route = r && r.currentRoute && r.currentRoute.value;
+      if (!route) return;
+      var pg = pageOf(route) || hotelPageOf(route) || otherOf(route, row);
       var own = pg.product || activeOf(row) || 'airport';
       if (to === own && !busy) return; // the page's own tab: nothing changes
       e.preventDefault();
@@ -912,7 +981,9 @@
     try {
       if (!r.__advTabs) {
         r.__advTabs = 1;
-        r.afterEach(function (to, f, fail) { if (!fail) remember(to); });
+        r.afterEach(function (to, f, fail) { if (!fail) remember(to); else if (fail.type === 16 && busy && busy.dup) busy.dup(); });
+        // every navigation the router starts: remember the newest; one that is not ours while ours is busy supersedes it (never blocks)
+        r.beforeEach(function (to) { try { last = to.fullPath; if (busy && busy.mine && !busy.mine(to)) busy.drop(); } catch (e) {} });
       }
       remember(r.currentRoute.value);
       var pg = pageOf(r.currentRoute.value);
