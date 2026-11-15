@@ -5,6 +5,18 @@
    4. Product tabs: on every page that shows the search band (home, results pages, hotel pages) a tab for another product opens that product's
       page (13 Nov 2026; the home page since 14 Nov 2026).
    5. Contact page: the Subject becomes a drop-down with an "Other" text and an optional hotel (13 Nov 2026).
+   6. Header, floating buttons, footer: the phone menu's first outside tap only closes it, a real menu button, floating buttons tucked on the first screen
+      while they would cover a control, the Hotels header item marked on hotel pages, empty store badges out of the tab order (14 Nov 2026).
+   7. Pop-ups: a Done bar for guests and rooms, calendars kept inside the window, month names on the phone calendar, no keyboard on phone filters (14 Nov 2026).
+   8. Page changes: the pager goes to the top of the list; /transport title, breadcrumb, heading and start prompt follow the mode; /packages heading (14 Nov 2026).
+   9. Transport place lists: "loading" while their places are fetched, instead of "no options available" (14 Nov 2026).
+   10. French (and English) pages: the theme's Arabic leftovers replaced by the page language's text (14 Nov 2026).
+   v1.0.8 = v1.0.7 + site-wide QA fixes F01-F40 as shipped (F11 left to Jood, F30 Arabic only): parts 6-10 (window flags __advChrome,
+   __advPop7, __advRoutes, __advForms, __advI18n) and small fixes in parts 1, 2, 3 and 5 (WhatsApp message source, wait for
+   advisor-brand.css before replacing theme controls, contact hotel list side). Part 4 (v1.0.7 tabs) is unchanged.
+   v1.0.8 fix2 (second review, 15 Nov 2026): parts 2, 3, 5, 6, 7, 8 and 10 start only once Nuxt has hydrated the page (its hook, or its
+   isHydrating flag polled), never on a fixed 6 s timer that could change the page in the middle of a slow hydration; part 10's French
+   assistant label is shorter.
    v1.0.7 (v1.0.6 + home tabs navigate, capitalised sheet labels): part 4 also on the home page (and any other page with the band), and it
    stays busy until a slow navigation resolves (the capitalised labels are in advisor-brand.css). The busy tab shows a spinner and the form
    under it waits (dimmed, inert); a later navigation (Services, a link, Back) ends the busy look at once. Part 2: WebKit viewport-scroll fix.
@@ -31,7 +43,8 @@
   function textOf(href) { try { return new URL(href, location.href).searchParams.get('text'); } catch (e) { return null; } }
   function message() {
     var l = lang();
-    var f = document.querySelector("[data-block-id='whatsapp-chat'] a[href*='wa.me'], [data-block-id='whatsapp-chat'] a[href*='whatsapp.com']");
+    // v1.0.8: the block id sits on the <a> itself (the descendant selector alone never matched, so the fallback texts were used)
+    var f = document.querySelector("a[data-block-id='whatsapp-chat'][href*='wa.me'], a[data-block-id='whatsapp-chat'][href*='whatsapp.com'], [data-block-id='whatsapp-chat'] a[href*='wa.me'], [data-block-id='whatsapp-chat'] a[href*='whatsapp.com']");
     var t = f && textOf(f.href);
     if (t && (l === 'ar' || t !== FALLBACK.ar)) return t;
     return FALLBACK[l];
@@ -505,10 +518,12 @@
     });
   }
   function app() { var el = document.querySelector('#__nuxt'); return el ? el.__vue_app__ : null; }
+  function cssOk() { try { return !!getComputedStyle(document.documentElement).getPropertyValue('--adv-btn'); } catch (e) { return false; } } // v1.0.8: advisor-brand.css applied
   function go() {
     if (started) return;
     var a = app();
     if (!a) return;
+    if (!cssOk()) { if ((go.n = (go.n || 0) + 1) < 50) setTimeout(go, 400); return; } // v1.0.8: without our stylesheet the theme's own field stays
     started = true;
     hookRouter(a);
     mountAll();
@@ -517,16 +532,21 @@
     setInterval(function () { if (document.querySelector('[data-adv-hotel]')) guard(sync); }, 500);
     (window.requestIdleCallback || function (f) { setTimeout(f, 1200); })(function () { if (forms().length) load(lang()); });
   }
+  // v1.0.8 (fix2): the part starts once Nuxt has hydrated the page: Nuxt's own hook, or its isHydrating flag (polled) if the hook was
+  // missed. The safety net was a fixed 6 s timer: on a slow load it changed the page while Vue was still hydrating it, and Vue then left out
+  // what it could not match (the /transport list section, the home band's Hotel field).
+  function hydrated(nuxt, f) {
+    var done = false, n = 0;
+    function run() { if (!done) { done = true; setTimeout(f, 0); } }
+    nuxt.hooks.hookOnce('app:suspense:resolve', run);
+    (function poll() { if (done) return; if (!nuxt.isHydrating) run(); else setTimeout(poll, ++n < 120 ? 500 : 3000); })();
+  }
   function start() {
     var a = app();
     if (!a) { setTimeout(start, 300); return; }
     var nuxt = a.config.globalProperties.$nuxt;
-    if (nuxt && nuxt.isHydrating && nuxt.hooks && nuxt.hooks.hookOnce) {
-      nuxt.hooks.hookOnce('app:suspense:resolve', function () { setTimeout(go, 0); });
-      setTimeout(go, 6000); // safety net if the hook never fires
-    } else {
-      go();
-    }
+    if (nuxt && nuxt.isHydrating && nuxt.hooks && nuxt.hooks.hookOnce) hydrated(nuxt, go);
+    else go();
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
 })();
@@ -686,22 +706,29 @@
       for (var i = 0; i < cals.length; i++) if (!cals[i].__advFoot) mount(cals[i]);
     } catch (e) {}
   }
+  function cssOk() { try { return !!getComputedStyle(document.documentElement).getPropertyValue('--adv-btn'); } catch (e) { return false; } } // v1.0.8: advisor-brand.css applied
   function go() {
     if (started) return;
+    if (!cssOk()) { if ((go.n = (go.n || 0) + 1) < 50) setTimeout(go, 400); return; } // v1.0.8: no unstyled Done bar without our stylesheet
     started = true;
     scan();
     new MutationObserver(function () { if (!timer) timer = setTimeout(scan, 30); }).observe(document.body, { childList: true, subtree: true });
   }
   function app() { var el = document.querySelector('#__nuxt'); return el ? el.__vue_app__ : null; }
+  // v1.0.8 (fix2): start once Nuxt has hydrated the page (hook, or its isHydrating flag polled); no fixed 6 s timer (see part 2)
+  function hydrated(nuxt, f) {
+    var done = false, n = 0;
+    function run() { if (!done) { done = true; setTimeout(f, 0); } }
+    nuxt.hooks.hookOnce('app:suspense:resolve', run);
+    (function poll() { if (done) return; if (!nuxt.isHydrating) run(); else setTimeout(poll, ++n < 120 ? 500 : 3000); })();
+  }
   function start() {
     try {
       var a = app();
       if (!a) { setTimeout(start, 300); return; }
       var nuxt = a.config.globalProperties.$nuxt;
-      if (nuxt && nuxt.isHydrating && nuxt.hooks && nuxt.hooks.hookOnce) {
-        nuxt.hooks.hookOnce('app:suspense:resolve', function () { setTimeout(go, 0); });
-        setTimeout(go, 6000); // safety net if the hook never fires
-      } else go();
+      if (nuxt && nuxt.isHydrating && nuxt.hooks && nuxt.hooks.hookOnce) hydrated(nuxt, go);
+      else go();
     } catch (e) {}
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
@@ -1133,7 +1160,7 @@
       pop.style.maxWidth = Math.round(vw < 768 ? r.width : Math.max(r.width, Math.min(360, vw - 16))) + 'px';
       var natural = Math.min(pop.scrollHeight + 2, 320); // the whole list's height (scrollHeight ignores max-height; the list keeps its scroll position)
       var below = top0 + h0 - r.bottom - GAP - M, above = r.top - top0 - GAP - M;
-      var down = below >= natural || below >= above;
+      var down = below >= Math.min(natural, 200) || below >= above; // v1.0.8: below when a useful list (200px) fits there, as part 2's list
       var maxH = Math.max(72, Math.min(320, down ? below : above));
       pop.style.maxHeight = Math.floor(maxH) + 'px';
       var h = Math.min(natural, maxH), w = pop.offsetWidth;
@@ -1629,24 +1656,766 @@
       });
     }
     function app() { var el = document.querySelector('#__nuxt'); return el ? el.__vue_app__ : null; }
+    function cssOk() { try { return !!getComputedStyle(document.documentElement).getPropertyValue('--adv-btn'); } catch (e) { return false; } } // v1.0.8: advisor-brand.css applied
     function go() {
       if (started) return;
+      if (!cssOk()) { if ((go.n = (go.n || 0) + 1) < 50) setTimeout(safe(go), 400); return; } // v1.0.8: the theme's Subject stays without our stylesheet
       started = true;
       safe(mountAll)();
       var t = null;
       new MutationObserver(function () { clearTimeout(t); t = setTimeout(safe(mountAll), 150); }).observe(document.body, { childList: true, subtree: true });
     }
+    // v1.0.8 (fix2): start once Nuxt has hydrated the page (hook, or its isHydrating flag polled); no fixed 6 s timer (see part 2)
+    function hydrated(nuxt, f) {
+      var done = false, n = 0;
+      function run() { if (!done) { done = true; setTimeout(f, 0); } }
+      nuxt.hooks.hookOnce('app:suspense:resolve', run);
+      (function poll() { if (done) return; if (!nuxt.isHydrating) run(); else setTimeout(poll, ++n < 120 ? 500 : 3000); })();
+    }
     function start() {
       var a = app();
       if (!a) { setTimeout(safe(start), 300); return; }
       var nuxt = a.config.globalProperties.$nuxt;
-      if (nuxt && nuxt.isHydrating && nuxt.hooks && nuxt.hooks.hookOnce) {
-        nuxt.hooks.hookOnce('app:suspense:resolve', function () { setTimeout(safe(go), 0); });
-        setTimeout(safe(go), 6000); // safety net if the hook never fires
-      } else {
-        go();
-      }
+      if (nuxt && nuxt.isHydrating && nuxt.hooks && nuxt.hooks.hookOnce) hydrated(nuxt, safe(go));
+      else go();
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', safe(start)); else safe(start)();
   } catch (e) {}
+})();
+/* ---------- 6. Header, floating buttons and footer (v1.0.8, 2026-11-14) ----------
+   - Phone menu: while the header menu is open, a transparent layer lies under it; the first tap outside the menu only closes the menu
+     (before, the same tap also opened whatever was under the finger, e.g. the stay calendar). The layer stays until that tap's click is over.
+   - Menu button (a bare 18px svg): reachable with Tab, a translated name instead of "open_navigation_menu", Enter/Space open it, aria-expanded
+     follows the menu (its 44px area and the X while open are in advisor-brand.css).
+   - Floating WhatsApp disc and assistant button: html[data-adv-top] while the page is at its top (and can scroll); a floating button that would
+     cover a field, button or link on that first screen is tucked away ([data-adv-tuck], faded in advisor-brand.css) until the visitor scrolls;
+     at any scroll position, one that would cover a form's submit button or a booking card's button is tucked away as well.
+   - Header: the Hotels link is marked ([data-adv-current]) on the hotel search results, a hotel's page and a city page.
+   - Footer: the app-store badges with no address yet leave the keyboard order; WhatsApp links without a target open in a new tab. */
+(function () {
+  if (window.__advChrome) return;
+  window.__advChrome = 1;
+  var NAME = { ar: 'القائمة', en: 'Menu', fr: 'Menu' };
+  var TOP = 80, started = false, shield = null, tuckT = null, scanT = null;
+  function lang() {
+    var l = (document.documentElement.getAttribute('lang') || 'ar').slice(0, 2).toLowerCase();
+    return NAME[l] ? l : 'ar';
+  }
+  function app() { var el = document.querySelector('#__nuxt'); return el ? el.__vue_app__ : null; }
+  function safe(f) { return function (a, b) { try { return f(a, b); } catch (e) {} }; }
+  function hit(a, b, m) { return Math.min(a.right, b.right) - Math.max(a.left, b.left) > m && Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top) > m; }
+
+  /* --- phone menu: the first tap outside only closes it --- */
+  function trig() { return document.querySelector("[data-block-id='header'] [data-slot='dropdown-menu-trigger']"); }
+  function menuOpen() {
+    var m = document.querySelectorAll("[data-slot='dropdown-menu-content'][data-state='open']");
+    for (var i = 0; i < m.length; i++) if (m[i].querySelector('nav a[href]')) return m[i];
+    return null;
+  }
+  function escape() {
+    try { document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', code: 'Escape', keyCode: 27, bubbles: true, cancelable: true })); } catch (e) {}
+  }
+  function dropShield() {
+    if (shield && shield.parentNode) shield.parentNode.removeChild(shield);
+    shield = null;
+  }
+  function eat(e) { if (e.cancelable) e.preventDefault(); e.stopPropagation(); }
+  function addShield() {
+    if (shield || !menuOpen()) return;
+    var s = document.createElement('div');
+    s.className = 'adv-menu-shield';
+    s.setAttribute('data-adv-shield', '');
+    s.setAttribute('aria-hidden', 'true');
+    s.style.cssText = 'position:fixed;inset:0;z-index:49;background:transparent;pointer-events:auto;touch-action:none;-webkit-tap-highlight-color:transparent';
+    var closing = false, t = null;
+    function finish() { clearTimeout(t); if (shield === s) dropShield(); }
+    s.addEventListener('pointerdown', safe(function (e) {
+      if (e.cancelable) e.preventDefault(); // no focus change, no text selection, no compatibility mouse events
+      if (closing) return;
+      closing = true;
+      // the theme's menu closes on a pointerdown outside it; Escape as well, in case that listener did not see this one
+      setTimeout(safe(function () { if (menuOpen()) escape(); }), 30);
+      t = setTimeout(finish, 1500);
+    }));
+    // touch: the cancelled touchstart means no click follows, so the layer goes 80ms after the finger lifts (it stayed 450ms and ate a quick second tap);
+    // mouse: the click on the layer follows at once and removes it
+    s.addEventListener('pointerup', safe(function (e) { eat(e); clearTimeout(t); t = setTimeout(finish, 80); }));
+    ['mousedown', 'mouseup', 'touchstart', 'touchend', 'contextmenu'].forEach(function (k) { s.addEventListener(k, eat, { passive: false }); });
+    s.addEventListener('click', safe(function (e) { eat(e); setTimeout(finish, 0); }));
+    shield = s;
+    document.body.appendChild(s);
+  }
+  function syncMenu() {
+    var tg = trig();
+    if (tg) {
+      // the theme's trigger is an svg: make it a keyboard-reachable button with a real name
+      if (tg.getAttribute('tabindex') !== '0') tg.setAttribute('tabindex', '0');
+      if (tg.getAttribute('role') !== 'button') tg.setAttribute('role', 'button');
+      var n = NAME[lang()];
+      if (tg.getAttribute('aria-label') !== n) tg.setAttribute('aria-label', n);
+      if (!tg.__advKey) {
+        tg.__advKey = 1;
+        tg.addEventListener('keydown', safe(function (e) {
+          if ((e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') && !e.defaultPrevented) {
+            e.preventDefault();
+            var was = tg.getAttribute('data-state');
+            setTimeout(safe(function () { // the theme's own key handler ran first: only press it when nothing happened
+              if (tg.getAttribute('data-state') === was) { try { tg.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, cancelable: true, pointerType: 'mouse', button: 0, isPrimary: true })); } catch (x) {} }
+            }), 0);
+          }
+        }));
+      }
+      if (!tg.__advMo) {
+        tg.__advMo = new MutationObserver(safe(function () { if (tg.getAttribute('data-state') === 'open') setTimeout(addShield, 0); else if (shield && !shield.__busy) setTimeout(function () { if (!menuOpen() && shield && !shield.__busy) dropShield(); }, 600); }));
+        tg.__advMo.observe(tg, { attributes: true, attributeFilter: ['data-state'] });
+      }
+    }
+    if (menuOpen()) addShield();
+  }
+
+  /* --- floating buttons: tucked away on the first screen while they would cover a control --- */
+  function floats() {
+    var out = [], w = document.querySelectorAll("a[data-block-id='whatsapp-chat'], button[data-slot='button'].fixed.rounded-full");
+    for (var i = 0; i < w.length; i++) out.push(w[i]);
+    return out;
+  }
+  var CTRL = "a[href],button,input:not([type='hidden']),select,textarea,label,[role='button'],[role='combobox'],[data-slot='popover-trigger'],[data-slot='sheet-trigger'],.cursor-pointer"; // .cursor-pointer: clickable photos / tiles (hotel gallery)
+  // a form's or a booking card's main button: no floating button stays over it at any scroll position (fix review 14 Nov)
+  // (not every primary button: result cards would make the floating buttons blink while the list scrolls)
+  var MAINBTN = "button[type='submit'],[data-slot='card-content']>button";
+  // a page that scrolls past the first-screen threshold at all (a short page such as /en/login scrolls 91px; 120px were required before)
+  function scrollable() { var d = document.documentElement; return (d.scrollHeight - innerHeight) > TOP + 8; }
+  function covers(f, sel) {
+    var a = f.getBoundingClientRect();
+    if (!a.width || !a.height) return false;
+    var roots = document.querySelectorAll("main, [data-block-id='footer']");
+    for (var r = 0; r < roots.length; r++) {
+      var c = roots[r].querySelectorAll(sel || CTRL);
+      for (var i = 0; i < c.length; i++) {
+        var el = c[i];
+        if (f.contains(el) || el.contains(f)) continue;
+        var b = el.getBoundingClientRect();
+        if (!b.width || !b.height || b.bottom < 0 || b.top > innerHeight || !hit(a, b, 4)) continue;
+        var cs = getComputedStyle(el);
+        if (cs.visibility === 'hidden' || cs.opacity === '0') continue;
+        return true;
+      }
+    }
+    return false;
+  }
+  function tuck() {
+    tuckT = null;
+    var d = document.documentElement, top = (window.pageYOffset || d.scrollTop || 0) < TOP && scrollable();
+    if (top) d.setAttribute('data-adv-top', ''); else d.removeAttribute('data-adv-top');
+    floats().forEach(function (f) {
+      var on = (top && covers(f)) || covers(f, MAINBTN);
+      if (on !== f.hasAttribute('data-adv-tuck')) { if (on) f.setAttribute('data-adv-tuck', ''); else f.removeAttribute('data-adv-tuck'); }
+    });
+  }
+  function soon(ms) { if (!tuckT) tuckT = setTimeout(safe(tuck), ms || 120); }
+
+  /* --- header current item, footer badges, WhatsApp targets --- */
+  var HOTELISH = /^(?:\/[a-z]{2}(?:-[a-z]{2})?)?\/(?:hotels\/[^\/]+|cities\/[^\/]+)\/?$/i;
+  function current() {
+    var p = location.pathname, on = HOTELISH.test(p);
+    var links = document.querySelectorAll("[data-block-id='header'] nav a[href], [data-slot='dropdown-menu-content'] nav a[href]");
+    for (var i = 0; i < links.length; i++) {
+      var a = links[i], h = a.getAttribute('href') || '';
+      var mine = on && /^(?:\/[a-z]{2}(?:-[a-z]{2})?)?\/hotels\/?$/i.test(h) && a.getAttribute('aria-current') !== 'page';
+      if (mine !== a.hasAttribute('data-adv-current')) { if (mine) a.setAttribute('data-adv-current', ''); else a.removeAttribute('data-adv-current'); }
+    }
+  }
+  function footer() {
+    var e = document.querySelectorAll("[data-block-id='footer'] a[href='']");
+    for (var i = 0; i < e.length; i++) {
+      if (e[i].getAttribute('tabindex') !== '-1') { e[i].setAttribute('tabindex', '-1'); e[i].setAttribute('aria-disabled', 'true'); }
+    }
+    var w = document.querySelectorAll("a[href*='wa.me/']:not([target]), a[href*='api.whatsapp.com']:not([target])");
+    for (var j = 0; j < w.length; j++) { w[j].setAttribute('target', '_blank'); w[j].setAttribute('rel', 'noopener'); }
+  }
+  function scan() {
+    scanT = null;
+    syncMenu();
+    current();
+    footer();
+    soon(0);
+  }
+  function later(ms) { if (!scanT) scanT = setTimeout(safe(scan), ms || 150); }
+  function go() {
+    if (started) return;
+    started = true;
+    scan();
+    new MutationObserver(function () { later(200); soon(300); }).observe(document.body, { childList: true, subtree: true });
+    window.addEventListener('scroll', function () {
+      var now = (window.pageYOffset || 0) < TOP;
+      soon(now || now !== document.documentElement.hasAttribute('data-adv-top') ? 60 : 120); // main buttons are checked at every position
+    }, { passive: true });
+    window.addEventListener('resize', function () { soon(200); });
+    try {
+      var r = app().config.globalProperties.$router;
+      if (r && !r.__advChrome) { r.__advChrome = 1; r.afterEach(function () { [60, 500, 1500].forEach(function (ms) { setTimeout(safe(scan), ms); }); }); }
+    } catch (e) {}
+    setTimeout(safe(scan), 1500);
+  }
+  function cssOk() { try { return !!getComputedStyle(document.documentElement).getPropertyValue('--adv-btn'); } catch (e) { return false; } }
+  // v1.0.8 (fix2): start once Nuxt has hydrated the page (hook, or its isHydrating flag polled); no fixed 6 s timer (see part 2)
+  function hydrated(nuxt, f) {
+    var done = false, n = 0;
+    function run() { if (!done) { done = true; setTimeout(f, 0); } }
+    nuxt.hooks.hookOnce('app:suspense:resolve', run);
+    (function poll() { if (done) return; if (!nuxt.isHydrating) run(); else setTimeout(poll, ++n < 120 ? 500 : 3000); })();
+  }
+  function start() {
+    var a = app();
+    if (!a) { setTimeout(start, 300); return; }
+    var n = 0, wait = function () { if (cssOk()) go(); else if (++n < 50) setTimeout(wait, 400); }; // our stylesheet missing: change nothing
+    var nuxt = a.config.globalProperties.$nuxt;
+    if (nuxt && nuxt.isHydrating && nuxt.hooks && nuxt.hooks.hookOnce) hydrated(nuxt, wait);
+    else wait();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', safe(start)); else safe(start)();
+})();
+
+/* ---------- 7. Pop-ups: a Done bar for guests and rooms, calendars kept inside the window, month names on the phone calendar (v1.0.8) ----------
+   - Guests and rooms (desktop pop-over on the home band, results card, hotel page and city card) closed only on a click outside or Esc: it gets
+     the calendar's footer bar (part 3 look): the current choice ("1 غرفة، 2 بالغين، 0 أطفال") and «تم / Done / Valider», which closes it like
+     Escape and gives the focus back to the field. Phones keep the theme's own screen and its «تطبيق».
+   - A calendar pop-up that opens over the sticky header or past the bottom of the window: the page scrolls once so its field sits just under the
+     header, where the whole calendar and its Done bar fit (short laptop windows); the pop-up itself is capped to the room left (advisor-brand.css).
+   - Phone stay calendar: a month name above each of the two stacked months (one heading "نوفمبر - ديسمبر 2026" sat above both).
+   - Phone filter screens: the focus no longer lands in the minimum price box when the screen opens (the keyboard popped up); it goes to the
+     screen's title. */
+(function () {
+  if (window.__advPop7) return;
+  window.__advPop7 = 1;
+  var T = {
+    ar: { done: 'تم', loc: 'ar-u-nu-latn' },
+    en: { done: 'Done', loc: 'en-US' },
+    fr: { done: 'Valider', loc: 'fr-FR' }
+  };
+  var started = false, timer = null;
+  function lang() {
+    var l = (document.documentElement.getAttribute('lang') || 'ar').slice(0, 2).toLowerCase();
+    return T[l] ? l : 'ar';
+  }
+  function app() { var el = document.querySelector('#__nuxt'); return el ? el.__vue_app__ : null; }
+  function safe(f) { return function (a, b) { try { return f(a, b); } catch (e) {} }; }
+  function triggerOf(pop) {
+    var id = pop.getAttribute('aria-labelledby'), t = id && document.getElementById(id);
+    if (t && !pop.contains(t)) return t;
+    var c = pop.id && document.querySelector("[aria-controls='" + pop.id + "']");
+    return c || null;
+  }
+  function text(el) { return el ? String(el.textContent || '').replace(/\s+/g, ' ').trim() : ''; }
+
+  /* --- guests and rooms --- */
+  function guests(pop) {
+    if (pop.__advG || pop.closest("[data-slot='sheet-content'],[data-slot='dialog-content']")) return;
+    var t = T[lang()], tg = triggerOf(pop);
+    var foot = document.createElement('div');
+    foot.className = 'adv-cal-foot';
+    foot.setAttribute('data-adv-cal-foot', 'guests');
+    var sum = document.createElement('p');
+    sum.className = 'adv-cal-sum';
+    sum.setAttribute('aria-live', 'polite');
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'adv-cal-done';
+    btn.textContent = t.done;
+    foot.appendChild(sum);
+    foot.appendChild(btn);
+    pop.appendChild(foot);
+    pop.__advG = { sum: sum, tg: tg };
+    function paint() {
+      // "1 غرفة،2 بالغين،0 أطفال" -> "1 غرفة، 2 بالغين" (a part that counts 0 is left out, so the line fits the bar)
+      var raw = text(tg), sep = /،/.test(raw) ? '، ' : ', ';
+      var parts = raw.split(/\s*[،,]\s*/), keep = [];
+      for (var i = 0; i < parts.length; i++) if (parts[i] && !/^0(?!\d)/.test(parts[i])) keep.push(parts[i]);
+      var s = (keep.length ? keep : parts).join(sep).trim();
+      if (sum.textContent !== s) sum.textContent = s;
+    }
+    paint();
+    var q = 0;
+    new MutationObserver(function () { if (!q) { q = 1; setTimeout(function () { q = 0; safe(paint)(); }, 60); } }).observe(pop, { subtree: true, childList: true, attributes: true, characterData: true });
+    if (tg) new MutationObserver(function () { safe(paint)(); }).observe(tg, { subtree: true, childList: true, characterData: true });
+    btn.addEventListener('click', safe(function () {
+      try { document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', code: 'Escape', keyCode: 27, bubbles: true, cancelable: true })); } catch (e) {}
+      setTimeout(safe(function () {
+        if (pop.isConnected && pop.getAttribute('data-state') === 'open') { try { document.body.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, cancelable: true, pointerType: 'mouse', button: 0, isPrimary: true })); } catch (e) {} }
+        var a = document.activeElement;
+        if (tg && tg.isConnected && (!a || a === document.body || pop.contains(a))) { try { tg.focus({ preventScroll: true }); } catch (e) {} }
+      }), 120);
+    }));
+  }
+
+  /* --- calendars kept inside the window, clear of the sticky header --- */
+  function header() {
+    var h = document.querySelector("[data-block-id='header']");
+    if (!h) return 0;
+    var cs = getComputedStyle(h), r = h.getBoundingClientRect();
+    return (cs.position === 'sticky' || cs.position === 'fixed') && r.bottom > 0 ? r.bottom : 0;
+  }
+  function fit(pop) {
+    if (pop.__advFit) return;
+    pop.__advFit = 1;
+    setTimeout(safe(function () {
+      if (!pop.isConnected || pop.getAttribute('data-state') !== 'open') return;
+      var tg = triggerOf(pop), r = pop.getBoundingClientRect(), hb = header();
+      if (!tg) return;
+      var tr = tg.getBoundingClientRect();
+      if (r.top >= hb + 4 && r.bottom <= innerHeight - 4 && pop.scrollHeight <= pop.clientHeight + 2) return; // it fits whole
+      // room under the field once it sits 8px under the header: enough for the whole pop-up?
+      var dy = tr.top - (hb + 8);
+      if (Math.abs(dy) < 8) return;
+      var maxY = document.documentElement.scrollHeight - innerHeight, y = window.pageYOffset || 0;
+      var ny = Math.max(0, Math.min(maxY, y + dy));
+      if (Math.abs(ny - y) < 8) return;
+      window.scrollTo(0, ny);
+    }), 80);
+  }
+
+  /* --- phone stay calendar: a caption above each month --- */
+  function captions(cal) {
+    var grids = cal.querySelectorAll("[data-slot='range-calendar-grid']");
+    // a caption whose month grid Vue removed (month change) is left behind before the next grid: drop every caption not directly before a grid
+    var old = cal.querySelectorAll('.adv-cal-cap');
+    for (var k = 0; k < old.length; k++) {
+      var nx = old[k].nextElementSibling;
+      if (!nx || nx.getAttribute('data-slot') !== 'range-calendar-grid' || grids.length < 2) old[k].parentNode.removeChild(old[k]);
+    }
+    if (grids.length < 2) return;
+    var loc = T[lang()].loc;
+    for (var i = 0; i < grids.length; i++) {
+      var g = grids[i], d = g.querySelector("[data-slot='range-calendar-trigger']:not([data-outside-view])"), v = d && d.getAttribute('data-value');
+      var cap = g.previousElementSibling && g.previousElementSibling.classList.contains('adv-cal-cap') ? g.previousElementSibling : null;
+      if (!v) continue;
+      var p = v.split('-'), s;
+      try { s = new Intl.DateTimeFormat(loc, { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(Date.UTC(+p[0], +p[1] - 1, 1))); } catch (e) { continue; }
+      if (!cap) {
+        cap = document.createElement('div');
+        cap.className = 'adv-cal-cap';
+        cap.setAttribute('aria-hidden', 'true'); // the grid already names its month to screen readers
+        g.parentNode.insertBefore(cap, g);
+      }
+      if (cap.textContent !== s) cap.textContent = s;
+    }
+  }
+  function phoneCal(cal) {
+    if (cal.__advCap) return;
+    cal.__advCap = 1;
+    captions(cal);
+    var q = 0;
+    new MutationObserver(function () { if (!q) { q = 1; setTimeout(function () { q = 0; safe(captions)(cal); }, 40); } }).observe(cal, { subtree: true, childList: true, attributes: true, attributeFilter: ['data-value'] });
+  }
+
+  /* --- phone filter screens: no keyboard on open --- */
+  function filterFocus(sheet) {
+    if (sheet.__advFf) return;
+    sheet.__advFf = 1;
+    [60, 350].forEach(function (ms) {
+      setTimeout(safe(function () {
+        var a = document.activeElement;
+        if (!sheet.isConnected || !a || !sheet.contains(a) || a.tagName !== 'INPUT' || a.type !== 'number' || sheet.__advTyped) return;
+        var t = sheet.querySelector("[data-slot='sheet-title']") || sheet;
+        if (!t.hasAttribute('tabindex')) t.setAttribute('tabindex', '-1');
+        try { t.focus({ preventScroll: true }); } catch (e) {}
+      }), ms);
+    });
+    sheet.addEventListener('keydown', function () { sheet.__advTyped = 1; }, true);
+    sheet.addEventListener('pointerdown', function () { sheet.__advTyped = 1; }, true);
+  }
+
+  function scan() {
+    timer = null;
+    var i, p = document.querySelectorAll("[data-slot='popover-content'][data-state='open']");
+    for (i = 0; i < p.length; i++) {
+      // guests too (fix review 14 Nov): on a short window the field moves up under the header so the whole pop-over and its Done bar fit
+      if (p[i].querySelector("[data-slot='increment']")) { guests(p[i]); if (!p[i].closest("[data-slot='sheet-content'],[data-slot='dialog-content']")) fit(p[i]); }
+      if (p[i].querySelector("[data-slot='range-calendar'],[data-slot='calendar']")) fit(p[i]);
+    }
+    var c = document.querySelectorAll("[data-slot='dialog-content'] [data-slot='range-calendar'],[data-slot='sheet-content'] [data-slot='range-calendar'],[data-slot='drawer-content'] [data-slot='range-calendar']");
+    for (i = 0; i < c.length; i++) phoneCal(c[i]);
+    var s = document.querySelectorAll("[data-slot='sheet-content'][data-state='open']");
+    for (i = 0; i < s.length; i++) if (s[i].querySelector("input[type='number']") && !s[i].querySelector("input[name='passengers']")) filterFocus(s[i]);
+  }
+  function go() {
+    if (started) return;
+    started = true;
+    scan();
+    new MutationObserver(function () { if (!timer) timer = setTimeout(safe(scan), 30); }).observe(document.body, { childList: true, subtree: true });
+  }
+  function cssOk() { try { return !!getComputedStyle(document.documentElement).getPropertyValue('--adv-btn'); } catch (e) { return false; } }
+  // v1.0.8 (fix2): start once Nuxt has hydrated the page (hook, or its isHydrating flag polled); no fixed 6 s timer (see part 2)
+  function hydrated(nuxt, f) {
+    var done = false, n = 0;
+    function run() { if (!done) { done = true; setTimeout(f, 0); } }
+    nuxt.hooks.hookOnce('app:suspense:resolve', run);
+    (function poll() { if (done) return; if (!nuxt.isHydrating) run(); else setTimeout(poll, ++n < 120 ? 500 : 3000); })();
+  }
+  function start() {
+    var a = app();
+    if (!a) { setTimeout(start, 300); return; }
+    var n = 0, wait = function () { if (cssOk()) go(); else if (++n < 50) setTimeout(wait, 400); };
+    var nuxt = a.config.globalProperties.$nuxt;
+    if (nuxt && nuxt.isHydrating && nuxt.hooks && nuxt.hooks.hookOnce) hydrated(nuxt, wait);
+    else wait();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', safe(start)); else safe(start)();
+})();
+
+/* ---------- 8. Page changes: pager, transport page title / breadcrumb / heading (v1.0.8) ----------
+   - Results and blog pagers (/hotels/search, /blog, any language): after a page change the view goes to the top of the list (just under the
+     sticky header); the theme left it at the pager and footer. Only a change of ?page alone; /hotels (infinite list) is not touched.
+   - /transport: the page title, the breadcrumb and a page heading (the page had no h1) follow the mode (transportation / airport transfer),
+     with the tab's own CMS label; html[data-adv-tr-mode] and the --adv-tr-m-label variable let advisor-brand.css name the mode on the phone
+     summary card with the same words; html[data-adv-tr-searched] (set as soon as the script runs, and on every route change) marks an address
+     that holds a search (route or date): only then does the empty list say "no vehicles for this route on this date" (otherwise a start prompt).
+   - /packages/search: a page heading as well. */
+(function () {
+  if (window.__advRoutes) return;
+  window.__advRoutes = 1;
+  var N = {
+    ar: { transportation: 'المواصلات', airport: 'النقل من المطار', packages: 'الباقات' },
+    en: { transportation: 'Transportation', airport: 'Airport transfer', packages: 'Packages' },
+    fr: { transportation: 'Transport', airport: "Transfert depuis l'aéroport", packages: 'Forfaits' }
+  };
+  var TR = /^((?:\/[a-z]{2}(?:-[a-z]{2})?)?)\/transport\/?$/i, PK = /^((?:\/[a-z]{2}(?:-[a-z]{2})?)?)\/packages\/search\/?$/i;
+  var PAGER = /^(?:\/[a-z]{2}(?:-[a-z]{2})?)?\/(hotels\/search|blog)\/?$/i;
+  var started = false, titleMo = null, want = null, timer = null;
+  function lang() {
+    var l = (document.documentElement.getAttribute('lang') || 'ar').slice(0, 2).toLowerCase();
+    return N[l] ? l : 'ar';
+  }
+  function app() { var el = document.querySelector('#__nuxt'); return el ? el.__vue_app__ : null; }
+  function safe(f) { return function (a, b) { try { return f(a, b); } catch (e) {} }; }
+  function one(v) { return Object.prototype.toString.call(v) === '[object Array]' ? v[0] : v; }
+  function q(name) { try { return new URLSearchParams(location.search).get(name); } catch (e) { return null; } }
+  // /transport whose address holds a search: advisor-brand.css shows "no vehicles for this route" only then (its default is the start prompt);
+  // set as soon as the script runs, before the page is hydrated (fix review 14 Nov: it waited 2-20s for hydration, so "no vehicles" showed first)
+  function searched(path, query) {
+    var d = document.documentElement, on = TR.test(path) && !!(query.from || query.to || query.dateFrom);
+    if (on !== d.hasAttribute('data-adv-tr-searched')) { if (on) d.setAttribute('data-adv-tr-searched', ''); else d.removeAttribute('data-adv-tr-searched'); }
+  }
+  function here() { return { from: q('from'), to: q('to'), dateFrom: q('dateFrom') }; }
+  safe(function () { searched(location.pathname, here()); })();
+
+  /* --- pager --- */
+  function sameBut(a, b, skip) {
+    var k, x = a || {}, y = b || {};
+    for (k in x) if (Object.prototype.hasOwnProperty.call(x, k) && k !== skip && String(one(x[k])) !== String(one(y[k]))) return false;
+    for (k in y) if (Object.prototype.hasOwnProperty.call(y, k) && k !== skip && !(k in x)) return false;
+    return true;
+  }
+  function pagerTarget() {
+    var pag = document.querySelector("main [data-slot='pagination']"), blk = pag && pag.closest('[data-block-id]');
+    if (blk && !/^(header|footer|hotel-search)$/.test(blk.getAttribute('data-block-id'))) return blk;
+    return document.querySelector('main h1:not(.sr-only)') || (pag && pag.parentElement) || null;
+  }
+  function toList() {
+    var t = pagerTarget();
+    if (!t) return;
+    var h = document.querySelector("[data-block-id='header']"), hh = h ? h.getBoundingClientRect().height : 0;
+    var y = Math.max(0, Math.round(t.getBoundingClientRect().top + (window.pageYOffset || 0) - hh - 12));
+    if ((window.pageYOffset || 0) <= y + 4) return; // already at or above the list
+    var smooth = true;
+    try { smooth = !matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+    try { window.scrollTo({ top: y, behavior: smooth ? 'smooth' : 'auto' }); } catch (e) { window.scrollTo(0, y); }
+  }
+  function onPage() {
+    // wait for the new page of the list to be drawn (no change in main for 150ms, at most 2.5s), then go to its top
+    var main = document.querySelector('main'), t0 = Date.now(), quiet = null, mo = null;
+    function done() { if (mo) mo.disconnect(); clearTimeout(quiet); safe(toList)(); }
+    if (!main || !window.MutationObserver) { setTimeout(safe(toList), 300); return; }
+    mo = new MutationObserver(function () { clearTimeout(quiet); if (Date.now() - t0 > 2500) done(); else quiet = setTimeout(done, 150); });
+    mo.observe(main, { childList: true, subtree: true });
+    quiet = setTimeout(done, 400);
+  }
+
+  /* --- transport and packages pages --- */
+  function mode() {
+    var m = q('mode');
+    return m === 'transportation' || m === 'airport' ? m : 'airport'; // bare /transport opens the airport transfer (theme default)
+  }
+  function tabLabel(m) {
+    var key = m === 'airport' ? 'airportTransfer' : m, el = document.querySelector("[data-block-id='hotel-search'] [data-theme-property*='\"" + key + "\"']");
+    var s = el ? String(el.textContent || '').replace(/\s+/g, ' ').trim() : '';
+    return s || N[lang()][m];
+  }
+  function setTitle(t) {
+    want = t;
+    if (!t) return;
+    var cur = document.title || '', i = cur.lastIndexOf(' | '), site = i >= 0 ? cur.slice(i + 3) : '';
+    var nt = site && cur.slice(0, i) !== t ? t + ' | ' + site : (i >= 0 ? cur : t);
+    if (document.title !== nt) document.title = nt;
+  }
+  function heading(text, where) {
+    var h = document.querySelector('main h1[data-adv-h1]');
+    if (!text) { if (h && h.parentNode) h.parentNode.removeChild(h); return; }
+    var others = document.querySelectorAll('main h1:not([data-adv-h1])');
+    for (var i = 0; i < others.length; i++) if (others[i].getClientRects().length) { if (h && h.parentNode) h.parentNode.removeChild(h); return; }
+    if (!where) return;
+    if (!h) {
+      h = document.createElement('h1');
+      h.className = 'adv-page-h1';
+      h.setAttribute('data-adv-h1', '');
+    }
+    if (h.textContent !== text) h.textContent = text;
+    if (h.parentNode !== where || where.firstElementChild !== h) where.insertBefore(h, where.firstChild);
+  }
+  function apply() {
+    timer = null;
+    var d = document.documentElement, p = location.pathname, l = lang();
+    searched(p, here());
+    if (TR.test(p)) {
+      var m = mode(), lab = tabLabel(m);
+      d.setAttribute('data-adv-tr-mode', m);
+      // the phone summary card names the mode with the same CMS words as the tab, the h1 and the title (advisor-brand.css F10)
+      var cssLab = '"' + lab.replace(/[\\"]/g, '\\$&').replace(/[\n\r\f]/g, ' ') + '"';
+      if (d.style.getPropertyValue('--adv-tr-m-label') !== cssLab) d.style.setProperty('--adv-tr-m-label', cssLab);
+      setTitle(lab);
+      var bc = document.querySelector("main [data-slot='breadcrumb-page']");
+      if (bc && String(bc.textContent || '').trim() !== lab) bc.textContent = lab;
+      heading(lab, document.querySelector('main>div.container.mx-auto'));
+    } else if (PK.test(p)) {
+      d.removeAttribute('data-adv-tr-mode'); d.style.removeProperty('--adv-tr-m-label');
+      want = null;
+      heading(N[l].packages, document.querySelector('main>div.container.mx-auto') || document.querySelector('main div.container:not(.mb-6)'));
+    } else {
+      d.removeAttribute('data-adv-tr-mode'); d.style.removeProperty('--adv-tr-m-label');
+      want = null;
+      heading(null);
+    }
+  }
+  function later(ms) { if (!timer) timer = setTimeout(safe(apply), ms || 120); }
+  function go() {
+    if (started) return;
+    started = true;
+    apply();
+    var r = null;
+    try { r = app().config.globalProperties.$router; } catch (e) {}
+    if (r && !r.__advRoutes) {
+      r.__advRoutes = 1;
+      r.afterEach(function (to, from, fail) {
+        if (fail) return;
+        try { searched(to.path, { from: one(to.query.from), to: one(to.query.to), dateFrom: one(to.query.dateFrom) }); } catch (e) {} // before the new page draws
+        [30, 400, 1200].forEach(function (ms) { setTimeout(safe(apply), ms); });
+        try {
+          if (from && from.matched && from.matched.length && to.path === from.path && PAGER.test(to.path) && String(one(to.query.page) || '1') !== String(one(from.query.page) || '1') && sameBut(to.query, from.query, 'page')) onPage();
+        } catch (e) {}
+      });
+    }
+    new MutationObserver(function () { if (document.documentElement.hasAttribute('data-adv-tr-mode') || PK.test(location.pathname)) later(200); }).observe(document.body, { childList: true, subtree: true });
+    var t = document.querySelector('head > title');
+    if (t) { titleMo = new MutationObserver(function () { if (want && document.title.indexOf(want + ' | ') !== 0 && document.title !== want) later(30); }); titleMo.observe(t, { childList: true, characterData: true, subtree: true }); }
+  }
+  function cssOk() { try { return !!getComputedStyle(document.documentElement).getPropertyValue('--adv-btn'); } catch (e) { return false; } }
+  // v1.0.8 (fix2): start once Nuxt has hydrated the page (hook, or its isHydrating flag polled); no fixed 6 s timer (see part 2)
+  function hydrated(nuxt, f) {
+    var done = false, n = 0;
+    function run() { if (!done) { done = true; setTimeout(f, 0); } }
+    nuxt.hooks.hookOnce('app:suspense:resolve', run);
+    (function poll() { if (done) return; if (!nuxt.isHydrating) run(); else setTimeout(poll, ++n < 120 ? 500 : 3000); })();
+  }
+  function start() {
+    var a = app();
+    if (!a) { setTimeout(start, 300); return; }
+    var n = 0, wait = function () { if (cssOk()) go(); else if (++n < 50) setTimeout(wait, 400); };
+    var nuxt = a.config.globalProperties.$nuxt;
+    if (nuxt && nuxt.isHydrating && nuxt.hooks && nuxt.hooks.hookOnce) hydrated(nuxt, wait);
+    else wait();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', safe(start)); else safe(start)();
+})();
+
+/* ---------- 9. Transport place lists: "loading" while their places are fetched (v1.0.8) ----------
+   The departure / arrival lists said «لا توجد خيارات متاحة حالياً» (advisor-brand.css v1.0.6, on an empty list) while their places were still on the
+   way (slow phone connections). html[data-adv-tr-loading] is set while a /api/transport/pick… or /api/transport/drop… request runs, so
+   advisor-brand.css shows "loading" instead. fetch is wrapped transparently: the original promise is returned untouched.
+   (No passengers stepper: the theme's form keeps only values typed by the visitor; a value written by a script fails its validation and blocks
+   the search, so the free number box stays the theme's until Jood gives it a stepper or a list.) */
+(function () {
+  if (window.__advForms) return;
+  window.__advForms = 1;
+  var pend = 0;
+  try {
+    var of = window.fetch;
+    if (of && !of.__adv) {
+      var wrapped = function (input) {
+        var u = '';
+        try { u = typeof input === 'string' ? input : (input && input.url) || String(input || ''); } catch (e) {}
+        if (!/\/api\/transport\/(pick|drop)/i.test(u)) return of.apply(this, arguments);
+        var p = of.apply(this, arguments);
+        try {
+          pend++;
+          document.documentElement.setAttribute('data-adv-tr-loading', '');
+          var done = function () { pend = Math.max(0, pend - 1); if (!pend) document.documentElement.removeAttribute('data-adv-tr-loading'); };
+          p.then(done, done);
+        } catch (e) {}
+        return p;
+      };
+      wrapped.__adv = 1;
+      window.fetch = wrapped;
+    }
+  } catch (e) {}
+})();
+
+/* ---------- 10. Theme strings left in Arabic on the French (and English) pages (v1.0.8) ----------
+   Some theme texts have no French entry in Jood's dictionary and no CMS field (footer "company classification", the assistant button, the
+   transport phone screen, the city page headings, the results sort, the hotel-name search, the sign-up consent, blog post dates and the post's
+   booking card, the results/blog pager's screen-reader text, the room list hint, the map filter heading and its hide button; and on French pages two English filter
+   names sent by the hotel API, 'Distance to haram' and 'All'): on html[lang=fr] (and lang=en for the booking card and the pager) the exact
+   Arabic text is replaced by the page language's. Only whole, exact
+   texts (or a known Arabic start followed by a name) are replaced, in text nodes and in aria-label / placeholder; nothing else is touched, and
+   once Jood translates a text this does nothing. Vue re-renders are followed with a MutationObserver. Wording to be approved by the owner. */
+(function () {
+  if (window.__advI18n) return;
+  window.__advI18n = 1;
+  var FR = {
+    'قيّم رحلتك': 'Évaluez votre voyage',
+    'مكان الإنطلاق': 'Lieu de départ',
+    'مكان الوصول': "Lieu d'arrivée",
+    'تاريخ الاستلام': 'Date de prise en charge',
+    'إبدأ البحث عن رحلتك': 'Lancer la recherche',
+    'السعر من الأعلى إلى الأقل': 'Prix décroissant',
+    'نتائج سريعة مطابقة': 'Résultats rapides',
+    'أفضل العروض في انتظاركم': 'Les meilleures offres vous attendent',
+    'تصنيف الشركة': "Classification de l'entreprise",
+    'وكالة السفر والسياحة': 'Agence de voyages et de tourisme',
+    'اسأل المساعد': "Parler à l'assistant", // fix2: fits the theme's 144px label (124px Calibri, 126px Noto); «Demander à l'assistant» was cut
+    'رقم واتساب': 'Numéro WhatsApp',
+    'بالتسجيل، أنت توافق على': 'En vous inscrivant, vous acceptez nos',
+    'تاريخ النشر:': 'Publié le :',
+    'تاريخ التحديث:': 'Mis à jour le :',
+    'في هذا المقال': 'Dans cet article',
+    'احجز الآن': 'Réserver maintenant',
+    'إحجز الآن': 'Réserver maintenant',
+    // fix review 14 Nov: pager (screen-reader text and buttons), room list, map filter heading, airport-mode filter
+    'الصفحة السابقة': 'Page précédente',
+    'الصفحة التالية': 'Page suivante',
+    'اختر عدد الغرف': 'Choisissez le nombre de chambres',
+    'التصفية حسب': 'Filtrer par',
+    'محطة الانطلاق': 'Point de départ',
+    'إخفاء الفلاتر': 'Masquer les filtres'
+  };
+  var EN = {
+    'احجز الآن': 'Book now',
+    'إحجز الآن': 'Book now',
+    'الصفحة السابقة': 'Previous page',
+    'الصفحة التالية': 'Next page',
+    'اختر عدد الغرف': 'Choose the number of rooms',
+    'التصفية حسب': 'Filter by',
+    'محطة الانطلاق': 'Departure point',
+    'إخفاء الفلاتر': 'Hide filters'
+  };
+  // English filter names of the hotel API left on French pages (exact texts only)
+  var FR_EN = {
+    'Distance to haram': 'Distance du Haram',
+    'All': 'Tous'
+  };
+  // a known Arabic start + a name, or a number: [regex, fr, en] ($1 = the kept part); en null = leave as is on English pages
+  var RX = [
+    [/^فنادق مقترحة في\s+(.+)$/, 'Hôtels suggérés à $1', null],
+    [/^نصيحة\s*(\d+)$/, 'Conseil $1', null],
+    [/^1 نجوم$/, '1 étoile', null],
+    [/^(\d+) نجوم$/, '$1 étoiles', null],
+    [/^1 راكب$/, '1 passager', '1 passenger'],
+    [/^(\d+) (?:ركاب|راكب)$/, '$1 passagers', '$1 passengers'],
+    [/^صورة الفندق السابقة$/, "Photo précédente de l'hôtel", 'Previous hotel photo'],
+    [/^صورة الفندق التالية$/, "Photo suivante de l'hôtel", 'Next hotel photo'],
+    [/^صور\s+(.+)$/, 'Photos : $1', 'Photos: $1'],
+    [/^بالتسجيل، أنت توافق على\s+(.+)$/, 'En vous inscrivant, vous acceptez nos $1', 'By signing up, you agree to our $1'],
+    [/^احجز فندق\s+.+$/, 'Réserver cet hôtel', 'Book this hotel'],
+    [/^شاهد الغرف المتاحة لتواريخك.*$/, 'Consultez les chambres disponibles pour vos dates et confirmez votre réservation en ligne, ou contactez-nous sur WhatsApp.', 'See the rooms available for your dates and confirm your booking online, or contact us on WhatsApp.'],
+    [/^الصفحة\s+(\d+)\s+من\s+(\d+)$/, 'Page $1 sur $2', 'Page $1 of $2']
+  ];
+  var ARABIC = /[؀-ۿ]/, started = false, pend = [], timer = null, full = false;
+  function lang() { return (document.documentElement.getAttribute('lang') || 'ar').slice(0, 2).toLowerCase(); }
+  function app() { var el = document.querySelector('#__nuxt'); return el ? el.__vue_app__ : null; }
+  function safe(f) { return function (a, b) { try { return f(a, b); } catch (e) {} }; }
+  function tr(s, l) {
+    var k = s.replace(/\s+/g, ' ').trim();
+    if (!k) return null;
+    if (!ARABIC.test(k)) return l === 'fr' && Object.prototype.hasOwnProperty.call(FR_EN, k) ? FR_EN[k] : null;
+    var d = l === 'fr' ? FR : EN;
+    if (Object.prototype.hasOwnProperty.call(d, k)) return d[k];
+    for (var i = 0; i < RX.length; i++) {
+      var m = RX[i][0].exec(k), out = l === 'fr' ? RX[i][1] : RX[i][2];
+      if (m && out) return out.replace('$1', m[1] || '').replace('$2', m[2] || '');
+    }
+    return null;
+  }
+  function skip(el) { return !el || /^(SCRIPT|STYLE|NOSCRIPT|TEXTAREA|CODE|PRE)$/.test(el.tagName) || el.isContentEditable || (el.closest && el.closest('[data-adv-cf],[data-adv-pop],[data-adv-hotel]')); }
+  function latin(v, l) { return l === 'fr' && v.length < 40 && Object.prototype.hasOwnProperty.call(FR_EN, v.replace(/\s+/g, ' ').trim()); }
+  function doText(n, l) {
+    var v = n.nodeValue;
+    if (!v || !(ARABIC.test(v) || latin(v, l)) || skip(n.parentElement)) return;
+    var out = tr(v, l);
+    if (out === null) return;
+    var lead = /^\s*/.exec(v)[0], tail = /\s*$/.exec(v)[0];
+    // a label followed by a date (blog post) keeps one space before the <time>
+    if (/[:：]$/.test(out) && !tail && n.nextSibling) tail = ' ';
+    var nv = lead + out + tail;
+    if (nv !== v) n.nodeValue = nv;
+  }
+  function doAttrs(el, l) {
+    var a = ['aria-label', 'placeholder', 'title'];
+    for (var i = 0; i < a.length; i++) {
+      var v = el.getAttribute(a[i]);
+      if (v && (ARABIC.test(v) || latin(v, l))) { var out = tr(v, l); if (out !== null && out !== v) el.setAttribute(a[i], out); }
+    }
+  }
+  function walk(root, l) {
+    if (!root) return;
+    if (root.nodeType === 3) { doText(root, l); return; }
+    if (root.nodeType !== 1 || skip(root)) return;
+    doAttrs(root, l);
+    var w = document.createTreeWalker(root, 1 | 4, null, false), n;
+    while ((n = w.nextNode())) {
+      if (n.nodeType === 3) doText(n, l);
+      else if (n.hasAttribute && (n.hasAttribute('aria-label') || n.hasAttribute('placeholder') || n.hasAttribute('title'))) doAttrs(n, l);
+    }
+  }
+  function flush() {
+    timer = null;
+    var l = lang();
+    if (l !== 'fr' && l !== 'en') { pend = []; full = false; return; }
+    if (full) { full = false; pend = []; walk(document.body, l); return; }
+    var list = pend; pend = [];
+    for (var i = 0; i < list.length; i++) if (list[i].isConnected !== false) walk(list[i], l);
+  }
+  function queue(n) { pend.push(n); if (pend.length > 400) { full = true; } if (!timer) timer = setTimeout(safe(flush), 60); }
+  function go() {
+    if (started) return;
+    started = true;
+    full = true; flush();
+    new MutationObserver(function (recs) {
+      var l = lang();
+      if (l !== 'fr' && l !== 'en') return;
+      for (var i = 0; i < recs.length; i++) {
+        var r = recs[i];
+        if (r.type === 'characterData') queue(r.target);
+        else if (r.type === 'attributes') queue(r.target);
+        else for (var j = 0; j < r.addedNodes.length; j++) queue(r.addedNodes[j]);
+      }
+    }).observe(document.body, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ['aria-label', 'placeholder', 'title'] });
+    try {
+      var r = app().config.globalProperties.$router;
+      if (r && !r.__advI18n) { r.__advI18n = 1; r.afterEach(function () { setTimeout(function () { full = true; if (!timer) timer = setTimeout(safe(flush), 300); }, 0); }); }
+    } catch (e) {}
+  }
+  // v1.0.8 (fix2): start once Nuxt has hydrated the page (hook, or its isHydrating flag polled); no fixed 6 s timer (see part 2)
+  function hydrated(nuxt, f) {
+    var done = false, n = 0;
+    function run() { if (!done) { done = true; setTimeout(f, 0); } }
+    nuxt.hooks.hookOnce('app:suspense:resolve', run);
+    (function poll() { if (done) return; if (!nuxt.isHydrating) run(); else setTimeout(poll, ++n < 120 ? 500 : 3000); })();
+  }
+  function start() {
+    var a = app();
+    if (!a) { setTimeout(start, 300); return; }
+    var nuxt = a.config.globalProperties.$nuxt;
+    if (nuxt && nuxt.isHydrating && nuxt.hooks && nuxt.hooks.hookOnce) hydrated(nuxt, safe(go));
+    else go();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', safe(start)); else safe(start)();
 })();

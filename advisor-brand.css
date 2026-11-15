@@ -8,7 +8,7 @@
 @font-face{font-family:"Calibri Adj";src:local("Calibri Italic"),local("Calibri-Italic");font-weight:351 550;font-style:italic;size-adjust:116%}
 @font-face{font-family:"Calibri Adj";src:local("Calibri Bold Italic"),local("Calibri-BoldItalic");font-weight:551 1000;font-style:italic;size-adjust:116%}
 :root{--font-default:"Calibri Adj","Noto Sans Arabic",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif!important}
-/* advisorholidays.sa brand stylesheet v1.0.7 (v1.0.6 + home tabs navigate, capitalised sheet labels: EN/FR button labels in pop-ups and phone sheets start with a capital; the tabs themselves are in advisor-site.js; a spinner on a tab and a dimmed form while the tab's page loads). v1.0.6 = (v1.0.5 + the site's own drop-down look for every list and pop-up, the site's own hotel list and a narrower hotel field from 1536px, a Done bar under the date pickers, the phone-sheet tab row on the hotel results, the content card for the new about/privacy/terms block ids and the contact Subject drop-down; v1.0.5 = v1.0.4 + the optional Hotel field drawn by advisor-site.js; v1.0.4 = v1.0.3 + readable tab row on the hotel search results; v1.0.3 = v1.0.2 + new search tabs, transport/airport/services pages, template image fallbacks).
+/* advisorholidays.sa brand stylesheet v1.0.8 (v1.0.8 = v1.0.7 + site-wide QA fixes F01-F40 as shipped and the second review's fixes (fix2: menu button ring after a tap, guests labels' capital, French map dates, phone /transport band, hotel total card), at the end of the file: phone menu, floating buttons, guests Done bar, calendars inside the window, two-line hotel names, map view, transport start prompt / phone tabs / loading lists, phone sheets, focus rings, 1536 margins, copyright, French strings, empty states, sign-in forms, blog posts and contact form). v1.0.7 = (v1.0.6 + home tabs navigate, capitalised sheet labels: EN/FR button labels in pop-ups and phone sheets start with a capital; the tabs themselves are in advisor-site.js; a spinner on a tab and a dimmed form while the tab's page loads). v1.0.6 = (v1.0.5 + the site's own drop-down look for every list and pop-up, the site's own hotel list and a narrower hotel field from 1536px, a Done bar under the date pickers, the phone-sheet tab row on the hotel results, the content card for the new about/privacy/terms block ids and the contact Subject drop-down; v1.0.5 = v1.0.4 + the optional Hotel field drawn by advisor-site.js; v1.0.4 = v1.0.3 + readable tab row on the hotel search results; v1.0.3 = v1.0.2 + new search tabs, transport/airport/services pages, template image fallbacks).
    v1.0.2 = v7 + footer app strip and coloured payment cards; v7 = v6 + font fit fixes after the Calibri switch.
    v6 = v5 + full hero photo, French search rows, Calibri font, brand-coloured social icons.
    System: fields and buttons 48px / 12px radius, border #8E80B8 (--input); secondary actions are 44px outlined pills (1.5px #7A45A0);
@@ -37,7 +37,7 @@ html{scroll-padding-top:72px}
 @media (min-width:768px){html{scroll-padding-top:96px}}
 body{background-color:#F6F5FC;background-image:radial-gradient(64rem 36rem at var(--adv-s) 0,rgba(26,160,200,.12),transparent 62%),radial-gradient(56rem 40rem at var(--adv-e) 30%,rgba(122,69,160,.08),transparent 62%),radial-gradient(56rem 40rem at var(--adv-s) 74%,rgba(192,58,128,.07),transparent 62%),linear-gradient(180deg,#EEF6FC 0%,#F4F1FC 38%,#F9F0F7 72%,#FDF2EE 100%);background-repeat:no-repeat}
 ::selection{background:#7A45A0;color:#fff;-webkit-text-fill-color:#fff}
-main a:focus-visible{outline:2px solid #3070B8;outline-offset:3px}
+main a:focus-visible{outline:2px solid #8E80B8;outline-offset:3px}
 
 /* ===== Header and top strip ===== */
 [data-block-id='header']>div{position:relative}
@@ -75,7 +75,7 @@ main a:focus-visible{outline:2px solid #3070B8;outline-offset:3px}
 [data-slot='dropdown-menu-content'] p.text-2xl.font-extrabold+p{color:#5A5F78;text-wrap:balance}
 [data-slot='dropdown-menu-content'] button[data-slot='button']:has(>a[href$='/login']){height:48px;padding:0;border-color:transparent;border-radius:12px;background-image:var(--adv-btn);background-origin:border-box;color:#fff;box-shadow:0 10px 22px -12px rgba(91,63,160,.8)}
 [data-slot='dropdown-menu-content'] button[data-slot='button']>a[href$='/login']{display:flex;align-items:center;justify-content:center;align-self:stretch;width:100%;border-radius:inherit;font-size:15px;font-weight:800;text-transform:capitalize}
-[data-slot='dropdown-menu-content'] button[data-slot='button']>a[href$='/login']:focus-visible{outline:2px solid #3070B8;outline-offset:2px}
+[data-slot='dropdown-menu-content'] button[data-slot='button']>a[href$='/login']:focus-visible{outline:2px solid #8E80B8;outline-offset:2px}
 [data-slot='dropdown-menu-content'] nav a{display:block;color:#14294A}
 [data-slot='dropdown-menu-content'] nav a p{font-weight:700}
 [data-slot='dropdown-menu-content'] nav a[aria-current='page']{color:#6B3FA0}
@@ -91,7 +91,7 @@ main a:focus-visible{outline:2px solid #3070B8;outline-offset:3px}
 :is(main,[data-block-id],[data-block-id='header']+div) [data-slot='button'].bg-primary{background-image:var(--adv-btn);background-size:180% 100%;background-position:0 50%;background-origin:border-box;border-color:transparent;color:#fff;font-weight:700;box-shadow:0 10px 22px -12px rgba(91,63,160,.8)}
 :is(main,[data-block-id],[data-block-id='header']+div) [data-slot='button'].bg-primary:hover{background-position:100% 50%;box-shadow:0 14px 28px -12px rgba(176,48,111,.75)}
 :is(main,[data-block-id],[data-block-id='header']+div) [data-slot='button'].bg-primary:disabled{box-shadow:none}
-:is(main,[data-block-id],[data-block-id='header']+div) [data-slot='button'].bg-primary:focus-visible,main :is([data-slot='carousel-previous'],[data-slot='carousel-next']):focus-visible{outline:2px solid #3070B8;outline-offset:3px}
+:is(main,[data-block-id],[data-block-id='header']+div) [data-slot='button'].bg-primary:focus-visible,main :is([data-slot='carousel-previous'],[data-slot='carousel-next']):focus-visible{outline:2px solid #8E80B8;outline-offset:3px}
 /* mobile search sheet close button is portalled outside main: same brand gradient as every other primary button */
 [data-slot='sheet-content'] [data-slot='sheet-close'].bg-primary{height:48px;border-radius:12px;background-image:var(--adv-btn);background-origin:border-box;font-weight:700;color:#fff;box-shadow:0 10px 22px -12px rgba(91,63,160,.8)}
 main input.bg-transparent:not([type='checkbox']):not([type='radio']):not([type='range']),main textarea.bg-transparent,main button[role='combobox'].bg-transparent{background-color:#fff}
@@ -201,7 +201,7 @@ main [data-block-id='hotel-search'] .bg-card.shadow-center,[data-block-id^='city
 :is(main [data-block-id='hotel-search'] .bg-card,[data-block-id^='city-search'] aside form) :is(button[data-slot='form-control'],[data-slot='form-item']>button,input.border:not(.border-none),div.h-11.border):hover{border-color:#6F5FA6}
 :is(main [data-block-id='hotel-search'] .bg-card,[data-block-id^='city-search'] aside form) :is(button[data-slot='form-control'],input.border:not(.border-none))[aria-invalid='true']{border-color:var(--destructive)}
 :is(main [data-block-id='hotel-search'] .bg-card,[data-block-id^='city-search'] aside form) [role='button']:focus-visible{outline:none}
-:is(main [data-block-id='hotel-search'] .bg-card,[data-block-id^='city-search'] aside form) :is(button,input.border:not(.border-none)):focus-visible,:is(main [data-block-id='hotel-search'] .bg-card,[data-block-id^='city-search'] aside form) [role='button']:focus-visible>div.h-11.border,:is(main [data-block-id='hotel-search'] .bg-card,[data-block-id^='city-search'] aside form) div.h-11.border:focus-within{outline:2px solid #3070B8;outline-offset:2px}
+:is(main [data-block-id='hotel-search'] .bg-card,[data-block-id^='city-search'] aside form) :is(button,input.border:not(.border-none)):focus-visible,:is(main [data-block-id='hotel-search'] .bg-card,[data-block-id^='city-search'] aside form) [role='button']:focus-visible>div.h-11.border,:is(main [data-block-id='hotel-search'] .bg-card,[data-block-id^='city-search'] aside form) div.h-11.border:focus-within{outline:2px solid #8E80B8;outline-offset:2px}
 [data-block-id^='city-search'] aside form h3{font-weight:800;color:#14294A}
 /* city search card: every field has a 16px purple icon at the inline start and one 14px inset (dates/promo had the icon at the far end, guests a 13px icon) */
 [data-block-id^='city-search'] aside form :is(div.h-11.border,[data-slot='form-item']>button){gap:10px;padding-inline:14px}
@@ -296,7 +296,7 @@ main .container.py-0>div[class*='md:flex-row'] :is([data-slot='popover-trigger']
 main .container.py-0>div[class*='md:flex-row'] :is([data-slot='popover-trigger'],[data-slot='sheet-trigger'])>span{color:#5A5F78}
 main .container.py-0>div[class*='md:flex-row'] :is([data-slot='popover-trigger'],[data-slot='select-trigger'],[data-slot='sheet-trigger']) svg{color:#7A45A0}
 main .container.py-0>div[class*='md:flex-row'] :is([data-slot='popover-trigger'],[data-slot='select-trigger'],[data-slot='sheet-trigger']):hover{border-color:#6F5FA6;background-color:#fff}
-main .container.py-0>div[class*='md:flex-row'] :is([data-slot='popover-trigger'],[data-slot='select-trigger'],[data-slot='sheet-trigger']):focus-visible{outline:2px solid #3070B8;outline-offset:2px}
+main .container.py-0>div[class*='md:flex-row'] :is([data-slot='popover-trigger'],[data-slot='select-trigger'],[data-slot='sheet-trigger']):focus-visible{outline:2px solid #8E80B8;outline-offset:2px}
 /* hotel-name search: a magnifier at the inline start instead of the theme's up/down chevrons, so it no longer reads as a second select */
 main .container.py-0>div[class*='md:flex-row'] :is([data-slot='popover-trigger'],[data-slot='sheet-trigger']):has(svg.lucide-chevrons-up-down){justify-content:flex-start;gap:10px}
 main .container.py-0>div[class*='md:flex-row'] :is([data-slot='popover-trigger'],[data-slot='sheet-trigger']):has(svg.lucide-chevrons-up-down)::before{content:'';flex:none;width:18px;height:18px;background-color:#7A45A0;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.3' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20.5 20.5-4.2-4.2'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.3' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20.5 20.5-4.2-4.2'/%3E%3C/svg%3E") center/contain no-repeat}
@@ -344,7 +344,7 @@ main div:has(>div.px-0.py-2.items-center)+div.mt-4{justify-content:center}
 main div:has(>div.px-0.py-2.items-center)+div.mt-4>button[data-slot='button']{height:auto;min-height:44px;padding:10px 24px;border:1.5px solid #7A45A0;border-radius:999px;background:#fff;color:#4A2A7A;font-size:14px;font-weight:700;box-shadow:0 10px 22px -16px rgba(74,42,122,.6)}
 main div:has(>div.px-0.py-2.items-center)+div.mt-4>button[data-slot='button'] :is(span,svg){color:#4A2A7A}
 main div:has(>div.px-0.py-2.items-center)+div.mt-4>button[data-slot='button']:hover{background:#F4EFFB}
-main div:has(>div.px-0.py-2.items-center)+div.mt-4>button[data-slot='button']:focus-visible{outline:2px solid #3070B8;outline-offset:3px;box-shadow:none}
+main div:has(>div.px-0.py-2.items-center)+div.mt-4>button[data-slot='button']:focus-visible{outline:2px solid #8E80B8;outline-offset:3px;box-shadow:none}
 /* room cards: one card style (18px, soft shadow, mist title bar); the placeholder room photo is a compact thumbnail, not a 288px banner per room */
 main div.bg-card.rounded-lg:has([data-slot='room-current-price']):has(>div.border-b>p){overflow:hidden;border-color:#E2DCEE;border-radius:18px;box-shadow:0 16px 34px -26px rgba(20,41,74,.55)}
 main div.bg-card.rounded-lg:has([data-slot='room-current-price'])>div.border-b:first-child{padding:14px 20px;border-bottom-color:#E7E1F2;background:var(--adv-mist)}
@@ -424,7 +424,7 @@ html[dir='ltr'] [data-block-id^='city-search'] article h2.truncate{text-align:le
 /* "show more results": an outlined pill under the list instead of a 14px link in the corner */
 [data-block-id^='city-search'] section>div.grid>div>h2~button{align-self:center;min-height:44px;padding:10px 26px;border:1.5px solid #7A45A0;border-radius:999px;background:#fff;color:#4A2A7A;font-size:15px;font-weight:700;text-decoration:none;box-shadow:0 10px 22px -16px rgba(74,42,122,.6)}
 [data-block-id^='city-search'] section>div.grid>div>h2~button:hover{background:#F4EFFB;text-decoration:none}
-[data-block-id^='city-search'] section>div.grid>div>h2~button:focus-visible{outline:2px solid #3070B8;outline-offset:3px}
+[data-block-id^='city-search'] section>div.grid>div>h2~button:focus-visible{outline:2px solid #8E80B8;outline-offset:3px}
 /* tips take the full width when the block has no FAQ column */
 @media (min-width:1024px){[data-block-id^='city-faq-tips'] section>div.grid>div:only-child{grid-column:1/-1}}
 @media (min-width:1280px){[data-block-id^='city-faq-tips'] section>div.grid>div:only-child>div.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
@@ -438,7 +438,7 @@ html[dir='ltr'] [data-block-id^='city-search'] article h2.truncate{text-align:le
 [data-block-id^='blog-more'] section>form{gap:10px}
 [data-block-id^='blog-more'] section>form>input{height:48px;border-radius:12px;padding-inline:16px;border-color:#8E80B8;background-color:#fff;color:#1A2238;font-size:15px;box-shadow:0 8px 20px -16px rgba(20,41,74,.45)}
 [data-block-id^='blog-more'] section>form>input:hover{border-color:#6F5FA6}
-[data-block-id^='blog-more'] section>form>input:focus-visible{border-color:#3070B8;outline:2px solid #3070B8;outline-offset:2px}
+[data-block-id^='blog-more'] section>form>input:focus-visible{border-color:#7A45A0;outline:2px solid #8E80B8;outline-offset:2px}
 [data-block-id^='blog-more'] section>form>button[type='submit']{height:48px;width:56px;border-radius:12px}
 [data-block-id^='blog-more'] section>form>button[type='submit'] svg{width:20px;height:20px}
 [data-block-id^='blog-more'] section>div.flex-wrap>button{border-radius:999px;border-color:rgba(122,69,160,.25);background:#fff;color:#4A2A7A;font-size:13px;font-weight:700}
@@ -529,7 +529,7 @@ main>div.gap-12>div.space-y-4:not([data-block-id])>:nth-last-child(2):has(+p:emp
 [data-block-id='contact-form'] :is(input[data-slot='form-control'],textarea,button[data-slot='popover-trigger'],button[data-slot='sheet-trigger']):not([aria-invalid='true']):hover{border-color:#6F5FA6}
 [data-block-id='contact-form'] :is(input,textarea):focus-visible{border-color:#7A45A0;box-shadow:0 0 0 3px rgba(122,69,160,.22)}
 [data-block-id='contact-form'] :is(input,textarea)[aria-invalid='true']{border-color:var(--destructive)}
-[data-block-id='contact-form'] button:is([data-slot='popover-trigger'],[data-slot='sheet-trigger']):focus-visible{outline:2px solid #3070B8;outline-offset:2px;box-shadow:none}
+[data-block-id='contact-form'] button:is([data-slot='popover-trigger'],[data-slot='sheet-trigger']):focus-visible{outline:2px solid #8E80B8;outline-offset:2px;box-shadow:none}
 /* send: a full-size CTA (phones keep the theme's full-width button) */
 [data-block-id='contact-form'] form button[type='submit']{height:50px;border-radius:12px;padding-inline:32px;font-size:16px;font-weight:800}
 @media (min-width:768px){[data-block-id='contact-form'] form button[type='submit']{min-width:200px}}
@@ -720,7 +720,7 @@ main div.container>h2+section [data-block-id='hotel-search']>div>div:has(>button
 main div.container>h2+section [data-block-id='hotel-search']>div>div:has(>button[data-slot='button'])>button[data-slot='button']:not(.bg-primary):hover{background:#F4EFFB;color:#4A2A7A}
 main div.container>h2+section [data-block-id='hotel-search']>div>div:has(>button[data-slot='button'])>button[data-slot='button'].bg-primary{background-color:#5B3FA0;background-image:var(--adv-btn);background-size:100% 100%;color:#fff;box-shadow:0 8px 18px -10px rgba(91,63,160,.85)}
 main div.container>h2+section [data-block-id='hotel-search']>div>div:has(>button[data-slot='button'])>button[data-slot='button'].bg-primary>svg{color:#fff}
-main div.container>h2+section [data-block-id='hotel-search']>div>div:has(>button[data-slot='button'])>button[data-slot='button']:focus-visible{outline:2px solid #3070B8;outline-offset:2px}
+main div.container>h2+section [data-block-id='hotel-search']>div>div:has(>button[data-slot='button'])>button[data-slot='button']:focus-visible{outline:2px solid #8E80B8;outline-offset:2px}
 /* hotel search results (/hotels/search, and any page that puts the search card in a section.md:block like /transport): the tab row as pills,
    white for the others and the brand gradient for the active one. Without this the generic tab rule above cleared the theme's fill and the
    active 'hotels' tab was white text on the light page (v1.0.4 fix). /transport keeps its own, more specific rules with the same look. */
@@ -731,7 +731,7 @@ main div.container>section.md\:block>[data-block-id='hotel-search']>div>div.mb-3
 main div.container>section.md\:block>[data-block-id='hotel-search']>div>div.mb-3>button[data-slot='button']:not(.bg-primary) svg{color:#7A45A0}
 main div.container>section.md\:block>[data-block-id='hotel-search']>div>div.mb-3>button[data-slot='button'].bg-primary{border:0;background-color:#5B3FA0;background-image:var(--adv-btn);background-size:180% 100%;background-position:0 50%;color:#fff;box-shadow:0 10px 22px -12px rgba(91,63,160,.8)}
 main div.container>section.md\:block>[data-block-id='hotel-search']>div>div.mb-3>button[data-slot='button'].bg-primary svg{color:#fff}
-main div.container>section.md\:block>[data-block-id='hotel-search']>div>div.mb-3>button[data-slot='button']:focus-visible{outline:2px solid #3070B8;outline-offset:3px;box-shadow:none}
+main div.container>section.md\:block>[data-block-id='hotel-search']>div>div.mb-3>button[data-slot='button']:focus-visible{outline:2px solid #8E80B8;outline-offset:3px;box-shadow:none}
 /* home band heading follows the form on show (it said "find your hotel" on every tab); a form it does not know gets no heading */
 [data-block-id^='hero-section'] [data-block-id='hotel-search'] .dark-form>.container:has([data-theme-property*='"departurePlace"']){--adv-search-title:'Find your transport'}
 [data-block-id^='hero-section'] [data-block-id='hotel-search'] .dark-form>.container:has([data-theme-property*='"departurePlace"']):lang(ar){--adv-search-title:'ابحث عن وسيلة تنقّلك'}
@@ -777,7 +777,7 @@ html[dir='ltr']:lang(fr) main div.container>h2+section [data-block-id='hotel-sea
 /* hotel page card: the place pickers and the date get the card's 48px purple-edged box (only the two inputs had it) */
 main [data-block-id='hotel-search'] .bg-card form:has(input[name='passengers'])>div>* :is(button[data-slot='select-trigger'],button[data-slot='sheet-trigger']),main [data-block-id='hotel-search'] .bg-card form:has(input[name='passengers'])>div>div:has(>label[data-slot='label'])>button{--background:#fff;height:48px;border:1px solid #8E80B8;border-radius:12px;background-color:#fff;color:#1A2238;box-shadow:none}
 main [data-block-id='hotel-search'] .bg-card form:has(input[name='passengers'])>div>* :is(button[data-slot='select-trigger'],button[data-slot='sheet-trigger']):hover,main [data-block-id='hotel-search'] .bg-card form:has(input[name='passengers'])>div>div:has(>label[data-slot='label'])>button:hover{border-color:#6F5FA6}
-main [data-block-id='hotel-search'] .bg-card form:has(input[name='passengers'])>div>* :is(button[data-slot='select-trigger'],button[data-slot='sheet-trigger']):focus-visible,main [data-block-id='hotel-search'] .bg-card form:has(input[name='passengers'])>div>div:has(>label[data-slot='label'])>button:focus-visible{outline:2px solid #3070B8;outline-offset:2px;box-shadow:none}
+main [data-block-id='hotel-search'] .bg-card form:has(input[name='passengers'])>div>* :is(button[data-slot='select-trigger'],button[data-slot='sheet-trigger']):focus-visible,main [data-block-id='hotel-search'] .bg-card form:has(input[name='passengers'])>div>div:has(>label[data-slot='label'])>button:focus-visible{outline:2px solid #8E80B8;outline-offset:2px;box-shadow:none}
 
 /* ===== Transport results (/transport: transportation and airport transfer, Jood feature added 2026-11) =====
    Scoped to the transport results page: its container is the only one whose results row (div.mt-8) holds the h-fit filter card
@@ -799,7 +799,7 @@ main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>section>[data-bloc
 main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>section>[data-block-id='hotel-search']>div>div.mb-3>button[data-slot='button']:not(.bg-primary) svg{color:#7A45A0}
 main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>section>[data-block-id='hotel-search']>div>div.mb-3>button[data-slot='button'].bg-primary{border:0;background-color:#5B3FA0;background-image:var(--adv-btn);background-size:180% 100%;background-position:0 50%;color:#fff;box-shadow:0 10px 22px -12px rgba(91,63,160,.8)}
 main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>section>[data-block-id='hotel-search']>div>div.mb-3>button[data-slot='button'].bg-primary:hover{background-position:100% 50%}
-main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>section>[data-block-id='hotel-search']>div>div.mb-3>button[data-slot='button']:focus-visible{outline:2px solid #3070B8;outline-offset:3px;box-shadow:none}
+main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>section>[data-block-id='hotel-search']>div>div.mb-3>button[data-slot='button']:focus-visible{outline:2px solid #8E80B8;outline-offset:3px;box-shadow:none}
 /* fields: one 48px / 12px field language (selects and the date were 44px theme boxes beside 48px inputs) and one label line
    (the date label sat 8px lower: its column has no gap and a taller line) */
 main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>section>[data-block-id='hotel-search'] form>div{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1.15fr) minmax(0,1.2fr) minmax(0,1.05fr) minmax(0,.95fr) auto;column-gap:12px;row-gap:16px;align-items:end}
@@ -855,7 +855,7 @@ main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section.h
 :is(main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section.h-fit,:root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='sheet-content']) [data-slot='slider-track']{height:6px;background:#E9E4F3}
 :is(main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section.h-fit,:root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='sheet-content']) [data-slot='slider-range']{background:var(--adv-btn-bright)}
 :is(main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section.h-fit,:root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='sheet-content']) [data-slot='slider'] [role='slider']{width:20px;height:20px;border:2px solid #7A45A0;background:#fff;box-shadow:0 3px 8px -2px rgba(74,42,122,.45)}
-:is(main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section.h-fit,:root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='sheet-content']) [data-slot='slider'] [role='slider']:focus-visible{outline:2px solid #3070B8;outline-offset:2px}
+:is(main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section.h-fit,:root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='sheet-content']) [data-slot='slider'] [role='slider']:focus-visible{outline:2px solid #8E80B8;outline-offset:2px}
 /* option rows: the whole row toggles (only the 16px box was clickable; the name is a plain div) */
 :is(main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section.h-fit,:root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='sheet-content']) div.flex-col:has(>div>div.flex-row>button[data-slot='checkbox']){gap:2px}
 :is(main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section.h-fit,:root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='sheet-content']) div.flex-row:has(>button[data-slot='checkbox']){position:relative;min-height:34px;margin-inline:-8px;padding:5px 8px;column-gap:10px;border-radius:10px;color:#1F2A44;font-size:15px}
@@ -863,7 +863,7 @@ main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section.h
 :is(main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section.h-fit,:root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='sheet-content']) div.flex-row>button[data-slot='checkbox']{width:18px;height:18px;border:1.5px solid #8E80B8;border-radius:5px;background:#fff;box-shadow:none}
 :is(main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section.h-fit,:root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='sheet-content']) div.flex-row>button[data-slot='checkbox']::after{content:'';position:absolute;inset:0;border-radius:10px}
 :is(main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section.h-fit,:root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='sheet-content']) div.flex-row>button[data-slot='checkbox'][data-state='checked']{border-color:transparent;background:var(--adv-btn);color:#fff}
-:is(main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section.h-fit,:root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='sheet-content']) div.flex-row>button[data-slot='checkbox']:focus-visible{outline:2px solid #3070B8;outline-offset:2px}
+:is(main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section.h-fit,:root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='sheet-content']) div.flex-row>button[data-slot='checkbox']:focus-visible{outline:2px solid #8E80B8;outline-offset:2px}
 :is(main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section.h-fit,:root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='sheet-content']) div.flex-row:has(>button[data-slot='checkbox'])>div{line-height:1.4}
 :is(main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section.h-fit,:root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='sheet-content']) div.flex-row:has(>button[data-slot='checkbox'][data-state='checked'])>div{font-weight:700;color:#4A2A7A}
 /* phone filter sheet: "search now" in the brand gradient */
@@ -875,7 +875,7 @@ main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section:n
 main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section:not(.h-fit)>div:first-child>p::after{content:'';display:block;width:56px;height:4px;margin-top:8px;border-radius:4px;background:var(--adv-grad)}
 main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section:not(.h-fit)>div:first-child :is(button[data-slot='dialog-trigger'],div[data-slot='sheet-trigger']){align-items:center;gap:8px;height:auto;min-height:40px;padding:6px 16px;border:1.5px solid #7A45A0;border-radius:999px;background:#fff;color:#4A2A7A;font-size:14px;font-weight:700;box-shadow:0 10px 22px -16px rgba(74,42,122,.6)}
 main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section:not(.h-fit)>div:first-child :is(button[data-slot='dialog-trigger'],div[data-slot='sheet-trigger']):hover{background:#F4EFFB}
-main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section:not(.h-fit)>div:first-child :is(button[data-slot='dialog-trigger'],div[data-slot='sheet-trigger']):focus-visible{outline:2px solid #3070B8;outline-offset:3px}
+main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section:not(.h-fit)>div:first-child :is(button[data-slot='dialog-trigger'],div[data-slot='sheet-trigger']):focus-visible{outline:2px solid #8E80B8;outline-offset:3px}
 main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section:not(.h-fit)>div:first-child :is(button[data-slot='dialog-trigger'],div[data-slot='sheet-trigger'])::before{content:'';flex:none;width:16px;height:16px;background-color:#7A45A0;-webkit-mask:var(--adv-tr-ic) center/contain no-repeat;mask:var(--adv-tr-ic) center/contain no-repeat}
 main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section:not(.h-fit)>div:first-child button[data-slot='dialog-trigger']{--adv-tr-ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linejoin='round'%3E%3Cpath d='m12 2.8 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.4l6.2-.9z'/%3E%3C/svg%3E")}
 /* the theme's filter icon is a broken <filter> element: draw the sliders icon instead */
@@ -890,7 +890,7 @@ main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section:n
 main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section:not(.h-fit)>div.flex-wrap>button[data-slot='button']:not(.bg-primary){border:1px solid rgba(122,69,160,.35);background:#fff;color:#14294A;font-weight:600}
 main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section:not(.h-fit)>div.flex-wrap>button[data-slot='button']:not(.bg-primary):hover{border-color:#7A45A0;background:#F4EFFB}
 main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section:not(.h-fit)>div.flex-wrap>button[data-slot='button'] svg{color:#7A45A0}
-main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section:not(.h-fit)>div.flex-wrap>button[data-slot='button']:focus-visible{outline:2px solid #3070B8;outline-offset:2px}
+main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section:not(.h-fit)>div.flex-wrap>button[data-slot='button']:focus-visible{outline:2px solid #8E80B8;outline-offset:2px}
 /* no results: the theme left a blank area under the count; a calm panel says why and what to do */
 main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section:not(.h-fit)>div:last-child>div.flex-col:empty{display:flex;flex-direction:column;align-items:center;gap:6px;padding:112px clamp(20px,4vw,48px) 36px;border:1px solid #E4DDF0;border-radius:20px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%231AA0C8'/%3E%3Cstop offset='.55' stop-color='%237A45A0'/%3E%3Cstop offset='1' stop-color='%23E8604A'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='18' fill='url(%23g)'/%3E%3Cg fill='none' stroke='%23fff' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round' transform='translate(14 14) scale(1.5)'%3E%3Cpath d='M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2'/%3E%3Ccircle cx='7' cy='17' r='2'/%3E%3Cpath d='M9 17h6'/%3E%3Ccircle cx='17' cy='17' r='2'/%3E%3C/g%3E%3C/svg%3E") center 32px/64px 64px no-repeat,var(--adv-mist);box-shadow:0 18px 40px -32px rgba(20,41,74,.5);text-align:center}
 main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section:not(.h-fit)>div:last-child>div.flex-col:empty::before{content:var(--adv-tr-none);max-width:46ch;font-size:clamp(17px,.4vw + 15px,20px);font-weight:800;line-height:1.5;color:#14294A;text-wrap:balance}
@@ -943,7 +943,7 @@ main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section:n
 /* book the trip: the main action, so the brand gradient button (was a pale outlined box) */
 :is(main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section:not(.h-fit)>div:last-child>div.flex-col>div.rounded-2xl,:root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='dialog-content']:has(a[href*='booking-request'])) a[data-slot='button'][href*='booking-request']{height:46px;padding-inline:22px;border:0;border-radius:12px;background-color:#5B3FA0;background-image:var(--adv-btn);background-size:180% 100%;background-position:0 50%;color:#fff;font-size:15px;font-weight:800;box-shadow:0 10px 22px -12px rgba(91,63,160,.8)}
 :is(main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section:not(.h-fit)>div:last-child>div.flex-col>div.rounded-2xl,:root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='dialog-content']:has(a[href*='booking-request'])) a[data-slot='button'][href*='booking-request']:hover{background-position:100% 50%;color:#fff;box-shadow:0 14px 28px -12px rgba(176,48,111,.75)}
-:is(main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section:not(.h-fit)>div:last-child>div.flex-col>div.rounded-2xl,:root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='dialog-content']:has(a[href*='booking-request'])) a[data-slot='button'][href*='booking-request']:focus-visible{outline:2px solid #3070B8;outline-offset:3px}
+:is(main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section:not(.h-fit)>div:last-child>div.flex-col>div.rounded-2xl,:root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='dialog-content']:has(a[href*='booking-request'])) a[data-slot='button'][href*='booking-request']:focus-visible{outline:2px solid #8E80B8;outline-offset:3px}
 @media (prefers-reduced-motion:no-preference){:is(main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section:not(.h-fit)>div:last-child>div.flex-col>div.rounded-2xl,:root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='dialog-content']:has(a[href*='booking-request'])) a[data-slot='button'][href*='booking-request']{transition:background-position .4s ease,box-shadow .25s ease}}
 
 /* --- trip details dialog --- */
@@ -972,7 +972,7 @@ main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.border div.tex
 /* edit-search control: a 40px pencil disc (the theme drew a 18px settings cog) */
 main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.border div.cursor-pointer>svg{box-sizing:content-box;width:20px;height:20px;padding:10px;border-radius:50%;background:#F4EFFB url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B3FA0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21.2 6.8a2.8 2.8 0 0 0-4-4L3.8 16.2a2 2 0 0 0-.5.8L2 21.4a.5.5 0 0 0 .6.6l4.4-1.3a2 2 0 0 0 .8-.5z'/%3E%3Cpath d='m15 5 4 4'/%3E%3C/svg%3E") center/18px 18px no-repeat;box-shadow:inset 0 0 0 1.5px rgba(122,69,160,.35)}
 main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.border div.cursor-pointer>svg>*{display:none}
-main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.border div.cursor-pointer>svg:focus-visible{outline:2px solid #3070B8;outline-offset:2px}
+main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.border div.cursor-pointer>svg:focus-visible{outline:2px solid #8E80B8;outline-offset:2px}
 /* sheet header: the CMS header logo is the white one, invisible on the theme's white bar; navy bar like the site header */
 :root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='sheet-content'] [data-slot='sheet-header']>div.shadow-center:has(>img[src*='LOGO-WHITE']){position:relative;max-width:none;padding-inline:20px;background-color:#14294A;background-image:linear-gradient(var(--adv-dir),var(--adv-deep));box-shadow:none}
 :root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='sheet-content'] [data-slot='sheet-header']>div.shadow-center:has(>img[src*='LOGO-WHITE'])::after{content:'';position:absolute;inset-inline:0;bottom:0;height:3px;background:var(--adv-grad)}
@@ -990,7 +990,7 @@ main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.border div.cur
 :root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='sheet-content'] form:has(input[name='passengers']) button[data-slot='dialog-trigger']>svg{margin-inline-start:auto}
 :root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='sheet-content'] form:has(input[name='passengers']) div.relative:has(>button.absolute)>button[data-slot='sheet-trigger']>div{margin-inline-end:24px}
 :root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='sheet-content'] form:has(input[name='passengers']) input::placeholder{color:#5B6478;opacity:1;font-size:15px}
-:root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='sheet-content'] form:has(input[name='passengers']) :is(button,input):focus-visible{outline:2px solid #3070B8;outline-offset:2px;box-shadow:none}
+:root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='sheet-content'] form:has(input[name='passengers']) :is(button,input):focus-visible{outline:2px solid #8E80B8;outline-offset:2px;box-shadow:none}
 :root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='sheet-content'] form:has(input[name='passengers']) button[type='submit']{height:50px;margin-top:6px;border:0;border-radius:12px;background-image:var(--adv-btn);background-origin:border-box;color:#fff;font-size:16px;font-weight:800;box-shadow:0 10px 22px -12px rgba(91,63,160,.8)}
 /* --- "rate your trip" dialog (booking-number lookup, portalled): the gradient-edged card, 48px field, brand CTA (was a plain box with a flat blue button) --- */
 :root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='dialog-content']:has(input[name='bookingKey']){gap:18px;padding:clamp(22px,3vw,30px);border:1px solid transparent;border-top-width:4px;border-radius:20px;background:linear-gradient(#fff,#fff) padding-box,var(--adv-grad) border-box;box-shadow:0 30px 70px -30px rgba(20,41,74,.6);color:#1F2A44}
@@ -1004,7 +1004,7 @@ main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.border div.cur
 :root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='dialog-content']:has(input[name='bookingKey']) [data-slot='dialog-footer']>div{width:100%;gap:10px}
 :root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='dialog-content']:has(input[name='bookingKey']) button[type='submit']{height:48px;border:0;border-radius:12px;background-color:#5B3FA0;background-image:var(--adv-btn);background-size:180% 100%;background-position:0 50%;color:#fff;font-size:16px;font-weight:800;box-shadow:0 10px 22px -12px rgba(91,63,160,.8)}
 :root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='dialog-content']:has(input[name='bookingKey']) button[type='submit']:hover{background-position:100% 50%}
-:root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='dialog-content']:has(input[name='bookingKey']) button[type='submit']:focus-visible{outline:2px solid #3070B8;outline-offset:3px}
+:root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='dialog-content']:has(input[name='bookingKey']) button[type='submit']:focus-visible{outline:2px solid #8E80B8;outline-offset:3px}
 :root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='dialog-content']:has(input[name='bookingKey']) [data-slot='dialog-footer'] p{font-size:13px;line-height:1.7;color:#5A5F78}
 :root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='dialog-content']:has(input[name='bookingKey'])>button.absolute{color:#4A2A7A;opacity:1}
 /* EN/FR strings arrive in lower case ("entrez vos détails de réservation", "numéro de réservation") */
@@ -1034,7 +1034,7 @@ main>div.container:has(input[name='goingTripPassengers']) form textarea{height:a
 main>div.container:has(input[name='goingTripPassengers']) form input::placeholder,main>div.container:has(input[name='goingTripPassengers']) form textarea::placeholder{color:#5B6478;opacity:1}
 main>div.container:has(input[name='goingTripPassengers']) form :is(input[data-slot='form-control'],textarea,button[data-slot='popover-trigger'],button[data-slot='sheet-trigger']):hover{border-color:#6F5FA6;background-color:#fff}
 main>div.container:has(input[name='goingTripPassengers']) form :is(input[data-slot='form-control'],textarea):focus-visible{border-color:#7A45A0;box-shadow:0 0 0 3px rgba(122,69,160,.22)}
-main>div.container:has(input[name='goingTripPassengers']) form button:is([data-slot='popover-trigger'],[data-slot='sheet-trigger']):focus-visible{outline:2px solid #3070B8;outline-offset:2px;box-shadow:none}
+main>div.container:has(input[name='goingTripPassengers']) form button:is([data-slot='popover-trigger'],[data-slot='sheet-trigger']):focus-visible{outline:2px solid #8E80B8;outline-offset:2px;box-shadow:none}
 main>div.container:has(input[name='goingTripPassengers']) form :is(input,textarea)[aria-invalid='true']{border-color:var(--destructive)}
 main>div.container:has(input[name='goingTripPassengers']) form button:is([data-slot='popover-trigger'],[data-slot='sheet-trigger']) svg{color:#7A45A0}
 main>div.container:has(input[name='goingTripPassengers']) form div.flex.gap-2:has(>[data-slot='form-item']>button:is([data-slot='popover-trigger'],[data-slot='sheet-trigger'])){gap:10px}
@@ -1048,7 +1048,7 @@ main>div.container:has(input[name='goingTripPassengers']) [role='radiogroup'] bu
 main>div.container:has(input[name='goingTripPassengers']) [role='radiogroup'] button[role='radio']::after{content:'';position:absolute;inset:0;border-radius:14px}
 main>div.container:has(input[name='goingTripPassengers']) [role='radiogroup'] button[role='radio'][data-state='checked']{border-color:#7A45A0}
 main>div.container:has(input[name='goingTripPassengers']) [role='radiogroup'] button[role='radio'] svg{fill:#7A45A0;color:#7A45A0}
-main>div.container:has(input[name='goingTripPassengers']) [role='radiogroup'] button[role='radio']:focus-visible{outline:2px solid #3070B8;outline-offset:2px}
+main>div.container:has(input[name='goingTripPassengers']) [role='radiogroup'] button[role='radio']:focus-visible{outline:2px solid #8E80B8;outline-offset:2px}
 main>div.container:has(input[name='goingTripPassengers']) [role='radiogroup'] label{font-size:15px;font-weight:700;line-height:1.4;color:#14294A}
 main>div.container:has(input[name='goingTripPassengers']) [role='radiogroup'] [data-slot='form-description']{margin-top:4px;font-size:13.5px;line-height:1.65;color:#46506A}
 main>div.container:has(input[name='goingTripPassengers']) [role='radiogroup'] [data-slot='form-item'] [data-slot='form-item']:empty{display:none}
@@ -1057,7 +1057,7 @@ main>div.container:has(input[name='goingTripPassengers']) [role='radiogroup'] [d
 main>div.container:has(input[name='goingTripPassengers']) form>div.flex-col:last-child{max-width:none;margin-top:24px;gap:18px}
 main>div.container:has(input[name='goingTripPassengers']) form button[role='checkbox']{width:18px;height:18px;margin-top:2px;border:1.5px solid #8E80B8;border-radius:5px;background:#fff;box-shadow:none}
 main>div.container:has(input[name='goingTripPassengers']) form button[role='checkbox'][data-state='checked']{border-color:transparent;background:var(--adv-btn);color:#fff}
-main>div.container:has(input[name='goingTripPassengers']) form button[role='checkbox']:focus-visible{outline:2px solid #3070B8;outline-offset:2px}
+main>div.container:has(input[name='goingTripPassengers']) form button[role='checkbox']:focus-visible{outline:2px solid #8E80B8;outline-offset:2px}
 main>div.container:has(input[name='goingTripPassengers']) form label[for='acceptTermsBooking']{font-size:14px;font-weight:400;line-height:1.75;color:#2A3350}
 main>div.container:has(input[name='goingTripPassengers']) form label[for='acceptTermsBooking'] a{color:#1E64AB;font-weight:700;text-decoration:underline;text-underline-offset:3px}
 main>div.container:has(input[name='goingTripPassengers']) form button[type='submit']{height:50px;min-width:min(240px,100%);padding-inline:28px;border-radius:12px;font-size:16px;font-weight:800}
@@ -1128,7 +1128,7 @@ main div.container:has(>h1+div.grid>a[href*='/services/'])>div.grid>a[href*='/se
 main div.container:has(>h1+div.grid>a[href*='/services/'])>div.grid>a[href*='/services/']>img+div>div:last-child>p.text-xs{grid-column:1;grid-row:2;font-size:12.5px;font-weight:500;line-height:1.5;color:#5A5F78}
 main div.container:has(>h1+div.grid>a[href*='/services/'])>div.grid>a[href*='/services/']>img+div>div:last-child>[data-slot='button']{grid-column:2;grid-row:1/span 2;height:40px;padding:0 18px;border:1.5px solid #7A45A0;border-radius:999px;background:#fff;color:#4A2A7A;font-size:14px;font-weight:700;box-shadow:none}
 main div.container:has(>h1+div.grid>a[href*='/services/'])>div.grid>a[href*='/services/']:hover>img+div>div:last-child>[data-slot='button']{border-color:transparent;background:var(--adv-btn) border-box;color:#fff;box-shadow:0 10px 22px -12px rgba(91,63,160,.8)}
-main div.container:has(>h1+div.grid>a[href*='/services/'])>div.grid>a[href*='/services/']:focus-visible{outline:3px solid #3070B8;outline-offset:3px}
+main div.container:has(>h1+div.grid>a[href*='/services/'])>div.grid>a[href*='/services/']:focus-visible{outline:3px solid #8E80B8;outline-offset:3px}
 /* phones: two compact cards per row (photo 4:3, name up to three lines, price over its tax note, full-width pill) */
 @media (max-width:639.98px){
 main div.container:has(>h1+div.grid>a[href*='/services/'])>div.grid>a[href*='/services/']{border-radius:16px}
@@ -1173,7 +1173,7 @@ main>div:has(>div.container>nav [data-slot='breadcrumb-link'][href$='/services']
 main>div:has(>div.container>nav [data-slot='breadcrumb-link'][href$='/services'])>div.container.mx-auto>div.grid>div[data-slot='card'] form [data-slot='form-item']>button:is([data-slot='popover-trigger'],[data-slot='dialog-trigger']){height:48px;justify-content:flex-start;gap:10px;padding-inline:14px;border:1px solid #8E80B8;border-radius:12px;background:#fff;color:#1A2238;font-size:15px;font-variant-numeric:tabular-nums;box-shadow:0 8px 20px -16px rgba(20,41,74,.45)}
 main>div:has(>div.container>nav [data-slot='breadcrumb-link'][href$='/services'])>div.container.mx-auto>div.grid>div[data-slot='card'] form [data-slot='form-item']>button:is([data-slot='popover-trigger'],[data-slot='dialog-trigger'])>svg{order:-1;flex:none;width:18px;height:18px;margin:0;opacity:1;color:#7A45A0}
 main>div:has(>div.container>nav [data-slot='breadcrumb-link'][href$='/services'])>div.container.mx-auto>div.grid>div[data-slot='card'] form [data-slot='form-item']>button:is([data-slot='popover-trigger'],[data-slot='dialog-trigger']):hover{border-color:#6F5FA6;background:#fff}
-main>div:has(>div.container>nav [data-slot='breadcrumb-link'][href$='/services'])>div.container.mx-auto>div.grid>div[data-slot='card'] form [data-slot='form-item']>button:is([data-slot='popover-trigger'],[data-slot='dialog-trigger']):focus-visible{outline:2px solid #3070B8;outline-offset:2px;box-shadow:none}
+main>div:has(>div.container>nav [data-slot='breadcrumb-link'][href$='/services'])>div.container.mx-auto>div.grid>div[data-slot='card'] form [data-slot='form-item']>button:is([data-slot='popover-trigger'],[data-slot='dialog-trigger']):focus-visible{outline:2px solid #8E80B8;outline-offset:2px;box-shadow:none}
 /* quantity: a soft row with a pill stepper (tinted minus, gradient plus; the theme's grey slab with two square buttons) */
 main>div:has(>div.container>nav [data-slot='breadcrumb-link'][href$='/services'])>div.container.mx-auto>div.grid>div[data-slot='card'] form>div[data-slot='card']{gap:12px;padding:8px;padding-inline-start:16px;border:1px solid #E2DCEE;border-radius:14px;background:#FAF9FE;box-shadow:none}
 main>div:has(>div.container>nav [data-slot='breadcrumb-link'][href$='/services'])>div.container.mx-auto>div.grid>div[data-slot='card'] form>div[data-slot='card']>p{min-width:0;font-size:15px;font-weight:700;line-height:1.4;color:#14294A}
@@ -1182,7 +1182,7 @@ main>div:has(>div.container>nav [data-slot='breadcrumb-link'][href$='/services']
 main>div:has(>div.container>nav [data-slot='breadcrumb-link'][href$='/services'])>div.container.mx-auto>div.grid>div[data-slot='card'] form>div[data-slot='card']>[data-slot='form-item']>button:last-child{background:var(--adv-btn) border-box;color:#fff;box-shadow:0 6px 14px -8px rgba(91,63,160,.8)}
 main>div:has(>div.container>nav [data-slot='breadcrumb-link'][href$='/services'])>div.container.mx-auto>div.grid>div[data-slot='card'] form>div[data-slot='card']>[data-slot='form-item']>button:first-child:not(:disabled):hover{background:#E4DAF5}
 main>div:has(>div.container>nav [data-slot='breadcrumb-link'][href$='/services'])>div.container.mx-auto>div.grid>div[data-slot='card'] form>div[data-slot='card']>[data-slot='form-item']>button:last-child:not(:disabled):hover{background:var(--adv-btn-bright) border-box}
-main>div:has(>div.container>nav [data-slot='breadcrumb-link'][href$='/services'])>div.container.mx-auto>div.grid>div[data-slot='card'] form>div[data-slot='card']>[data-slot='form-item']>button:focus-visible{outline:2px solid #3070B8;outline-offset:2px}
+main>div:has(>div.container>nav [data-slot='breadcrumb-link'][href$='/services'])>div.container.mx-auto>div.grid>div[data-slot='card'] form>div[data-slot='card']>[data-slot='form-item']>button:focus-visible{outline:2px solid #8E80B8;outline-offset:2px}
 main>div:has(>div.container>nav [data-slot='breadcrumb-link'][href$='/services'])>div.container.mx-auto>div.grid>div[data-slot='card'] form>div[data-slot='card']>[data-slot='form-item']>button svg{width:18px;height:18px}
 main>div:has(>div.container>nav [data-slot='breadcrumb-link'][href$='/services'])>div.container.mx-auto>div.grid>div[data-slot='card'] form>div[data-slot='card']>[data-slot='form-item']>div{min-width:34px;padding:0 4px;text-align:center;font-size:17px;font-weight:800;color:#14294A;font-variant-numeric:tabular-nums}
 /* total and the book button (the brand gradient CTA at 48px) */
@@ -1209,13 +1209,13 @@ main>div:has(>div.container>nav [data-slot='breadcrumb-link'][href$='/services']
 :root:has(link[rel='canonical'][href*='/packages/']) :is(main div.container>div.flex>div.shadow-center,[data-slot='sheet-content']) button:is([data-slot='popover-trigger'],[data-slot='dialog-trigger']):hover{border-color:#6F5FA6;background:#fff}
 :root:has(link[rel='canonical'][href*='/packages/']) :is(main div.container>div.flex>div.shadow-center,[data-slot='sheet-content']) input[data-slot='input']{height:44px;padding-inline:12px;border-color:#8E80B8;border-radius:12px;background:#fff;color:#1A2238;font-size:15px;font-variant-numeric:tabular-nums;box-shadow:none}
 :root:has(link[rel='canonical'][href*='/packages/']) :is(main div.container>div.flex>div.shadow-center,[data-slot='sheet-content']) input[data-slot='input']:hover{border-color:#6F5FA6}
-:root:has(link[rel='canonical'][href*='/packages/']) :is(main div.container>div.flex>div.shadow-center,[data-slot='sheet-content']) :is(input[data-slot='input'],button:is([data-slot='popover-trigger'],[data-slot='dialog-trigger'])):focus-visible{border-color:#7A45A0;outline:2px solid #3070B8;outline-offset:2px;box-shadow:none}
+:root:has(link[rel='canonical'][href*='/packages/']) :is(main div.container>div.flex>div.shadow-center,[data-slot='sheet-content']) :is(input[data-slot='input'],button:is([data-slot='popover-trigger'],[data-slot='dialog-trigger'])):focus-visible{border-color:#7A45A0;outline:2px solid #8E80B8;outline-offset:2px;box-shadow:none}
 /* price slider: gradient range, white thumbs ringed in brand purple (the theme drew it in the default black/blue); the thumbs need a z-index to stay above the gradient track */
 :root:has(link[rel='canonical'][href*='/packages/']) [data-slot='slider']{margin-block:6px 2px;padding-block:8px}
 :root:has(link[rel='canonical'][href*='/packages/']) [data-slot='slider-track']{height:6px;background:#E7E1F2}
 :root:has(link[rel='canonical'][href*='/packages/']) [data-slot='slider-range']{background:var(--adv-grad)}
 :root:has(link[rel='canonical'][href*='/packages/']) [data-slot='slider-thumb']{z-index:1;width:22px;height:22px;border:2px solid #7A45A0;background:#fff;box-shadow:0 4px 10px -4px rgba(74,42,122,.6);cursor:grab}
-:root:has(link[rel='canonical'][href*='/packages/']) [data-slot='slider-thumb']:focus-visible{outline:2px solid #3070B8;outline-offset:2px}
+:root:has(link[rel='canonical'][href*='/packages/']) [data-slot='slider-thumb']:focus-visible{outline:2px solid #8E80B8;outline-offset:2px}
 /* count line ("+0 packages available") as the page title */
 :root:has(link[rel='canonical'][href*='/packages/']) main div.container>div.flex>section>div:first-child{align-items:center}
 :root:has(link[rel='canonical'][href*='/packages/']) main div.container>div.flex>section>div:first-child>p{font-size:clamp(22px,1.2vw + 14px,32px);font-weight:800;line-height:1.35;color:#14294A}
@@ -1232,10 +1232,10 @@ html:lang(fr):has(link[rel='canonical'][href*='/packages/']) main div.container>
 :root:has(link[rel='canonical'][href*='/packages/']) main section [data-slot='sheet-trigger']{min-height:40px;padding:8px 16px;border:1.5px solid #7A45A0;border-radius:999px;background:#fff;color:#4A2A7A;font-weight:700}
 :root:has(link[rel='canonical'][href*='/packages/']) main section [data-slot='sheet-trigger']>span{font-size:14px;font-weight:700}
 :root:has(link[rel='canonical'][href*='/packages/']) main section [data-slot='sheet-trigger'] svg{color:#7A45A0}
-:root:has(link[rel='canonical'][href*='/packages/']) main [data-slot='sheet-trigger']:focus-visible{outline:2px solid #3070B8;outline-offset:2px}
+:root:has(link[rel='canonical'][href*='/packages/']) main [data-slot='sheet-trigger']:focus-visible{outline:2px solid #8E80B8;outline-offset:2px}
 /* filter sheets (portalled outside the theme wrapper, so the theme drew them black): brand search button, purple close */
 :root:has(link[rel='canonical'][href*='/packages/']) [data-slot='sheet-content'] button[data-slot='button']{height:48px;border-color:transparent;border-radius:12px;background:var(--adv-btn) border-box;color:#fff;font-size:16px;font-weight:800;box-shadow:0 10px 22px -12px rgba(91,63,160,.8)}
-:root:has(link[rel='canonical'][href*='/packages/']) [data-slot='sheet-content'] button[data-slot='button']:focus-visible{outline:2px solid #3070B8;outline-offset:2px}
+:root:has(link[rel='canonical'][href*='/packages/']) [data-slot='sheet-content'] button[data-slot='button']:focus-visible{outline:2px solid #8E80B8;outline-offset:2px}
 :root:has(link[rel='canonical'][href*='/packages/']) [data-slot='sheet-content']>button:not([data-slot]){color:#4A2A7A;opacity:1}
 
 /* --- gradient titles and hover motion (same conditions as the rest of the site; no photo zoom: the photo sits directly in the card, so a scaled photo would run over the card text) --- */
@@ -1251,7 +1251,7 @@ html:lang(fr):has(link[rel='canonical'][href*='/packages/']) main div.container>
 [data-slot='calendar'] :is([data-slot='calendar-prev-button'],[data-slot='calendar-next-button']){width:32px;height:32px;top:50%;margin-top:-16px;border-color:rgba(122,69,160,.25);border-radius:10px;background:#fff;color:#4A2A7A;opacity:1}
 [data-slot='calendar'] :is([data-slot='calendar-prev-button'],[data-slot='calendar-next-button']):disabled{opacity:.35}
 [data-slot='calendar'] :is([data-slot='calendar-prev-button'],[data-slot='calendar-next-button']):not(:disabled):hover{border-color:#7A45A0;background:#F4EFFB;color:#4A2A7A}
-[data-slot='calendar'] :is([data-slot='calendar-prev-button'],[data-slot='calendar-next-button']):focus-visible{outline:2px solid #3070B8;outline-offset:2px;box-shadow:none}
+[data-slot='calendar'] :is([data-slot='calendar-prev-button'],[data-slot='calendar-next-button']):focus-visible{outline:2px solid #8E80B8;outline-offset:2px;box-shadow:none}
 [data-slot='calendar'] [data-slot='calendar-head-cell']{font-size:12.5px;font-weight:700;color:#6B3FA0}
 [data-slot='calendar'] [data-slot='calendar-cell']:has([data-selected]){background:transparent}
 [data-slot='calendar'] [data-slot='calendar-cell-trigger']{border-radius:10px;font-size:14px;font-weight:500;color:#1A2238;font-variant-numeric:tabular-nums}
@@ -1259,9 +1259,9 @@ html:lang(fr):has(link[rel='canonical'][href*='/packages/']) main div.container>
 [data-slot='calendar'] [data-slot='calendar-cell-trigger'][data-today]:not([data-selected]):not([data-disabled]){background:#fff;box-shadow:inset 0 0 0 1.5px #7A45A0;color:#4A2A7A;font-weight:700}
 [data-slot='calendar'] [data-slot='calendar-cell-trigger'][data-selected]{border-color:transparent;background:var(--adv-btn) border-box;color:#fff;font-weight:800;box-shadow:0 8px 16px -8px rgba(91,63,160,.85)}
 [data-slot='calendar'] [data-slot='calendar-cell-trigger'][data-disabled]{color:#9AA0B4}
-[data-slot='calendar'] [data-slot='calendar-cell-trigger']:focus-visible{outline:2px solid #3070B8;outline-offset:1px;box-shadow:none}
+[data-slot='calendar'] [data-slot='calendar-cell-trigger']:focus-visible{outline:2px solid #8E80B8;outline-offset:1px;box-shadow:none}
 [data-slot='dialog-content']:has([data-slot='calendar']) button[data-slot='dialog-close']{height:48px;border-color:transparent;border-radius:12px;background:var(--adv-btn) border-box;color:#fff;font-size:16px;font-weight:800;box-shadow:0 10px 22px -12px rgba(91,63,160,.8)}
-[data-slot='dialog-content']:has([data-slot='calendar']) button[data-slot='dialog-close']:focus-visible{outline:2px solid #3070B8;outline-offset:2px}
+[data-slot='dialog-content']:has([data-slot='calendar']) button[data-slot='dialog-close']:focus-visible{outline:2px solid #8E80B8;outline-offset:2px}
 [data-slot='dialog-content']:has([data-slot='calendar'])>button:not([data-slot]){color:#4A2A7A;opacity:1}
 [data-slot='dialog-content']:has([data-slot='calendar'])>button:not([data-slot])>svg{width:24px;height:24px}
 /* place lists (portalled): card corners and brand hover */
@@ -1364,7 +1364,7 @@ main button[data-slot='button'].fixed.rounded-full{bottom:calc(max(1rem,env(safe
 main [data-block-id='hotel-search'] .bg-card [data-adv-hotel] .adv-hotel-box{--adv-hf-h:48px;--adv-hf-r:12px}
 main [data-block-id='hotel-search'] .bg-card [data-adv-hotel] .adv-hl-trigger{border-color:#8E80B8;background-color:#fff;color:#1A2238}
 main [data-block-id='hotel-search'] .bg-card [data-adv-hotel] .adv-hl-trigger:enabled:hover{border-color:#6F5FA6;background-color:#fff}
-main [data-block-id='hotel-search'] .bg-card [data-adv-hotel] .adv-hl-trigger:focus-visible{border-color:#8E80B8;outline:2px solid #3070B8;outline-offset:2px}
+main [data-block-id='hotel-search'] .bg-card [data-adv-hotel] .adv-hl-trigger:focus-visible{border-color:#8E80B8;outline:2px solid #8E80B8;outline-offset:2px}
 /* list open: the box keeps its hover edge while the pointer and focus are in the list */
 [data-block-id='hotel-search'] [data-adv-hotel][data-adv-open] .adv-hl-trigger{border-color:var(--ring)}
 [data-block-id^='hero-section'] [data-block-id='hotel-search'] .dark-form [data-adv-hotel][data-adv-open] .adv-hl-trigger{border-color:#C9B6E6}
@@ -1695,7 +1695,7 @@ html:lang(fr) [data-block-id^='hero-section'] [data-block-id='hotel-search'] for
 [data-slot='sheet-content'] [data-block-id='hotel-search']>div>div:has(>button[data-slot='button'])>button[data-slot='button']:not(.bg-primary):hover{background:#F4EFFB;color:#4A2A7A}
 [data-slot='sheet-content'] [data-block-id='hotel-search']>div>div:has(>button[data-slot='button'])>button[data-slot='button'].bg-primary{background-color:#5B3FA0;background-image:var(--adv-btn);background-size:100% 100%;color:#fff;box-shadow:0 8px 18px -10px rgba(91,63,160,.85)}
 [data-slot='sheet-content'] [data-block-id='hotel-search']>div>div:has(>button[data-slot='button'])>button[data-slot='button'].bg-primary>svg{color:#fff}
-[data-slot='sheet-content'] [data-block-id='hotel-search']>div>div:has(>button[data-slot='button'])>button[data-slot='button']:focus-visible{outline:2px solid #3070B8;outline-offset:2px}
+[data-slot='sheet-content'] [data-block-id='hotel-search']>div>div:has(>button[data-slot='button'])>button[data-slot='button']:focus-visible{outline:2px solid #8E80B8;outline-offset:2px}
 @media (forced-colors:active){[data-slot='sheet-content'] [data-block-id='hotel-search']>div>div:has(>button[data-slot='button'])>button[data-slot='button'].bg-primary{outline:2px solid Highlight}}
 /* while a tab opens its page (advisor-site.js marks the row aria-busy until the new page is drawn, however slow) */
 [data-block-id='hotel-search']>div>div[aria-busy='true']>button[data-slot='button']{cursor:progress}
@@ -1836,3 +1836,321 @@ html:not(:lang(ar)) :is([data-slot='sheet-content'] button[data-slot='sheet-clos
 html:not(:lang(ar)) :is([data-slot='popover-content'],[data-slot='sheet-content']):has([data-slot='increment']) button[data-slot='button'].bg-primary>span:first-child::first-letter,
 html:not(:lang(ar)):not(:has(main>div.container>div.mt-8>section.h-fit.shadow-center)) [data-slot='dialog-content'] form button[type='submit'][data-slot='button']>span::first-letter,
 html:not(:lang(ar)) [data-slot='sheet-content'] button[data-slot='sheet-trigger']>span.text-muted-foreground:first-child::first-letter{text-transform:uppercase}
+
+/* ===== v1.0.8 fixes (QA, 2026-11-14). One section per item of the v1.0.7 triage list; ids F01-F40 refer to that list. =====
+   Every rule is scoped to the element it fixes (or to an attribute set by advisor-site.js parts 6-10), so nothing else on the page changes. */
+
+/* --- F01 / F13 / F22 phone menu: the menu button is a 44px target (the svg was 18x18) with an X while the menu is open; the menu's links are
+       44px rows (they were 24px); the gaps shrink so the menu keeps about its height. The tap-outside layer is drawn by advisor-site.js part 6. --- */
+[data-block-id='header'] svg[data-slot='dropdown-menu-trigger']{box-sizing:content-box;width:18px;height:18px;padding:13px;margin:-13px;border-radius:12px}
+[data-block-id='header'] svg[data-slot='dropdown-menu-trigger'][data-state='open']{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M18 6 6 18M6 6l12 12'/%3E%3C/svg%3E") center/20px no-repeat}
+[data-block-id='header']:not(:has(img[src*='LOGO-WHITE'])) svg[data-slot='dropdown-menu-trigger'][data-state='open']{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2314294A' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M18 6 6 18M6 6l12 12'/%3E%3C/svg%3E")}
+[data-block-id='header'] svg[data-slot='dropdown-menu-trigger'][data-state='open']>*{visibility:hidden}
+[data-block-id='header'] svg[data-slot='dropdown-menu-trigger']:focus-visible{outline:2px solid #8EDCF2;outline-offset:-2px}
+[data-block-id='header']:not(:has(img[src*='LOGO-WHITE'])) svg[data-slot='dropdown-menu-trigger']:focus-visible{outline-color:#8E80B8}
+/* fix2: no ring after a tap or a click (the button now takes the focus back when the menu closes; only the keyboard ring above shows) */
+[data-block-id='header'] svg[data-slot='dropdown-menu-trigger']:focus:not(:focus-visible){outline:none}
+/* forced colours: the drawn X is a fixed white image (invisible on a light high-contrast Canvas), so the theme's own icon stays (it follows the system colours) */
+@media (forced-colors:active){[data-block-id='header'] svg[data-slot='dropdown-menu-trigger'][data-state='open']{background-image:none!important}[data-block-id='header'] svg[data-slot='dropdown-menu-trigger'][data-state='open']>*{visibility:visible}}
+[data-slot='dropdown-menu-content']:has(nav a[href]) nav ul.gap-8{gap:8px}
+[data-slot='dropdown-menu-content']:has(nav a[href]) nav a{display:flex;align-items:center;min-height:44px}
+.adv-menu-shield{cursor:default}
+
+/* --- F02 floating WhatsApp and assistant buttons. Phones: the assistant is a 48px disc (its label stays for screen readers) stacked on the
+       WhatsApp disc at the inline end, so the inline start and the middle of the screen stay free; the blog post's "book now" pill takes the
+       free corner. Every width: a floating button that would cover a control on the first screen fades out (advisor-site.js part 6 sets
+       [data-adv-tuck] while html[data-adv-top]) and comes back once the visitor scrolls. --- */
+@media (max-width:767.98px){
+[data-block-id='whatsapp-chat']{inset-inline-start:auto;inset-inline-end:16px;bottom:calc(max(1rem,env(safe-area-inset-bottom)) + 60px)}
+button[data-slot='button'].fixed.rounded-full.bg-primary:not(main *){width:48px;min-width:48px;height:48px;padding:0;gap:0;inset-inline-end:16px}
+button[data-slot='button'].fixed.rounded-full.bg-primary:not(main *)>:not(svg){position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
+button[data-slot='button'].fixed.rounded-full.bg-primary:not(main *)>svg{width:22px;height:22px;margin:0}
+main button[data-slot='button'].fixed.rounded-full{inset-inline-end:auto;inset-inline-start:16px;bottom:max(1rem,env(safe-area-inset-bottom))}
+}
+@media (min-width:640px) and (max-width:767.98px){
+[data-block-id='whatsapp-chat']{inset-inline-end:24px;bottom:calc(max(1rem,env(safe-area-inset-bottom)) + 64px);width:48px;height:48px}
+button[data-slot='button'].fixed.rounded-full.bg-primary:not(main *){inset-inline-end:24px}
+main button[data-slot='button'].fixed.rounded-full{inset-inline-start:24px;bottom:max(1rem,env(safe-area-inset-bottom))}
+}
+:is([data-block-id='whatsapp-chat'],button[data-slot='button'].fixed.rounded-full)[data-adv-tuck]{opacity:0;visibility:hidden;pointer-events:none}
+@media (prefers-reduced-motion:no-preference){:is([data-block-id='whatsapp-chat'],button[data-slot='button'].fixed.rounded-full){transition:opacity .2s ease,visibility .2s,transform .18s ease,box-shadow .18s ease,background-position .4s ease}}
+
+/* --- F03 guests and rooms pop-over: the Done bar (advisor-site.js part 7) is the calendar's bar. The pop-over is capped to the room left in
+       the window (v1.0.6) and scrolls inside, so the bar sticks to its visible bottom edge, across the pop-over's 20px padding (it sat under the
+       edge at 1366x768 / 1024x768 and with 2+ rooms); the summary drops "0 children" and wraps rather than ending in "…" (fix review 14 Nov) --- */
+[data-slot='popover-content']:has(>[data-adv-cal-foot='guests']){display:flex;flex-direction:column;scroll-padding-bottom:72px}
+[data-slot='popover-content']>[data-adv-cal-foot='guests']{flex:none;position:sticky;bottom:-20px;z-index:1;margin:12px -20px -20px;padding:12px 20px 16px;border-radius:0 0 12px 12px;background:#fff;box-shadow:0 -10px 14px -12px rgba(20,41,74,.28)}
+[data-adv-cal-foot='guests'] .adv-cal-sum{white-space:normal;overflow:visible;text-overflow:clip;font-size:13.5px;line-height:1.35;font-weight:600;text-wrap:balance;overflow-wrap:anywhere}
+@media (forced-colors:active){.adv-cal-done{border:1px solid ButtonText}}
+/* fix2: the room title and the counters' labels arrive in lower case from the translations («room 1», «adults number», «chambre 1», «nombre
+   d'adultes»): a capital first letter on English and French pages, like «Add room» and «Done» under them (Arabic untouched) */
+html:not(:lang(ar)) :is([data-slot='popover-content'],[data-slot='sheet-content']):has([data-slot='increment']) :is(div.border-b>p.text-lg,[data-slot='form-label'])::first-letter{text-transform:uppercase}
+
+/* --- F04 calendars inside the window: a date pop-up is never taller than the room left on its side minus 12px (it scrolls inside, the Done
+       bar stays in view); windows under 860px tall get a compact calendar (32px days, tighter header and bar, about 60px less); advisor-site.js
+       part 7 scrolls the page once when a calendar opens over the sticky header or past the bottom. --- */
+[data-slot='popover-content']:has([data-slot='range-calendar'],[data-slot='calendar']){max-height:calc(var(--reka-popover-content-available-height,100vh) - 12px);overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#B9A3DB #F4EFFB}
+[data-slot='popover-content']:has(>[data-slot='calendar']){overflow-y:auto}
+[data-slot='popover-content'] [data-adv-cal-foot]:is([data-adv-cal-foot='range'],[data-adv-cal-foot='single']){position:sticky;bottom:0;z-index:1;background:#fff}
+@media (min-width:768px) and (max-height:860px){
+[data-slot='popover-content'] :is([data-slot='range-calendar'],[data-slot='calendar']){padding:8px 10px 6px}
+[data-slot='popover-content'] :is([data-slot='range-calendar-head-cell'],[data-slot='range-calendar-cell'],[data-slot='calendar'] [data-slot='calendar-head-cell'],[data-slot='calendar'] [data-slot='calendar-cell']){height:32px;min-width:32px}
+[data-slot='popover-content'] :is([data-slot='range-calendar-trigger'],[data-slot='calendar'] [data-slot='calendar-cell-trigger']){height:32px;min-width:32px;width:100%}
+[data-slot='popover-content'] :is([data-slot='range-calendar-grid-row'],[data-slot='calendar'] [data-slot='calendar-grid-row']).mt-2{margin-top:4px}
+[data-slot='popover-content'] :is([data-slot='range-calendar'],[data-slot='calendar'])>div.mt-4{margin-top:8px}
+[data-slot='popover-content'] [data-adv-cal-foot]:is([data-adv-cal-foot='range'],[data-adv-cal-foot='single']){padding:8px 12px}
+[data-slot='popover-content'] .adv-cal-done{height:36px}}
+
+/* --- F06 hotel names: up to two lines on the results cards and the home featured hotels (never cut on one line; a Latin name in an Arabic page
+       keeps its start); the city page's suggested-hotel cards were already on two lines. --- */
+main :is(h2,h3).truncate:has(>a[href*='provider=']){white-space:normal;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden;text-overflow:clip;line-height:1.3;unicode-bidi:plaintext;overflow-wrap:anywhere}
+html[dir='rtl'] main :is(h2,h3).truncate:has(>a[href*='provider=']){text-align:right}
+html[dir='ltr'] main :is(h2,h3).truncate:has(>a[href*='provider=']){text-align:left}
+main div.flex.items-center.min-w-0:has(>:is(h2,h3).truncate>a[href*='provider=']){align-items:flex-start}
+main div.flex.items-center.min-w-0:has(>:is(h2,h3).truncate>a[href*='provider='])>div.shrink-0{margin-top:.55em}
+main [data-block-id] h3.truncate:has(>a[href*='/hotels/']),main [data-block-id] a[href*='/hotels/'] h3.truncate{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden;white-space:normal;text-overflow:clip;unicode-bidi:plaintext}
+html[dir='rtl'] main [data-block-id] :is(h3.truncate:has(>a[href*='/hotels/']),a[href*='/hotels/'] h3.truncate){text-align:right}
+html[dir='ltr'] main [data-block-id] :is(h3.truncate:has(>a[href*='/hotels/']),a[href*='/hotels/'] h3.truncate){text-align:left}
+
+/* city page suggested hotels at 1280-1535 (one row: photo, text, price): the text column was 217px between a 288px photo and a 224px price
+   column that is empty at the top; a 240px photo and a price column sized to its content give the name and address about 330px */
+@media (min-width:1280px) and (max-width:1535.98px){
+[data-block-id^='city-search'] article>div.relative.shrink-0:has([data-slot='carousel']){width:15rem}
+[data-block-id^='city-search'] article [data-slot='hotel-price-column']{width:auto;min-width:9.5rem;max-width:12rem}}
+
+/* --- F07 map view (results "show map" sheet, portalled outside main): the search card gets the results card's one-row layout (the theme's
+       12-column grid left six 90px cells with cut values), and Leaflet's zoom buttons move below the sheet's close button. --- */
+@media (min-width:1280px){
+[role='dialog']:has(.leaflet-container) [data-block-id='hotel-search'] .bg-card form>div.grid:has(>[data-adv-hotel]:not([hidden])){column-gap:8px;--adv-hcols:minmax(0,146fr) minmax(0,222fr) minmax(0,298fr) minmax(0,210fr) minmax(0,140fr) minmax(0,130fr);grid-template-columns:var(--adv-hcols)}
+html[dir='ltr'] [role='dialog']:has(.leaflet-container) [data-block-id='hotel-search'] .bg-card form>div.grid:has(>[data-adv-hotel]:not([hidden])){--adv-hcols:minmax(0,172fr) minmax(0,140fr) minmax(0,328fr) minmax(0,246fr) minmax(0,164fr) minmax(0,96fr)}
+/* fix2: French 1280-1535 (the sheet's card is 1208px): 6px gaps and dates 316px (they were cut at 295px: «mar., novembre 24 - jeu., novembre 26»
+   needs 248px in Calibri, 259px in Noto), destination 122, guests 266 (its text does not shrink: 262px Calibri), promo 208 (placeholder 205px
+   Calibri), search 112 (it was 104: «Rechercher» touched its edges) */
+html[dir='ltr']:lang(fr) [role='dialog']:has(.leaflet-container) [data-block-id='hotel-search'] .bg-card form>div.grid:has(>[data-adv-hotel]:not([hidden])){column-gap:6px;--adv-hcols:minmax(0,122fr) minmax(0,154fr) minmax(0,316fr) minmax(0,266fr) minmax(0,208fr) minmax(0,112fr)}
+[role='dialog']:has(.leaflet-container) [data-block-id='hotel-search'] .bg-card form>div.grid:has(>[data-adv-hotel][hidden]){grid-template-columns:minmax(0,2fr) minmax(0,3fr) minmax(0,2.4fr) minmax(0,1.6fr) minmax(0,1.4fr)}
+[role='dialog']:has(.leaflet-container) [data-block-id='hotel-search'] .bg-card form>div.grid:has(>[data-adv-hotel][hidden])>*{grid-column:auto}}
+@media (min-width:1536px){
+[role='dialog']:has(.leaflet-container) [data-block-id='hotel-search'] .bg-card form>div.grid:has(>[data-adv-hotel]:not([hidden])){--adv-hcols:minmax(0,156fr) minmax(0,256fr) minmax(0,308fr) minmax(0,220fr) minmax(0,150fr) minmax(0,150fr)}
+html[dir='ltr'] [role='dialog']:has(.leaflet-container) [data-block-id='hotel-search'] .bg-card form>div.grid:has(>[data-adv-hotel]:not([hidden])){--adv-hcols:minmax(0,180fr) minmax(0,256fr) minmax(0,338fr) minmax(0,254fr) minmax(0,172fr) minmax(0,108fr)}
+html[dir='ltr']:lang(fr) [role='dialog']:has(.leaflet-container) [data-block-id='hotel-search'] .bg-card form>div.grid:has(>[data-adv-hotel]:not([hidden])){column-gap:8px;--adv-hcols:minmax(0,136fr) minmax(0,240fr) minmax(0,316fr) minmax(0,270fr) minmax(0,250fr) minmax(0,124fr)}}
+[role='dialog']:has(.leaflet-container) [data-block-id='hotel-search'] .bg-card form>div.grid [data-slot='form-item'],[role='dialog']:has(.leaflet-container) [data-block-id='hotel-search'] .bg-card form>div.grid>div{min-width:0}
+[role='dialog'] .leaflet-container .leaflet-top.leaflet-left{top:56px}
+/* fix review 14 Nov: the results card's field look (its rules are scoped to main, and the sheet is portalled outside it): one 48px height, 12px corners
+   and the #8E80B8 border, so the labels share a line (the dates label sat 30px higher, the hotel 4px higher; fields were 44 and 48px) */
+[role='dialog']:has(.leaflet-container) [data-block-id='hotel-search'] .bg-card label{font-weight:700}
+[role='dialog']:has(.leaflet-container) [data-block-id='hotel-search'] .bg-card label:not([data-error='true']){color:#14294A}
+[role='dialog']:has(.leaflet-container) [data-block-id='hotel-search'] .bg-card :is(button[data-slot='form-control'],[data-slot='form-item']>button,input.border:not(.border-none),div.h-11.border){height:48px;border:1px solid #8E80B8;border-radius:12px;background-color:#fff;color:#1A2238}
+[role='dialog']:has(.leaflet-container) [data-block-id='hotel-search'] .bg-card :is(button[data-slot='form-control'],[data-slot='form-item']>button,input.border:not(.border-none),div.h-11.border):hover{border-color:#6F5FA6}
+[role='dialog']:has(.leaflet-container) [data-block-id='hotel-search'] .bg-card [role='button']:focus-visible{outline:none}
+[role='dialog']:has(.leaflet-container) [data-block-id='hotel-search'] .bg-card [role='button']:focus-visible>div.h-11.border{outline:2px solid #8E80B8;outline-offset:2px}
+
+/* --- F09 /transport before any search: the empty list asks for a route and a date instead of saying "no vehicles for this route on this date",
+       and the "0 vehicles" count line above it is hidden. Fix review 14 Nov: this is the default from the first paint; advisor-site.js part 8
+       marks an address that holds a search (from / to / dateFrom) with html[data-adv-tr-searched] as soon as the script runs, and only then does
+       the "no vehicles" text of v1.0.6 show. The script comes only when Nuxt hydrates the page (2-35s), so until it has run (no
+       html[data-adv-tr-mode] yet) a searched address is recognised by the theme's filter chips («مسح الكل» / Clear all), which the server
+       draws only for a search: then "no vehicles" shows from the first paint, as in v1.0.6. --- */
+html:is([data-adv-tr-mode]:not([data-adv-tr-searched]),:not([data-adv-tr-mode]):not(:has(main>div.container>div.mt-8>section:not(.h-fit)>div.flex-wrap>button))):lang(ar){--adv-tr-none:'ابدأ بالبحث عن رحلتك';--adv-tr-hint:'اختر مكان الانطلاق والوصول والتاريخ، ثم اضغط زر البحث لعرض السيارات المتاحة.'}
+html:is([data-adv-tr-mode]:not([data-adv-tr-searched]),:not([data-adv-tr-mode]):not(:has(main>div.container>div.mt-8>section:not(.h-fit)>div.flex-wrap>button))):lang(en){--adv-tr-none:'Start by searching for your trip';--adv-tr-hint:'Choose where you leave from, where you are going and the date, then press search to see the available vehicles.'}
+html:is([data-adv-tr-mode]:not([data-adv-tr-searched]),:not([data-adv-tr-mode]):not(:has(main>div.container>div.mt-8>section:not(.h-fit)>div.flex-wrap>button))):lang(fr){--adv-tr-none:'Commencez par rechercher votre trajet';--adv-tr-hint:"Choisissez le lieu de départ, la destination et la date, puis lancez la recherche pour voir les véhicules disponibles."}
+html:is([data-adv-tr-mode]:not([data-adv-tr-searched]),:not([data-adv-tr-mode]):not(:has(main>div.container>div.mt-8>section:not(.h-fit)>div.flex-wrap>button))) main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section:not(.h-fit)>div:last-child>div.flex-col:empty{background-color:#fff}
+html:is([data-adv-tr-mode]:not([data-adv-tr-searched]),:not([data-adv-tr-mode]):not(:has(main>div.container>div.mt-8>section:not(.h-fit)>div.flex-wrap>button))) main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section:not(.h-fit):has(>div:last-child>div.flex-col:empty)>div:first-child>p{visibility:hidden}
+/* fix2: on phones the count line has a row of its own (the rate / filter buttons wrap under it): it leaves the layout instead of an 86px blank band */
+@media (max-width:767.98px){html:is([data-adv-tr-mode]:not([data-adv-tr-searched]),:not([data-adv-tr-mode]):not(:has(main>div.container>div.mt-8>section:not(.h-fit)>div.flex-wrap>button))) main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section:not(.h-fit):has(>div:last-child>div.flex-col:empty)>div:first-child>p{display:none}}
+
+/* --- F10 /transport on phones: the product tabs (hidden with the desktop search card) show as a 2x2 row of 44px pills above the summary card;
+       their clicks open their own page (part 4). The summary card names the mode (html[data-adv-tr-mode], part 8). --- */
+html:lang(ar){--adv-tr-m-transportation:'المواصلات';--adv-tr-m-airport:'النقل من المطار'}
+html:lang(en){--adv-tr-m-transportation:'Transportation';--adv-tr-m-airport:'Airport transfer'}
+html:lang(fr){--adv-tr-m-transportation:'Transport';--adv-tr-m-airport:"Transfert depuis l'aéroport"}
+@media (max-width:767.98px){
+main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>section.hidden:has([data-block-id='hotel-search']){display:block;margin-bottom:14px}
+main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>section.hidden [data-block-id='hotel-search']>div>div:not(:has(>button[data-slot='button'])){display:none}
+main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>section.hidden [data-block-id='hotel-search']>div>div:has(>button[data-slot='button']){display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:0;padding:6px;border-radius:16px;background:#fff;box-shadow:inset 0 0 0 1px #E2DCEE,0 10px 22px -18px rgba(20,41,74,.5)}
+main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>section.hidden [data-block-id='hotel-search']>div>div:has(>button[data-slot='button'])>button[data-slot='button']{min-height:44px;height:auto;padding:8px 10px;white-space:normal;line-height:1.25;text-align:center}
+html[data-adv-tr-mode] main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.border::before{content:var(--adv-tr-m-label,var(--adv-tr-m-airport));order:-1;font-size:12.5px;font-weight:700;letter-spacing:.01em;color:#6B3FA0}
+html[data-adv-tr-mode='transportation'] main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.border::before{content:var(--adv-tr-m-label,var(--adv-tr-m-transportation))}
+}
+
+/* --- F12 phone filter screens (results, /transport, packages): the scrolling form shows the site's 8px scrollbar and the page behind does not
+       scroll with it --- */
+[data-slot='sheet-content']>div.overflow-y-auto.no-scrollbar{scrollbar-width:auto;scrollbar-color:auto;overscroll-behavior:contain}
+[data-slot='sheet-content']>div.overflow-y-auto.no-scrollbar::-webkit-scrollbar{display:block;width:8px;height:8px}
+[data-slot='sheet-content']>div.overflow-y-auto.no-scrollbar::-webkit-scrollbar-track{border-radius:8px;background:#F4EFFB}
+[data-slot='sheet-content']>div.overflow-y-auto.no-scrollbar::-webkit-scrollbar-thumb{border-radius:8px;background:#B9A3DB}
+[data-slot='sheet-content']>div.overflow-y-auto.no-scrollbar::-webkit-scrollbar-thumb:hover{background:#6B3FA0}
+@supports not selector(::-webkit-scrollbar){[data-slot='sheet-content']>div.overflow-y-auto.no-scrollbar{scrollbar-width:thin;scrollbar-color:#B9A3DB #F4EFFB}}
+[data-slot='sheet-content']>div.overflow-y-auto.no-scrollbar [data-slot='sheet-title']:focus{outline:none}
+
+/* --- F14 phone screens of the hotel results and packages: the navy header bar of the /transport screens (the white logo was invisible on the
+       theme's white bar), 48px / 12px fields in the edit-search screen, and the pencil disc instead of the small cog on the summary card --- */
+[data-slot='sheet-content'] [data-slot='sheet-header']>div.shadow-center:has(>img[src*='LOGO-WHITE']){position:relative;max-width:none;padding-inline:20px;background-color:#14294A;background-image:linear-gradient(var(--adv-dir),var(--adv-deep));box-shadow:none}
+[data-slot='sheet-content'] [data-slot='sheet-header']>div.shadow-center:has(>img[src*='LOGO-WHITE'])::after{content:'';position:absolute;inset-inline:0;bottom:0;height:3px;background:var(--adv-grad)}
+[data-slot='sheet-content']:has(>[data-slot='sheet-header'] img[src*='LOGO-WHITE'])>button.absolute{top:22px;color:#fff;opacity:1}
+[data-slot='sheet-content']:has(>[data-slot='sheet-header'] img[src*='LOGO-WHITE'])>button.absolute svg{width:24px;height:24px}
+[data-slot='sheet-content']:has(>[data-slot='sheet-header'] img[src*='LOGO-WHITE'])>button.absolute:focus-visible{outline:2px solid #8EDCF2;outline-offset:2px;box-shadow:none}
+[data-slot='sheet-content'] [data-block-id='hotel-search'] form :is(button[data-slot='select-trigger'],button[data-slot='sheet-trigger'],[data-slot='popover-trigger'][role='button']>div.h-11,input[data-slot='form-control'],.adv-hl-trigger){min-height:48px;border-radius:12px}
+main div.container.mx-auto>[data-slot='sheet-trigger'].md\:hidden svg.lucide-settings{box-sizing:content-box;width:20px;height:20px;padding:10px;margin:-8px;border-radius:50%;background:#F4EFFB url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B3FA0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 20h9'/%3E%3Cpath d='M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z'/%3E%3C/svg%3E") center/20px no-repeat}
+main div.container.mx-auto>[data-slot='sheet-trigger'].md\:hidden svg.lucide-settings>*{display:none}
+
+/* --- F15 transport place lists while their places are loading (advisor-site.js part 9 sets html[data-adv-tr-loading]): "loading" with a small
+       spinner instead of "no options available" --- */
+html:lang(ar){--adv-tr-loading:'جارٍ التحميل…'}
+html:lang(en){--adv-tr-loading:'Loading…'}
+html:lang(fr){--adv-tr-loading:'Chargement…'}
+html[data-adv-tr-loading]{--adv-tr-noopt:var(--adv-tr-loading)}
+html[data-adv-tr-loading] :is([data-slot='select-content'] [data-slot='select-group'],[data-slot='sheet-content'] [role='radiogroup']):empty::after{border-style:solid;background-image:none}
+html[data-adv-tr-loading] :is([data-slot='select-content'] [data-slot='select-group'],[data-slot='sheet-content'] [role='radiogroup']):empty::before{content:'';display:block;width:18px;height:18px;margin:12px auto 0;border:2px solid #E3D9F2;border-top-color:#6B3FA0;border-radius:50%}
+@media (prefers-reduced-motion:no-preference){html[data-adv-tr-loading] :is([data-slot='select-content'] [data-slot='select-group'],[data-slot='sheet-content'] [role='radiogroup']):empty::before{animation:adv-spin .8s linear infinite}}
+@keyframes adv-spin{to{transform:rotate(360deg)}}
+
+/* --- F17 Windows high contrast: the chosen row of the hotel list in Highlight (it was white on light lilac) --- */
+@media (forced-colors:active){
+[data-adv-pop].adv-hl-pop .adv-hl-opt[aria-selected='true'],[data-adv-pop].adv-hl-pop .adv-hl-opt[aria-selected='true'][data-active]{forced-color-adjust:none;background:Highlight;color:HighlightText}
+[data-adv-pop].adv-hl-pop .adv-hl-opt[aria-selected='true']::after{background-color:HighlightText}}
+
+/* --- F18 keyboard focus: the header links draw their ring (the inline <a> around a block <p> painted nothing); the transport fields and tabs,
+       the city search card and the results search/sort use the site's 2px #8E80B8 ring (they had the theme's blue) --- */
+[data-block-id='header'] nav a{display:inline-block}
+main>div.container:has(>div.mt-8>section.h-fit.shadow-center) [data-block-id='hotel-search'] :is(button,input,[role='button']):focus-visible,
+[data-slot='sheet-content'] form:has(input[name='passengers']) :is(button,input):focus-visible,
+[data-block-id^='city-search'] aside form :is(button,input,[role='button']):focus-visible,
+main [data-block-id='hotel-search'] .bg-card :is(button,input,[role='button']):focus-visible,
+main [data-slot='dropdown-menu-trigger']:focus-visible,main div.md\:max-w-80 :is(button,input):focus-visible{outline:2px solid #8E80B8;outline-offset:2px;box-shadow:none}
+/* fix review 14 Nov: the v1.0.x rings were #3070B8 (now #8E80B8 in place, in every rule); the theme's own translucent rings in main (breadcrumb, date and
+   guests fields, hotel-name search) take the same colour, and the price slider thumbs (outline none) get the ring */
+main :is(a,button,input,select,textarea,[role='button'],[role='combobox'],[role='checkbox'],[role='radio'],[role='tab'],[role='switch']):focus-visible{outline-color:#8E80B8}
+main [role='slider']:focus-visible{outline:2px solid #8E80B8;outline-offset:2px}
+
+/* --- F19 outer margin at 1536-1780px (125% laptops): the theme's container jumped from 1280px to the full 1536px there, so the side margin fell
+       from 143px to 20px; it now stays about 140px until the wider container fits with its own margin (1920 unchanged). The home search band
+       keeps its own width. --- */
+@media (min-width:1536px){.container:not([data-block-id='hotel-search'] *):not([data-slot='sheet-content'] *){padding-inline:max(20px,calc(143px - (100vw - 1536px) / 2))}}
+
+/* --- F21 footer copyright in Arabic: right-to-left order and a separator between the brand and «كل الحقوق محفوظة»
+       («© 2026 ذا أدفايزر · كل الحقوق محفوظة»); English and French get the same separator --- */
+[data-block-id='footer'] p:has(>[data-theme-property='copyrightLabel']){unicode-bidi:isolate}
+html[dir='rtl'] [data-block-id='footer'] p[dir='ltr']:has(>[data-theme-property='copyrightLabel']){direction:rtl}
+[data-block-id='footer'] p>[data-theme-property='copyrightLabel']::before{content:'·';margin-inline-end:.4em;font-weight:700}
+
+/* --- F23 the current breadcrumb item starts with a capital on English and French pages (home > hotels) --- */
+:is(:lang(en),:lang(fr)) [data-slot='breadcrumb-page']{display:inline-block}
+:is(:lang(en),:lang(fr)) [data-slot='breadcrumb-page']::first-letter{text-transform:uppercase}
+
+/* --- F25 French transport card on /transport from 1536px: one row like Arabic and English (it kept the 1280px two-row layout: 479px places and
+       date, 357px passengers and promo code, a 725px search button); 1280-1535 keeps two rows --- */
+@media (min-width:1536px){
+html:lang(fr) main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>section>[data-block-id='hotel-search'] form:has(input[name='passengers'])>div{grid-template-columns:minmax(0,1.2fr) minmax(0,1.2fr) minmax(0,1.15fr) minmax(0,.9fr) minmax(0,1fr) auto}
+html:lang(fr) main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>section>[data-block-id='hotel-search'] form:has(input[name='passengers'])>div>:nth-child(n){grid-column:auto}
+html:lang(fr) main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>section>[data-block-id='hotel-search'] form:has(input[name='passengers'])>div>button[type='submit']{grid-column:auto;max-width:230px;padding-inline:18px;white-space:normal;line-height:1.15;text-wrap:balance}}
+
+/* --- F26 phone stay calendar: a month caption above each of the two months (advisor-site.js part 7) --- */
+.adv-cal-cap{margin:14px 4px 4px;font-size:15px;font-weight:700;color:#14294A;text-align:center}
+:is([data-slot='range-calendar'] div.flex-col>.adv-cal-cap:first-child){margin-top:0}
+@media (min-width:768px){[data-slot='popover-content'] .adv-cal-cap{display:none}}
+
+/* --- F27 hotel page booking pieces: the booking-number dialog («أضف ملاحظاتك»: "enter your booking details") gets the /transport dialog look
+       (its rules were scoped to /transport), «اقترح سعرك» the brand button, and the total card a «choose a room» line instead of «0» while
+       no room is chosen (its book button is disabled) --- */
+[data-slot='dialog-content']:has(input[name='bookingKey']){gap:18px;padding:clamp(22px,3vw,30px);border:1px solid transparent;border-top-width:4px;border-radius:20px;background:linear-gradient(#fff,#fff) padding-box,var(--adv-grad) border-box;box-shadow:0 30px 70px -30px rgba(20,41,74,.6);color:#14294A}
+[data-slot='dialog-content']:has(input[name='bookingKey']) [data-slot='dialog-title']{font-size:20px;font-weight:800;line-height:1.4;color:#14294A}
+[data-slot='dialog-content']:has(input[name='bookingKey']) [data-slot='dialog-description']{font-size:14.5px;line-height:1.7;color:#5A5F78}
+[data-slot='dialog-content']:has(input[name='bookingKey']) label{font-weight:700;color:#14294A}
+[data-slot='dialog-content']:has(input[name='bookingKey']) input[data-slot='form-control']{height:48px;padding-inline:14px;border-color:#8E80B8;border-radius:12px;background-color:#fff;color:#1A2238;font-size:15px}
+[data-slot='dialog-content']:has(input[name='bookingKey']) input[data-slot='form-control']:hover{border-color:#6F5FA6}
+[data-slot='dialog-content']:has(input[name='bookingKey']) input[data-slot='form-control']:focus-visible{border-color:#7A45A0;outline:2px solid #8E80B8;outline-offset:1px;box-shadow:none}
+[data-slot='dialog-content']:has(input[name='bookingKey']) input::placeholder{color:#5B6478;opacity:1}
+[data-slot='dialog-content']:has(input[name='bookingKey']) [data-slot='dialog-footer']>div{width:100%;gap:10px}
+[data-slot='dialog-content']:has(input[name='bookingKey']) button[type='submit']{height:48px;border:0;border-radius:12px;background-color:#5B3FA0;background-image:var(--adv-btn);background-size:180% 100%;background-position:0 50%;color:#fff;font-size:16px;font-weight:800;box-shadow:0 10px 22px -12px rgba(91,63,160,.8)}
+[data-slot='dialog-content']:has(input[name='bookingKey']) button[type='submit']:hover{background-position:100% 50%}
+[data-slot='dialog-content']:has(input[name='bookingKey']) button[type='submit']:focus-visible{outline:2px solid #8E80B8;outline-offset:3px}
+[data-slot='dialog-content']:has(input[name='bookingKey']) [data-slot='dialog-footer'] p{font-size:13px;line-height:1.7;color:#5A5F78}
+[data-slot='dialog-content']:has(input[name='bookingKey'])>button.absolute{color:#4A2A7A;opacity:1}
+:is(:lang(en),:lang(fr)) [data-slot='dialog-content']:has(input[name='bookingKey']) :is([data-slot='dialog-title'],[data-slot='dialog-description'],label)::first-letter{text-transform:uppercase}
+main div.sticky.self-start [data-slot='card'] [data-slot='card-content']>button{height:44px;padding-inline:22px;border:0;border-radius:12px;background-color:#5B3FA0;background-image:var(--adv-btn);background-size:180% 100%;background-position:0 50%;color:#fff;font-weight:700;box-shadow:0 10px 22px -14px rgba(91,63,160,.8)}
+main div.sticky.self-start [data-slot='card'] [data-slot='card-content']>button:hover{background-position:100% 50%}
+main div.sticky.self-start [data-slot='card'] [data-slot='card-content']>button:focus-visible{outline:2px solid #8E80B8;outline-offset:2px}
+html:lang(ar){--adv-pick-room:'اختر غرفة لعرض السعر'}
+html:lang(en){--adv-pick-room:'Choose a room to see the price'}
+html:lang(fr){--adv-pick-room:'Choisissez une chambre pour voir le prix'}
+main div.sticky.self-start>div.shadow-center:has(>button:disabled)>div.flex-col>div.items-end:has(>p.text-4xl){display:none}
+main div.sticky.self-start>div.shadow-center:has(>button:disabled)>div.flex-col::before{content:var(--adv-pick-room);max-width:16em;font-size:18px;font-weight:800;line-height:1.4;color:#14294A}
+/* fix2: the total's two captions («السعر الإجمالي», «شامل الضرائب والرسوم») wait for a price too: the hint stands alone above the button */
+main div.sticky.self-start>div.shadow-center:has(>button:disabled)>div.flex-col>div.text-muted-foreground{display:none}
+
+/* --- F28 / F29 blog posts: the title above its own section headings on phones (it was 18px/500 under 24px/700 headings); on desktop the text
+       of a post keeps about 75-85 characters per line (it was about 106) at 17px / 1.8. Fix review 14 Nov: only blog posts (the post column
+       div.min-w-0 and its anchored prose); the hotel page description (also .prose.inject-html) is untouched. One 720px measure for headings,
+       paragraphs and lists (40em grew with each font size, so 24px headings stuck out past 17px text), started on the column's own edge like the
+       title, the photo and the contents box; photos and tables keep the full column. --- */
+@media (max-width:767.98px){main h1.text-lg.font-medium:is(.md\:text-4xl){font-size:clamp(24px,6.4vw,28px);font-weight:800;line-height:1.35}}
+@media (min-width:1024px){
+main div.min-w-0>.prose.inject-html[class*='scroll-mt']>:is(p,ul,ol,h2,h3,h4,h5,h6,blockquote,dl){max-width:720px;margin-inline:0}
+main div.min-w-0>.prose.inject-html[class*='scroll-mt']>:is(p,ul,ol,blockquote,dl){font-size:17px;line-height:1.8}}
+
+/* --- F30 contact form: on Arabic phones the country code sits next to the number on one row (each had its own full row); English and French
+       keep the two rows of v1.0.x because their placeholders ("Enter your phone number" 199px, "Saisissez votre numéro de téléphone" 281px) do
+       not fit the 158px left beside the code (owner: a shorter placeholder in the CMS would allow one row there too). From 1280px name and
+       email share a row (each was 811px wide at 1920) --- */
+@media (max-width:767.98px){
+html:lang(ar) [data-block-id='contact-form'] div.flex:has(>div.grid>button:is([data-slot='popover-trigger'],[data-slot='sheet-trigger'])){display:grid;grid-template-columns:minmax(0,1fr) 112px;column-gap:8px;row-gap:0;flex-wrap:nowrap}
+html:lang(ar) [data-block-id='contact-form'] div.flex:has(>div.grid>button:is([data-slot='popover-trigger'],[data-slot='sheet-trigger']))>div{flex:none;min-width:0}}
+@media (min-width:1280px){
+[data-block-id='contact-form'] form.md\:grid-cols-2>[data-slot='form-item']:is(:nth-child(1),:nth-child(2)):has(>input:is([type='text'],[type='email'],:not([type]))){grid-column:span 1}}
+
+/* --- F31 contact Subject: the theme's free-text field is not shown before advisor-site.js part 5 replaces it (it showed for up to 4s).
+       Fix review 14 Nov: a timer from the first paint cannot know when the script comes, because the CMS head adds advisor-site.js only when
+       Nuxt hydrates the page (it is in the page data, not in the server HTML: 2-35s after the first paint, measured), while this file is a
+       server-rendered <link>. So: no reveal while the page waits for hydration (the field cannot be used before it anyway; 45s absolute
+       safety); once the script tag is in the head, the safety reveal (script blocked, failing, or the page changed) comes 20s later (12s
+       let the free-text field show for 6s when jsDelivr answered in 18s). --- */
+[data-block-id='contact-form'] form [data-slot='form-item']:has(>input[name='subject']):not([data-adv-subject]){visibility:hidden;animation:adv-show 0s 45s forwards}
+:root:has(script[src*='/advisor-site.js']) [data-block-id='contact-form'] form [data-slot='form-item']:has(>input[name='subject']):not([data-adv-subject]){animation:adv-show-js 0s 20s forwards}
+@keyframes adv-show{to{visibility:visible}}
+@keyframes adv-show-js{to{visibility:visible}}
+
+/* --- F32 phone sort menu: a 12px gutter from the screen edge (it touched it) --- */
+@media (max-width:767.98px){[data-slot='dropdown-menu-content']:not(:has(nav)){max-width:calc(100vw - 24px);margin-inline:12px}}
+
+/* --- F34 empty states (no hotels for a search, no post for a blog search, no place on a city map): the /transport empty panel look (gradient
+       tile, title, next step) instead of a bare grey line --- */
+html:lang(ar){--adv-empty-hint:'جرّب وجهة أو تواريخ أخرى، أو تواصل معنا على واتساب لمساعدتك.';--adv-empty-blog:'جرّب كلمة أخرى أو تصفّح كل المقالات.'}
+html:lang(en){--adv-empty-hint:'Try another destination or other dates, or contact us on WhatsApp and we will help you.';--adv-empty-blog:'Try another word or browse all the posts.'}
+html:lang(fr){--adv-empty-hint:"Essayez une autre destination ou d'autres dates, ou contactez-nous sur WhatsApp pour vous aider.";--adv-empty-blog:'Essayez un autre mot ou parcourez tous les articles.'}
+:root{--adv-empty-tile:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%231AA0C8'/%3E%3Cstop offset='.55' stop-color='%237A45A0'/%3E%3Cstop offset='1' stop-color='%23E8604A'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='18' fill='url(%23g)'/%3E%3Ccircle cx='29' cy='29' r='11' fill='none' stroke='%23fff' stroke-width='3.5'/%3E%3Cpath d='m37 37 8 8' stroke='%23fff' stroke-width='3.5' stroke-linecap='round'/%3E%3C/svg%3E")}
+main section div.min-h-64.rounded-2xl.bg-card.text-center:has(>p.text-muted-foreground:only-child),
+main section.container>p.mt-8.text-center.text-muted-foreground{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:104px clamp(20px,4vw,48px) 32px;border:1px solid #E4DDF0;border-radius:20px;background:var(--adv-empty-tile) center 32px/56px no-repeat,var(--adv-mist);box-shadow:none;text-align:center}
+main section div.min-h-64.rounded-2xl.bg-card.text-center:has(>p.text-muted-foreground:only-child)>p,
+main section.container>p.mt-8.text-center.text-muted-foreground>span{font-size:clamp(17px,.4vw + 15px,20px);font-weight:800;line-height:1.5;color:#14294A}
+main section div.min-h-64.rounded-2xl.bg-card.text-center:has(>p.text-muted-foreground:only-child)::after{content:var(--adv-empty-hint);max-width:52ch;font-size:15px;line-height:1.7;color:#46506A;text-wrap:balance}
+main section.container>p.mt-8.text-center.text-muted-foreground::after{content:var(--adv-empty-blog);max-width:52ch;font-size:15px;line-height:1.7;color:#46506A;text-wrap:balance}
+main div.relative.overflow-hidden.rounded-2xl.border.bg-muted>div.absolute.inset-0.flex.items-center.justify-center.text-muted-foreground{flex-direction:column;gap:12px;padding-top:72px;background:var(--adv-empty-tile) center calc(50% - 30px)/56px no-repeat,var(--adv-mist);font-size:17px;font-weight:800;color:#14294A}
+
+/* --- F35 the Hotels header item is marked on the results, hotel and city pages (advisor-site.js part 6 sets [data-adv-current]) --- */
+[data-block-id='header']:has(img[src*='LOGO-WHITE']) nav a[data-adv-current],[data-block-id='header']:has(img[src*='LOGO-WHITE']) nav a[data-adv-current] span{color:#8EDCF2!important}
+[data-block-id='header']:not(:has(img[src*='LOGO-WHITE'])) nav a[data-adv-current] span{color:#6B3FA0!important}
+[data-slot='dropdown-menu-content'] nav a[data-adv-current]{color:#6B3FA0}
+[data-slot='dropdown-menu-content'] nav a[data-adv-current]>span>p{position:relative;padding-inline-start:14px}
+[data-slot='dropdown-menu-content'] nav a[data-adv-current]>span>p::before{content:'';position:absolute;inset-inline-start:0;top:.15em;bottom:.15em;width:4px;border-radius:4px;background:var(--adv-grad-v)}
+
+/* --- F36 sign-in and sign-up: the contact form's 48px / 12px fields and button, and no 160px gap above the button on phones --- */
+main form:has(input[type='password']) input:is([data-slot='form-control'],[data-slot='input']){height:48px;padding-inline:14px;border-color:#8E80B8;border-radius:12px;background-color:#fff;color:#1A2238}
+main form:has(input[type='password']) input:is([data-slot='form-control'],[data-slot='input']):hover{border-color:#6F5FA6}
+main form:has(input[type='password']) input:is([data-slot='form-control'],[data-slot='input']):focus-visible{border-color:#7A45A0;box-shadow:0 0 0 3px rgba(122,69,160,.22)}
+main form:has(input[type='password']) label{font-weight:700;color:#14294A}
+main form:has(input[type='password']) [data-slot='form-item']>button:is([data-slot='sheet-trigger'],[data-slot='popover-trigger']){height:48px;border-color:#8E80B8;border-radius:12px;background-color:#fff}
+main form:has(input[type='password']) button[type='submit']{height:50px;border-radius:12px;font-size:16px;font-weight:800}
+@media (max-width:767.98px){main form:has(input[type='password']).justify-between{justify-content:flex-start;height:auto}main div.flex-col:has(>form input[type='password']).h-full{height:auto}}
+
+/* --- F38 home latest posts on phones (English, French): three lines of title before the cut --- */
+@media (max-width:767.98px){:is(:lang(en),:lang(fr)) main a.group[href*='/blog/'] p.line-clamp-2{-webkit-line-clamp:3;line-clamp:3}}
+
+/* --- F39 /transport and /packages/search heading (the pages had no h1; advisor-site.js part 8 adds it) in the page-title style --- */
+main h1.adv-page-h1{position:relative;width:fit-content;max-width:100%;margin:4px 0 22px;font-size:clamp(24px,2vw + 14px,40px);font-weight:800;line-height:1.3;color:#14294A}
+main h1.adv-page-h1::after{content:'';display:block;width:72px;height:5px;margin-top:10px;border-radius:5px;background:var(--adv-grad)}
+@supports ((-webkit-background-clip:text) or (background-clip:text)){@media (forced-colors:none){main h1.adv-page-h1{background:var(--adv-grad-text);-webkit-background-clip:text;background-clip:text;color:transparent}}}
+@media (max-width:767.98px){main h1.adv-page-h1{margin-bottom:14px}}
+
+/* --- F40 assistant page: the "Smart Booking" bar lines up with the header's container (it sat about 40px from the edges) --- */
+@media (min-width:1280px){div.flex.h-dvh>main section.mx-auto>header.h-14{padding-inline:max(20px,calc((100% - 1240px) / 2))}}
+@media (min-width:1536px){div.flex.h-dvh>main section.mx-auto>header.h-14{padding-inline:max(139px,calc((100% - 1496px) / 2))}}
