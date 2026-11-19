@@ -6,10 +6,12 @@
 // (media='not all') and the test-commit CSS is inserted right after it (same cascade position). Analytics requests are dropped in
 // both variants. Nothing else is touched.
 (function () {
-  if (window.H && window.H.ver === 4) return 'exists';
+  if (window.H && window.H.ver === 5) return 'exists';
   var CAND = 'https://cdn.jsdelivr.net/gh/ahmedd-sherif/advisorholidays-style@eefae49439456b0f83ce3537eb1e2065f6bb5a39/';
   var V108RE = /advisorholidays-style@v1\.0\.8\/advisor-(site\.js|brand\.css)/;
-  var BLOCK = /(cloudflareinsights\.com|\/cdn-cgi\/rum|google-analytics\.com|googletagmanager\.com|doubleclick\.net|googleadservices\.com|google\.com\/(?:pagead|ccm|rmkt)|facebook\.(?:com|net)|clarity\.ms|tiktok\.com|snapchat\.com|hotjar\.com|analytics\.google)/i;
+  var BLOCK = /(cloudflareinsights\.com|\/cdn-cgi\/rum|google-analytics\.com|googletagmanager\.com|doubleclick\.net|googleadservices\.com|google\.com\/(?:pagead|ccm|rmkt)|facebook\.(?:com|net)|clarity\.ms|tiktok\.com|snapchat\.com|hotjar\.com|analytics\.google|\/api\/a\/track|sc-static\.net)/i;
+  // safety net as in lq9: a non-GET request is answered locally, except the searches and the room prices (never a booking or a form)
+  var ALLOW = /\/api\/[a-z\/_-]*search|\/api\/webbeds\/getRooms/i;
   function bad(u) { try { return BLOCK.test(String(u || '')); } catch (e) { return false; } }
   function hook(w, variant) {
     var st = w.__harn = { variant: variant, swapped: [], blocked: [] };
@@ -32,9 +34,9 @@
       if (o) w.Element.prototype[k] = function () { for (var i = 0; i < arguments.length; i++) fix(arguments[i]); return o.apply(this, arguments); };
     });
     var of = w.fetch;
-    w.fetch = function (u) { var url = u && u.url ? u.url : u; if (bad(url)) { st.blocked.push(String(url)); return w.Promise.resolve(new w.Response(null, { status: 204 })); } return of.apply(this, arguments); };
+    w.fetch = function (u, o) { var url = u && u.url ? u.url : u, m = String((o && o.method) || (u && u.method) || 'GET').toUpperCase(); if (bad(url)) { st.blocked.push(String(url)); return w.Promise.resolve(new w.Response(null, { status: 204 })); } if (m !== 'GET' && m !== 'HEAD' && !ALLOW.test(String(url))) { st.blocked.push(m + ' ' + String(url)); return w.Promise.resolve(new w.Response('{"blocked_by_test":true}', { status: 200, headers: { 'content-type': 'application/json' } })); } return of.apply(this, arguments); };
     var XP = w.XMLHttpRequest.prototype, xo = XP.open, xs = XP.send;
-    XP.open = function (m, u) { this.__hb = bad(u) ? String(u) : null; return xo.apply(this, arguments); };
+    XP.open = function (m, u) { var M = String(m || 'GET').toUpperCase(); this.__hb = bad(u) ? String(u) : (M !== 'GET' && M !== 'HEAD' && !ALLOW.test(String(u)) ? M + ' ' + String(u) : null); return xo.apply(this, arguments); };
     XP.send = function () { if (this.__hb) { st.blocked.push(this.__hb); return; } return xs.apply(this, arguments); };
     if (w.navigator.sendBeacon) { var sb = w.navigator.sendBeacon.bind(w.navigator); w.navigator.sendBeacon = function (u, d) { if (bad(u)) { st.blocked.push(String(u)); return true; } return sb(u, d); }; }
     [['HTMLImageElement', 'src'], ['HTMLScriptElement', 'src']].forEach(function (p) {
@@ -58,7 +60,7 @@
     }
     return true;
   }
-  var H = window.H = { ver: 4, CAND: CAND, frame: null, last: null };
+  var H = window.H = { ver: 5, CAND: CAND, frame: null, last: null };
   H.win = function () { return H.frame && H.frame.contentWindow; };
   H.doc = function () { return H.frame && H.frame.contentDocument; };
   H.q = function (s) { return H.doc().querySelector(s); };
