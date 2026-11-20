@@ -11,6 +11,9 @@
    8. Page changes: the pager goes to the top of the list; /transport title, breadcrumb, heading and start prompt follow the mode; /packages heading (14 Nov 2026).
    9. Transport place lists: "loading" while their places are fetched, instead of "no options available" (14 Nov 2026).
    10. French (and English) pages: the theme's Arabic leftovers replaced by the page language's text (14 Nov 2026).
+   11. Services list: each service card gets the kind of service (meal, parking, visa...) for its icon (20 Nov 2026).
+   v1.0.10 = v1.0.9 + part 11, for Jood's new service cards (about 15 Nov 2026; the new card look is in advisor-brand.css), and part 6
+   lifts the floating buttons over the hotel page's booking bar below 1280px (owner: the WhatsApp and assistant buttons never go away).
    v1.0.9 = v1.0.8 + fixes for Jood's theme update of 15 Nov 2026: part 6 also tucks the theme's phone help pill («مساعدة» / Help; never while
    its menu is open or focused) and keeps every floating button off the hotel booking card's «احجز» and the stay summary's «تغيير»; part 10
    translates the new Arabic theme strings on French pages (help menu, results «تعديل البحث», the hotel page's labels, nights and rooms).
@@ -1802,6 +1805,9 @@
     var a = f.getBoundingClientRect();
     if (!a.width || !a.height) return false;
     var own = f.parentElement && f.parentElement.hasAttribute('data-floating-help-menu') ? f.parentElement : f; // the help pill's own menu
+    // v1.0.10: while the buttons are lifted over the hotel booking bar (on a short screen they may sit over its top), a page control that
+    // scrolls behind the bar is out of sight: it does not count (the bar's own «احجز» still does)
+    var bar = liftPx ? document.querySelector('[data-booking-action-bar]') : null, bt = bar ? bar.getBoundingClientRect().top : 0;
     var roots = document.querySelectorAll("main, [data-block-id='footer']");
     for (var r = 0; r < roots.length; r++) {
       var c = [].slice.call(roots[r].querySelectorAll(sel || CTRL));
@@ -1814,6 +1820,7 @@
         if (own.contains(el) || el.contains(f)) continue;
         var b = el.getBoundingClientRect();
         if (!b.width || !b.height || b.bottom < 0 || b.top > innerHeight || !hit(a, b, 4)) continue;
+        if (bar && !bar.contains(el) && Math.max(a.top, b.top) >= bt - 1) continue;
         var cs = getComputedStyle(el);
         if (cs.visibility === 'hidden' || cs.opacity === '0') continue;
         return true;
@@ -1833,8 +1840,39 @@
     if (!p) return false;
     try { return p.matches(':popover-open'); } catch (e) { return !!(p.offsetWidth || p.offsetHeight); }
   }
+  // v1.0.10: the hotel page's booking bar (below 1280px once a room is chosen; fixed at the bottom, z-index 30) hid the WhatsApp disc
+  // (z-index 20), the phone help pill sat over its total, and from 768px the theme hides the assistant launcher while it is up. While the
+  // bar is shown, html[data-adv-lift] and --adv-float-lift (the bar's height, in a style element of our own, since the theme manages the
+  // html attributes) put the buttons 12px above it (advisor-brand.css). On a short (landscape) screen the lift is lowered to leave room
+  // above the buttons (phones: 260px for the help pill and its menu; from 768px: 150px for the launcher), so they may sit over the top of
+  // the bar (the lifted disc is raised above it in the CSS), but never lower than the top of the bar's «احجز» (part 6 would tuck them
+  // there for as long as the bar stays), and the lift stays on (1px at least) while the bar is shown, which keeps the launcher shown.
+  var liftPx = 0, liftEl = null;
+  function lift() {
+    var d = document.documentElement, bar = document.querySelector('[data-booking-action-bar]'), px = 0;
+    if (bar) {
+      var cs = getComputedStyle(bar), r = bar.getBoundingClientRect();
+      if (cs.position === 'fixed' && cs.display !== 'none' && cs.visibility !== 'hidden' && r.height > 0 && r.top < innerHeight) {
+        var bk = bar.querySelector("button[data-slot='button'].bg-primary"), kr = bk ? bk.getBoundingClientRect() : null;
+        var clear = kr && kr.height ? Math.round(innerHeight - kr.top) + 4 : 0;
+        px = Math.max(1, clear, Math.min(Math.round(innerHeight - r.top), innerHeight - (innerWidth < 768 ? 260 : 150)));
+      }
+    }
+    if (px === liftPx) return;
+    liftPx = px;
+    if (px) {
+      if (!liftEl || !liftEl.isConnected) { liftEl = document.createElement('style'); liftEl.id = 'adv-float-lift'; document.head.appendChild(liftEl); }
+      liftEl.textContent = ':root{--adv-float-lift:' + px + 'px}';
+      d.setAttribute('data-adv-lift', '');
+    } else {
+      d.removeAttribute('data-adv-lift');
+      if (liftEl) liftEl.textContent = '';
+    }
+    setTimeout(safe(tuck), 450); // the bar slides in: measure again once it has settled
+  }
   function tuck() {
     tuckT = null;
+    lift();
     var d = document.documentElement, top = (window.pageYOffset || d.scrollTop || 0) < TOP && scrollable();
     if (top) d.setAttribute('data-adv-top', ''); else d.removeAttribute('data-adv-top');
     floats().forEach(function (f) {
@@ -2486,6 +2524,87 @@
     } catch (e) {}
   }
   // v1.0.8 (fix2): start once Nuxt has hydrated the page (hook, or its isHydrating flag polled); no fixed 6 s timer (see part 2)
+  function hydrated(nuxt, f) {
+    var done = false, n = 0;
+    function run() { if (!done) { done = true; setTimeout(f, 0); } }
+    nuxt.hooks.hookOnce('app:suspense:resolve', run);
+    (function poll() { if (done) return; if (!nuxt.isHydrating) run(); else setTimeout(poll, ++n < 120 ? 500 : 3000); })();
+  }
+  function start() {
+    var a = app();
+    if (!a) { setTimeout(start, 300); return; }
+    var nuxt = a.config.globalProperties.$nuxt;
+    if (nuxt && nuxt.isHydrating && nuxt.hooks && nuxt.hooks.hookOnce) hydrated(nuxt, safe(go));
+    else go();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', safe(start)); else safe(start)();
+})();
+
+/* ---------- 11. Services list: the kind of each service, for its icon (v1.0.10, 20 Nov 2026) ----------
+   Jood's ServiceListCard (since about 15 Nov 2026) shows the same concierge bell for every service, and a service with no price and no
+   description is a plain box with no link to read its slug from. On /services each card gets [data-adv-svc-kind] (coffee, meal, moon,
+   parking, map, visa, camera, plane, bus) from the service's slug in the page data (payload "services:<locale>", matched by name), the
+   card's link, or its name; advisor-brand.css draws the kind's gradient icon. A service of no known kind keeps the bell. */
+(function () {
+  if (window.__advSvc) return;
+  window.__advSvc = 1;
+  // first match wins: Ramadan meals before breakfast («افطار رمضان»), breakfast before the other meals; visa and bus before the guide
+  // («تأشيرة سياحية», «باص سياحي», "tourist-visa")
+  var KINDS = [
+    ['moon', /iftar|ftour|souhour|suhoor|sohour|sahur|ramadan|سحور|رمضان/i],
+    ['coffee', /breakfast|petit[- ]?d[ée]jeuner|فطور|افطار|إفطار/i],
+    ['meal', /lunch|dinner|half[- ]?board|full[- ]?board|meal|d[ée]jeuner|d[îi]ner|repas|غداء|عشاء|وجب/i],
+    ['visa', /visa|تأشير|تاشير|فيزا/i],
+    ['bus', /\bbus(?:es)?\b|minibus|coach|transport|باص|حافل|نقل/i],
+    ['parking', /parking|car[- ]?park|stationnement|موقف|مواقف/i],
+    ['map', /guid|tour|visite|مرافق|مرشد|سياح/i],
+    ['camera', /photo|تصوير/i],
+    ['plane', /flight|airline|avion|طيران/i]
+  ];
+  var LIST = /^(?:\/[a-z]{2}(?:-[a-z]{2})?)?\/services\/?$/i;
+  var started = false, timer = null;
+  function app() { var el = document.querySelector('#__nuxt'); return el ? el.__vue_app__ : null; }
+  function safe(f) { return function (a, b) { try { return f(a, b); } catch (e) {} }; }
+  function norm(t) { return String(t || '').replace(/\s+/g, ' ').trim(); }
+  function kind(s) { for (var i = 0; i < KINDS.length; i++) if (KINDS[i][1].test(s)) return KINDS[i][0]; return ''; }
+  function services() {
+    try {
+      var n = app().config.globalProperties.$nuxt, d = n && n.payload && n.payload.data;
+      var l = (document.documentElement.getAttribute('lang') || 'ar').slice(0, 2).toLowerCase();
+      var v = d && d['services:' + l];
+      return Array.isArray(v) ? v : [];
+    } catch (e) { return []; }
+  }
+  function mark() {
+    timer = null;
+    if (!LIST.test(location.pathname)) return;
+    var grid = document.querySelector('main div.container.mx-auto>h1+div.grid');
+    if (!grid) return;
+    var list = services(), slugOf = {};
+    for (var i = 0; i < list.length; i++) if (list[i] && list[i].slug) slugOf[norm(list[i].name)] = String(list[i].slug);
+    for (var j = 0; j < grid.children.length; j++) {
+      var c = grid.children[j], h = c.querySelector('h2'), name = norm(h && h.textContent), slug = slugOf[name] || '';
+      if (!slug && c.tagName === 'A') {
+        var m = (c.getAttribute('href') || '').match(/\/services\/([^\/?#]+)/);
+        if (m) { try { slug = decodeURIComponent(m[1]); } catch (e) { slug = m[1]; } }
+      }
+      var k = kind(slug + ' ' + name);
+      if (k) { if (c.getAttribute('data-adv-svc-kind') !== k) c.setAttribute('data-adv-svc-kind', k); }
+      else if (c.hasAttribute('data-adv-svc-kind')) c.removeAttribute('data-adv-svc-kind');
+    }
+  }
+  function later(ms) { if (!timer) timer = setTimeout(safe(mark), ms || 120); }
+  function go() {
+    if (started) return;
+    started = true;
+    mark();
+    new MutationObserver(function () { if (LIST.test(location.pathname)) later(150); }).observe(document.body, { childList: true, subtree: true });
+    try {
+      var r = app().config.globalProperties.$router;
+      if (r && !r.__advSvc) { r.__advSvc = 1; r.afterEach(function () { [60, 600].forEach(function (ms) { setTimeout(safe(mark), ms); }); }); }
+    } catch (e) {}
+  }
+  // start once Nuxt has hydrated the page (as parts 2-10)
   function hydrated(nuxt, f) {
     var done = false, n = 0;
     function run() { if (!done) { done = true; setTimeout(f, 0); } }
