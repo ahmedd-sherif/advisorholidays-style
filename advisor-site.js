@@ -1805,6 +1805,9 @@
     var a = f.getBoundingClientRect();
     if (!a.width || !a.height) return false;
     var own = f.parentElement && f.parentElement.hasAttribute('data-floating-help-menu') ? f.parentElement : f; // the help pill's own menu
+    // v1.0.10: while the buttons are lifted over the hotel booking bar (on a short screen they may sit over its top), a page control that
+    // scrolls behind the bar is out of sight: it does not count (the bar's own «احجز» still does)
+    var bar = liftPx ? document.querySelector('[data-booking-action-bar]') : null, bt = bar ? bar.getBoundingClientRect().top : 0;
     var roots = document.querySelectorAll("main, [data-block-id='footer']");
     for (var r = 0; r < roots.length; r++) {
       var c = [].slice.call(roots[r].querySelectorAll(sel || CTRL));
@@ -1817,6 +1820,7 @@
         if (own.contains(el) || el.contains(f)) continue;
         var b = el.getBoundingClientRect();
         if (!b.width || !b.height || b.bottom < 0 || b.top > innerHeight || !hit(a, b, 4)) continue;
+        if (bar && !bar.contains(el) && Math.max(a.top, b.top) >= bt - 1) continue;
         var cs = getComputedStyle(el);
         if (cs.visibility === 'hidden' || cs.opacity === '0') continue;
         return true;
