@@ -8,7 +8,7 @@
 @font-face{font-family:"Calibri Adj";src:local("Calibri Italic"),local("Calibri-Italic");font-weight:351 550;font-style:italic;size-adjust:116%}
 @font-face{font-family:"Calibri Adj";src:local("Calibri Bold Italic"),local("Calibri-BoldItalic");font-weight:551 1000;font-style:italic;size-adjust:116%}
 :root{--font-default:"Calibri Adj","Noto Sans Arabic",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif!important}
-/* advisorholidays.sa brand stylesheet v1.0.10 (v1.0.10 = v1.0.9 + the /services list drawn for Jood's new service cards (an icon per kind of service, 3/2/1 columns, every card state) and the WhatsApp disc back on phones, on the right in Arabic with the help pill on the left, both lifted over the hotel booking bar, 20 Nov 2026). v1.0.9 (v1.0.9 = v1.0.8 + theme-update fixes, 16 Nov 2026: French guests labels on one line and the two counters on one row, the phone help pill in the floating-button tuck, the results empty state with the theme's new assistant link, no capital ::first-letter on Arabic pages (Firefox broke the letter joining), the city heading bar without a :has() (pager long task), compact multi-line hotel names on the results and on the city page's suggested hotels; review fixes 19 Nov: a tapped help pill tucked again once its menu is closed, the help menu's WhatsApp icon, the breadcrumb links' capital on English and French pages). */
+/* advisorholidays.sa brand stylesheet v1.0.10 (v1.0.10 = v1.0.9 + the /services list drawn for Jood's new service cards (an icon per kind of service, 3/2/1 columns, every card state) and the WhatsApp disc back on phones, on the right in Arabic with the help pill on the left, the floating buttons lifted over the hotel booking bar below 1280px, 20 Nov 2026). v1.0.9 (v1.0.9 = v1.0.8 + theme-update fixes, 16 Nov 2026: French guests labels on one line and the two counters on one row, the phone help pill in the floating-button tuck, the results empty state with the theme's new assistant link, no capital ::first-letter on Arabic pages (Firefox broke the letter joining), the city heading bar without a :has() (pager long task), compact multi-line hotel names on the results and on the city page's suggested hotels; review fixes 19 Nov: a tapped help pill tucked again once its menu is closed, the help menu's WhatsApp icon, the breadcrumb links' capital on English and French pages). */
 /* advisorholidays.sa brand stylesheet v1.0.8 (v1.0.8 = v1.0.7 + site-wide QA fixes F01-F40 as shipped and the second review's fixes (fix2: menu button ring after a tap, guests labels' capital, French map dates, phone /transport band, hotel total card), at the end of the file: phone menu, floating buttons, guests Done bar, calendars inside the window, two-line hotel names, map view, transport start prompt / phone tabs / loading lists, phone sheets, focus rings, 1536 margins, copyright, French strings, empty states, sign-in forms, blog posts and contact form). v1.0.7 = (v1.0.6 + home tabs navigate, capitalised sheet labels: EN/FR button labels in pop-ups and phone sheets start with a capital; the tabs themselves are in advisor-site.js; a spinner on a tab and a dimmed form while the tab's page loads). v1.0.6 = (v1.0.5 + the site's own drop-down look for every list and pop-up, the site's own hotel list and a narrower hotel field from 1536px, a Done bar under the date pickers, the phone-sheet tab row on the hotel results, the content card for the new about/privacy/terms block ids and the contact Subject drop-down; v1.0.5 = v1.0.4 + the optional Hotel field drawn by advisor-site.js; v1.0.4 = v1.0.3 + readable tab row on the hotel search results; v1.0.3 = v1.0.2 + new search tabs, transport/airport/services pages, template image fallbacks).
    v1.0.2 = v7 + footer app strip and coloured payment cards; v7 = v6 + font fit fixes after the Calibri switch.
    v6 = v5 + full hero photo, French search rows, Calibri font, brand-coloured social icons.
@@ -1914,13 +1914,23 @@ main button[data-slot='button'].fixed.rounded-full{inset-inline-start:24px;botto
    the inline end, 16px in, 80px up), so phones had no WhatsApp button of their own; F02 (v1.0.8) had also stacked the disc over the
    assistant at the inline end. The disc is back on phones at the inline start, 48px, 16px in, on the pill's row (80px up) on every page:
    the pill is added after the page loads, so a rule keyed on it made the disc jump on every load (the blog's "book now" pill stays at the
-   bottom of the free corner, under the disc). While the hotel page's phone booking bar is up ([data-booking-action-bar], fixed at the
-   bottom, z-index 30, about 220px with one room; the disc's z-index is 20), advisor-site.js part 6 sets html[data-adv-lift] and
-   --adv-float-lift (the bar's height) and both buttons, with the help menu, sit 12px above the bar instead of under it or over its total. */
+   bottom of the free corner, under the disc).
+   Hotel page booking bar: once a room is chosen, below 1280px the theme shows [data-booking-action-bar] (fixed at the bottom, z-index 30,
+   about 220px on phones, 270px at 1024x768; class xl:hidden). The WhatsApp disc (z-index 20) sat under it, the phone help pill over its
+   total, and from 768 to 1279px the theme hides the assistant launcher outright while the bar is up (max-xl:[body:has(bar)]:hidden).
+   advisor-site.js part 6 sets html[data-adv-lift] and --adv-float-lift (the bar's height, capped so that the help pill and its menu
+   always fit above it on short landscape screens) and the buttons sit 12px above the bar: on phones the disc, the help pill and its
+   menu; from 768 to 1279px the disc and the assistant launcher, shown again. */
 @media (max-width:767.98px){
 a[data-block-id='whatsapp-chat']{display:flex;inset-inline-end:auto;inset-inline-start:16px;bottom:80px;width:48px;height:48px}
-html[data-adv-lift] a[data-block-id='whatsapp-chat'],html[data-adv-lift] [data-floating-help-menu]>button.fixed{bottom:calc(var(--adv-float-lift,0px) + 12px)}
+html[data-adv-lift] [data-floating-help-menu]>button.fixed{bottom:calc(var(--adv-float-lift,0px) + 12px)}
 html[data-adv-lift] [data-floating-help-menu] [popover]{bottom:calc(var(--adv-float-lift,0px) + 72px)}
+}
+@media (max-width:1279.98px){
+html[data-adv-lift] a[data-block-id='whatsapp-chat']{bottom:calc(var(--adv-float-lift,0px) + 12px)}
+}
+@media (min-width:768px) and (max-width:1279.98px){
+html[data-adv-lift] button[data-slot='button'].fixed.rounded-full.bg-primary:not(main *){display:inline-flex;bottom:calc(var(--adv-float-lift,0px) + 12px)}
 }
 
 /* --- F03 guests and rooms pop-over: the Done bar (advisor-site.js part 7) is the calendar's bar. The pop-over is capped to the room left in

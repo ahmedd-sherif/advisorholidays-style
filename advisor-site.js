@@ -13,7 +13,7 @@
    10. French (and English) pages: the theme's Arabic leftovers replaced by the page language's text (14 Nov 2026).
    11. Services list: each service card gets the kind of service (meal, parking, visa...) for its icon (20 Nov 2026).
    v1.0.10 = v1.0.9 + part 11, for Jood's new service cards (about 15 Nov 2026; the new card look is in advisor-brand.css), and part 6
-   lifts the floating buttons over the hotel page's phone booking bar (owner: the WhatsApp and assistant buttons never go away).
+   lifts the floating buttons over the hotel page's booking bar below 1280px (owner: the WhatsApp and assistant buttons never go away).
    v1.0.9 = v1.0.8 + fixes for Jood's theme update of 15 Nov 2026: part 6 also tucks the theme's phone help pill («مساعدة» / Help; never while
    its menu is open or focused) and keeps every floating button off the hotel booking card's «احجز» and the stay summary's «تغيير»; part 10
    translates the new Arabic theme strings on French pages (help menu, results «تعديل البحث», the hotel page's labels, nights and rooms).
@@ -1836,15 +1836,17 @@
     if (!p) return false;
     try { return p.matches(':popover-open'); } catch (e) { return !!(p.offsetWidth || p.offsetHeight); }
   }
-  // v1.0.10: the hotel page's phone booking bar (fixed at the bottom, z-index 30) hid the WhatsApp disc (z-index 20) and the help pill sat
-  // over its total: while the bar is up on a phone, html[data-adv-lift] and --adv-float-lift (the bar's height, in a style element of our own,
-  // since the theme manages the html attributes) put both buttons and the help menu 12px above it (advisor-brand.css)
+  // v1.0.10: the hotel page's booking bar (below 1280px once a room is chosen; fixed at the bottom, z-index 30) hid the WhatsApp disc
+  // (z-index 20), the phone help pill sat over its total, and from 768px the theme hides the assistant launcher while it is up. While the
+  // bar is shown, html[data-adv-lift] and --adv-float-lift (the bar's height, in a style element of our own, since the theme manages the
+  // html attributes) put the buttons 12px above it (advisor-brand.css). The lift leaves 260px above it (help pill + its menu), so on a
+  // short landscape phone the buttons may sit over the top of the bar but stay reachable.
   var liftPx = 0, liftEl = null;
   function lift() {
-    var d = document.documentElement, bar = innerWidth < 768 ? document.querySelector('[data-booking-action-bar]') : null, px = 0;
+    var d = document.documentElement, bar = document.querySelector('[data-booking-action-bar]'), px = 0;
     if (bar) {
       var cs = getComputedStyle(bar), r = bar.getBoundingClientRect();
-      if (cs.position === 'fixed' && cs.display !== 'none' && cs.visibility !== 'hidden' && r.height > 0 && r.top < innerHeight) px = Math.max(0, Math.round(innerHeight - r.top));
+      if (cs.position === 'fixed' && cs.display !== 'none' && cs.visibility !== 'hidden' && r.height > 0 && r.top < innerHeight) px = Math.max(0, Math.min(Math.round(innerHeight - r.top), innerHeight - 260));
     }
     if (px === liftPx) return;
     liftPx = px;
