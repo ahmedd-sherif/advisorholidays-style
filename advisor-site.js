@@ -11,6 +11,8 @@
    8. Page changes: the pager goes to the top of the list; /transport title, breadcrumb, heading and start prompt follow the mode; /packages heading (14 Nov 2026).
    9. Transport place lists: "loading" while their places are fetched, instead of "no options available" (14 Nov 2026).
    10. French (and English) pages: the theme's Arabic leftovers replaced by the page language's text (14 Nov 2026).
+   11. Services list: each service card gets the kind of service (meal, parking, visa...) for its icon (20 Nov 2026).
+   v1.0.10 = v1.0.9 + part 11, for Jood's new service cards (about 15 Nov 2026); the new card look is in advisor-brand.css.
    v1.0.9 = v1.0.8 + fixes for Jood's theme update of 15 Nov 2026: part 6 also tucks the theme's phone help pill («مساعدة» / Help; never while
    its menu is open or focused) and keeps every floating button off the hotel booking card's «احجز» and the stay summary's «تغيير»; part 10
    translates the new Arabic theme strings on French pages (help menu, results «تعديل البحث», the hotel page's labels, nights and rooms).
@@ -2486,6 +2488,86 @@
     } catch (e) {}
   }
   // v1.0.8 (fix2): start once Nuxt has hydrated the page (hook, or its isHydrating flag polled); no fixed 6 s timer (see part 2)
+  function hydrated(nuxt, f) {
+    var done = false, n = 0;
+    function run() { if (!done) { done = true; setTimeout(f, 0); } }
+    nuxt.hooks.hookOnce('app:suspense:resolve', run);
+    (function poll() { if (done) return; if (!nuxt.isHydrating) run(); else setTimeout(poll, ++n < 120 ? 500 : 3000); })();
+  }
+  function start() {
+    var a = app();
+    if (!a) { setTimeout(start, 300); return; }
+    var nuxt = a.config.globalProperties.$nuxt;
+    if (nuxt && nuxt.isHydrating && nuxt.hooks && nuxt.hooks.hookOnce) hydrated(nuxt, safe(go));
+    else go();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', safe(start)); else safe(start)();
+})();
+
+/* ---------- 11. Services list: the kind of each service, for its icon (v1.0.10, 20 Nov 2026) ----------
+   Jood's ServiceListCard (since about 15 Nov 2026) shows the same concierge bell for every service, and a service with no price and no
+   description is a plain box with no link to read its slug from. On /services each card gets [data-adv-svc-kind] (coffee, meal, moon,
+   parking, map, visa, camera, plane, bus) from the service's slug in the page data (payload "services:<locale>", matched by name), the
+   card's link, or its name; advisor-brand.css draws the kind's gradient icon. A service of no known kind keeps the bell. */
+(function () {
+  if (window.__advSvc) return;
+  window.__advSvc = 1;
+  // first match wins: Ramadan meals before breakfast («افطار رمضان»), breakfast before the other meals
+  var KINDS = [
+    ['moon', /iftar|ftour|souhour|suhoor|sohour|sahur|ramadan|سحور|رمضان/i],
+    ['coffee', /breakfast|petit[- ]?d[ée]jeuner|فطور|افطار|إفطار/i],
+    ['meal', /lunch|dinner|half[- ]?board|full[- ]?board|meal|d[ée]jeuner|d[îi]ner|repas|غداء|عشاء|وجب/i],
+    ['parking', /park|stationnement|موقف|مواقف/i],
+    ['map', /guide|tour|مرافق|مرشد|سياح/i],
+    ['visa', /visa|تأشير|تاشير|فيزا/i],
+    ['camera', /photo|تصوير/i],
+    ['plane', /flight|ticket|avion|billet|طيران|تذكر/i],
+    ['bus', /\bbus\b|coach|transport|باص|حافل|نقل/i]
+  ];
+  var LIST = /^(?:\/[a-z]{2}(?:-[a-z]{2})?)?\/services\/?$/i;
+  var started = false, timer = null;
+  function app() { var el = document.querySelector('#__nuxt'); return el ? el.__vue_app__ : null; }
+  function safe(f) { return function (a, b) { try { return f(a, b); } catch (e) {} }; }
+  function norm(t) { return String(t || '').replace(/\s+/g, ' ').trim(); }
+  function kind(s) { for (var i = 0; i < KINDS.length; i++) if (KINDS[i][1].test(s)) return KINDS[i][0]; return ''; }
+  function services() {
+    try {
+      var n = app().config.globalProperties.$nuxt, d = n && n.payload && n.payload.data;
+      var l = (document.documentElement.getAttribute('lang') || 'ar').slice(0, 2).toLowerCase();
+      var v = d && d['services:' + l];
+      return Array.isArray(v) ? v : [];
+    } catch (e) { return []; }
+  }
+  function mark() {
+    timer = null;
+    if (!LIST.test(location.pathname)) return;
+    var grid = document.querySelector('main div.container.mx-auto>h1+div.grid');
+    if (!grid) return;
+    var list = services(), slugOf = {};
+    for (var i = 0; i < list.length; i++) if (list[i] && list[i].slug) slugOf[norm(list[i].name)] = String(list[i].slug);
+    for (var j = 0; j < grid.children.length; j++) {
+      var c = grid.children[j], h = c.querySelector('h2'), name = norm(h && h.textContent), slug = slugOf[name] || '';
+      if (!slug && c.tagName === 'A') {
+        var m = (c.getAttribute('href') || '').match(/\/services\/([^\/?#]+)/);
+        if (m) { try { slug = decodeURIComponent(m[1]); } catch (e) { slug = m[1]; } }
+      }
+      var k = kind(slug + ' ' + name);
+      if (k) { if (c.getAttribute('data-adv-svc-kind') !== k) c.setAttribute('data-adv-svc-kind', k); }
+      else if (c.hasAttribute('data-adv-svc-kind')) c.removeAttribute('data-adv-svc-kind');
+    }
+  }
+  function later(ms) { if (!timer) timer = setTimeout(safe(mark), ms || 120); }
+  function go() {
+    if (started) return;
+    started = true;
+    mark();
+    new MutationObserver(function () { if (LIST.test(location.pathname)) later(150); }).observe(document.body, { childList: true, subtree: true });
+    try {
+      var r = app().config.globalProperties.$router;
+      if (r && !r.__advSvc) { r.__advSvc = 1; r.afterEach(function () { [60, 600].forEach(function (ms) { setTimeout(safe(mark), ms); }); }); }
+    } catch (e) {}
+  }
+  // start once Nuxt has hydrated the page (as parts 2-10)
   function hydrated(nuxt, f) {
     var done = false, n = 0;
     function run() { if (!done) { done = true; setTimeout(f, 0); } }
