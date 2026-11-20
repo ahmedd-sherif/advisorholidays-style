@@ -11,6 +11,11 @@
    8. Page changes: the pager goes to the top of the list; /transport title, breadcrumb, heading and start prompt follow the mode; /packages heading (14 Nov 2026).
    9. Transport place lists: "loading" while their places are fetched, instead of "no options available" (14 Nov 2026).
    10. French (and English) pages: the theme's Arabic leftovers replaced by the page language's text (14 Nov 2026).
+   v1.0.9 = v1.0.8 + fixes for Jood's theme update of 15 Nov 2026: part 6 also tucks the theme's phone help pill («مساعدة» / Help; never while
+   its menu is open or focused) and keeps every floating button off the hotel booking card's «احجز» and the stay summary's «تغيير»; part 10
+   translates the new Arabic theme strings on French pages (help menu, results «تعديل البحث», the hotel page's labels, nights and rooms).
+   v1.0.9 review fixes (19 Nov): a tapped help pill is tucked again once its menu is closed (only keyboard focus holds it); on French pages
+   the stay calendar's Arabic label, the theme's own French counts («1 chambres», «0 enfants», «prix pour 2 nuit») and a no-break space before «:».
    v1.0.8 = v1.0.7 + site-wide QA fixes F01-F40 as shipped (F11 left to Jood, F30 Arabic only): parts 6-10 (window flags __advChrome,
    __advPop7, __advRoutes, __advForms, __advI18n) and small fixes in parts 1, 2, 3 and 5 (WhatsApp message source, wait for
    advisor-brand.css before replacing theme controls, contact hotel list side). Part 4 (v1.0.7 tabs) is unchanged.
@@ -1690,6 +1695,9 @@
    - Floating WhatsApp disc and assistant button: html[data-adv-top] while the page is at its top (and can scroll); a floating button that would
      cover a field, button or link on that first screen is tucked away ([data-adv-tuck], faded in advisor-brand.css) until the visitor scrolls;
      at any scroll position, one that would cover a form's submit button or a booking card's button is tucked away as well.
+     v1.0.9: the theme's phone help pill ([data-floating-help-menu], «مساعدة» / Help) is one of them (it is never tucked while its menu is open,
+     the focus is in its menu or it has the keyboard focus); the hotel page's booking card / phone booking bar «احجز», the stay summary's
+     «تغيير» and the hotel's «اختر غرفة» count as main buttons.
    - Header: the Hotels link is marked ([data-adv-current]) on the hotel search results, a hotel's page and a city page.
    - Footer: the app-store badges with no address yet leave the keyboard order; WhatsApp links without a target open in a new tab. */
 (function () {
@@ -1775,7 +1783,7 @@
 
   /* --- floating buttons: tucked away on the first screen while they would cover a control --- */
   function floats() {
-    var out = [], w = document.querySelectorAll("a[data-block-id='whatsapp-chat'], button[data-slot='button'].fixed.rounded-full");
+    var out = [], w = document.querySelectorAll("a[data-block-id='whatsapp-chat'], button[data-slot='button'].fixed.rounded-full, [data-floating-help-menu]>button.fixed");
     for (var i = 0; i < w.length; i++) out.push(w[i]);
     return out;
   }
@@ -1783,17 +1791,27 @@
   // a form's or a booking card's main button: no floating button stays over it at any scroll position (fix review 14 Nov)
   // (not every primary button: result cards would make the floating buttons blink while the list scrolls)
   var MAINBTN = "button[type='submit'],[data-slot='card-content']>button";
+  // v1.0.9: the hotel page's booking card (desktop) and booking bar (phones) button, and the buttons found by their theme label key: the stay
+  // summary's «تغيير» (change_stay) and the hotel's «اختر غرفة» (choose_a_room)
+  // (browser check 20 Nov: the WebBeds/other hotels' card has no .shadow-center; div.bg-card.text-card-foreground.h-fit>button matches both cards)
+  var MAINBTN9 = MAINBTN + ",div.shadow-center.bg-card>button[data-slot='button'].bg-primary,div.bg-card.text-card-foreground.h-fit>button[data-slot='button'].bg-primary,[data-booking-action-bar] button[data-slot='button'].bg-primary";
+  var MAINKEY = "[data-theme-property*='change_stay'],[data-theme-property*='choose_a_room']";
   // a page that scrolls past the first-screen threshold at all (a short page such as /en/login scrolls 91px; 120px were required before)
   function scrollable() { var d = document.documentElement; return (d.scrollHeight - innerHeight) > TOP + 8; }
-  function covers(f, sel) {
+  function covers(f, sel, keys) {
     var a = f.getBoundingClientRect();
     if (!a.width || !a.height) return false;
+    var own = f.parentElement && f.parentElement.hasAttribute('data-floating-help-menu') ? f.parentElement : f; // the help pill's own menu
     var roots = document.querySelectorAll("main, [data-block-id='footer']");
     for (var r = 0; r < roots.length; r++) {
-      var c = roots[r].querySelectorAll(sel || CTRL);
+      var c = [].slice.call(roots[r].querySelectorAll(sel || CTRL));
+      if (keys) {
+        var k = roots[r].querySelectorAll(keys);
+        for (var j = 0; j < k.length; j++) { var kb = k[j].closest ? k[j].closest('button') : null; if (kb) c.push(kb); }
+      }
       for (var i = 0; i < c.length; i++) {
         var el = c[i];
-        if (f.contains(el) || el.contains(f)) continue;
+        if (own.contains(el) || el.contains(f)) continue;
         var b = el.getBoundingClientRect();
         if (!b.width || !b.height || b.bottom < 0 || b.top > innerHeight || !hit(a, b, 4)) continue;
         var cs = getComputedStyle(el);
@@ -1803,12 +1821,24 @@
     }
     return false;
   }
+  // v1.0.9: the help pill stays while its menu is open, the focus is in its menu, or the pill has the keyboard focus (review fix: a tap leaves
+  // the pill focused in Chromium and Firefox, without :focus-visible, and it must tuck again once its menu is closed; an engine without
+  // :focus-visible keeps any focus)
+  function held(f) {
+    var m = f.parentElement;
+    if (!m || !m.hasAttribute('data-floating-help-menu')) return false;
+    var ae = document.activeElement;
+    if (ae && ae !== document.body && m.contains(ae)) { if (ae !== f) return true; try { if (ae.matches(':focus-visible')) return true; } catch (e) { return true; } }
+    var p = m.querySelector('[popover]');
+    if (!p) return false;
+    try { return p.matches(':popover-open'); } catch (e) { return !!(p.offsetWidth || p.offsetHeight); }
+  }
   function tuck() {
     tuckT = null;
     var d = document.documentElement, top = (window.pageYOffset || d.scrollTop || 0) < TOP && scrollable();
     if (top) d.setAttribute('data-adv-top', ''); else d.removeAttribute('data-adv-top');
     floats().forEach(function (f) {
-      var on = (top && covers(f)) || covers(f, MAINBTN);
+      var on = !held(f) && ((top && covers(f)) || covers(f, MAINBTN9, MAINKEY));
       if (on !== f.hasAttribute('data-adv-tuck')) { if (on) f.setAttribute('data-adv-tuck', ''); else f.removeAttribute('data-adv-tuck'); }
     });
   }
@@ -1851,6 +1881,9 @@
       soon(now || now !== document.documentElement.hasAttribute('data-adv-top') ? 60 : 120); // main buttons are checked at every position
     }, { passive: true });
     window.addEventListener('resize', function () { soon(200); });
+    // v1.0.9: the help menu opening / closing (popover 'toggle', which does not bubble) and the focus entering / leaving it re-check at once
+    var helpEv = function (e) { var t = e.target; if (t && t.closest && t.closest('[data-floating-help-menu]')) setTimeout(safe(tuck), 0); };
+    ['toggle', 'focusin', 'focusout'].forEach(function (k) { document.addEventListener(k, helpEv, true); });
     try {
       var r = app().config.globalProperties.$router;
       if (r && !r.__advChrome) { r.__advChrome = 1; r.afterEach(function () { [60, 500, 1500].forEach(function (ms) { setTimeout(safe(scan), ms); }); }); }
@@ -2266,7 +2299,13 @@
    names sent by the hotel API, 'Distance to haram' and 'All'): on html[lang=fr] (and lang=en for the booking card and the pager) the exact
    Arabic text is replaced by the page language's. Only whole, exact
    texts (or a known Arabic start followed by a name) are replaced, in text nodes and in aria-label / placeholder; nothing else is touched, and
-   once Jood translates a text this does nothing. Vue re-renders are followed with a MutationObserver. Wording to be approved by the owner. */
+   once Jood translates a text this does nothing. Vue re-renders are followed with a MutationObserver. Wording to be approved by the owner.
+   v1.0.9 (theme update of 15 Nov): the phone help pill and its menu, the results phone summary «تعديل البحث», the empty results / no rooms
+   panels and the hotel page's labels sent in Arabic on French pages (price start, «اختر غرفة», nights, the stay summary, tabs, read more, the
+   rating title, the room +/- names). Hotel names, room names (JoodBooking data such as «فلات») and CMS texts are never touched.
+   v1.0.9 review fixes: the stay calendar's label (aria-label and screen-reader heading); the theme's own French counts on French pages (whole
+   short texts made only of counts: «1 chambres», «0 enfants», «prix pour 2 nuit»: singular for 0 and 1, plural from 2); a no-break space
+   before the French «:». */
 (function () {
   if (window.__advI18n) return;
   window.__advI18n = 1;
@@ -2284,8 +2323,8 @@
     'اسأل المساعد': "Parler à l'assistant", // fix2: fits the theme's 144px label (124px Calibri, 126px Noto); «Demander à l'assistant» was cut
     'رقم واتساب': 'Numéro WhatsApp',
     'بالتسجيل، أنت توافق على': 'En vous inscrivant, vous acceptez nos',
-    'تاريخ النشر:': 'Publié le :',
-    'تاريخ التحديث:': 'Mis à jour le :',
+    'تاريخ النشر:': 'Publié le\u00a0:',
+    'تاريخ التحديث:': 'Mis à jour le\u00a0:',
     'في هذا المقال': 'Dans cet article',
     'احجز الآن': 'Réserver maintenant',
     'إحجز الآن': 'Réserver maintenant',
@@ -2295,7 +2334,26 @@
     'اختر عدد الغرف': 'Choisissez le nombre de chambres',
     'التصفية حسب': 'Filtrer par',
     'محطة الانطلاق': 'Point de départ',
-    'إخفاء الفلاتر': 'Masquer les filtres'
+    'إخفاء الفلاتر': 'Masquer les filtres',
+    // v1.0.9: theme update of 15 Nov (help pill and menu, results phone summary, empty / no-room panels, hotel page)
+    'مساعدة': 'Aide',
+    'واتساب': 'WhatsApp',
+    'تعديل البحث': 'Modifier la recherche',
+    'اسأل المساعد عن خيارات ثانية': "Demander d'autres options à l'assistant",
+    'اسألنا عبر واتساب': 'Écrivez-nous sur WhatsApp',
+    'فنادق مشابهة': 'Hôtels similaires',
+    'لا توجد غرف متاحة في الأسابيع الأربعة القريبة من تواريخك. تواصل معنا وسنساعدك في إيجاد إقامة.': 'Aucune chambre disponible dans les quatre semaines autour de vos dates. Contactez-nous et nous vous aiderons à trouver un hébergement.',
+    'ابتداءً من': 'À partir de',
+    'اختر غرفة': 'Choisir une chambre',
+    'تغيير': 'Modifier',
+    'لليلة واحدة': 'pour 1 nuit',
+    'لليلتين': 'pour 2 nuits',
+    'نظرة عامة': 'Aperçu',
+    'الموقع': 'Emplacement',
+    'اقرأ المزيد': 'Lire la suite',
+    'قيّم تجربتك مع الحجز': 'Évaluez votre expérience de réservation',
+    'إزالة غرفة واحدة': 'Retirer une chambre',
+    'إضافة غرفة واحدة': 'Ajouter une chambre'
   };
   var EN = {
     'احجز الآن': 'Book now',
@@ -2310,7 +2368,10 @@
   // English filter names of the hotel API left on French pages (exact texts only)
   var FR_EN = {
     'Distance to haram': 'Distance du Haram',
-    'All': 'Tous'
+    'All': 'Tous',
+    // browser check 20 Nov: the theme now writes the blog dates in French itself («Publié le: »): the no-break space before ':' kept
+    'Publié le:': 'Publié le\u00a0:',
+    'Mis à jour le:': 'Mis à jour le\u00a0:'
   };
   // a known Arabic start + a name, or a number: [regex, fr, en] ($1 = the kept part); en null = leave as is on English pages
   var RX = [
@@ -2322,20 +2383,41 @@
     [/^(\d+) (?:ركاب|راكب)$/, '$1 passagers', '$1 passengers'],
     [/^صورة الفندق السابقة$/, "Photo précédente de l'hôtel", 'Previous hotel photo'],
     [/^صورة الفندق التالية$/, "Photo suivante de l'hôtel", 'Next hotel photo'],
-    [/^صور\s+(.+)$/, 'Photos : $1', 'Photos: $1'],
+    [/^صور\s+(.+)$/, 'Photos\u00a0: $1', 'Photos: $1'],
     [/^بالتسجيل، أنت توافق على\s+(.+)$/, 'En vous inscrivant, vous acceptez nos $1', 'By signing up, you agree to our $1'],
     [/^احجز فندق\s+.+$/, 'Réserver cet hôtel', 'Book this hotel'],
     [/^شاهد الغرف المتاحة لتواريخك.*$/, 'Consultez les chambres disponibles pour vos dates et confirmez votre réservation en ligne, ou contactez-nous sur WhatsApp.', 'See the rooms available for your dates and confirm your booking online, or contact us on WhatsApp.'],
-    [/^الصفحة\s+(\d+)\s+من\s+(\d+)$/, 'Page $1 sur $2', 'Page $1 of $2']
+    [/^الصفحة\s+(\d+)\s+من\s+(\d+)$/, 'Page $1 sur $2', 'Page $1 of $2'],
+    // v1.0.9: the hotel page's nights (the theme writes «1 ليالي» too), a room's price «لـ 3 ليالٍ» / «لـ 12 ليلة», and the stay summary
+    // «1 chambres · عدد النزلاء: 2» (its French start keeps the theme's plural «chambres» for one room: corrected here, the line being rewritten)
+    [/^1 (?:ليالي|ليالٍ|ليلة)$/, '1 nuit', null],
+    [/^(\d+) (?:ليالي|ليالٍ|ليلة)$/, '$1 nuits', null],
+    [/^لـ\s*1\s*(?:ليالي|ليالٍ|ليلة)$/, 'pour 1 nuit', null],
+    [/^لـ\s*(\d+)\s*(?:ليالي|ليالٍ|ليلة)$/, 'pour $1 nuits', null],
+    [/^1 chambres? · عدد النزلاء: (\d+)$/, '1 chambre · Voyageurs\u00a0: $1', null],
+    [/^(\d+) chambres? · عدد النزلاء: (\d+)$/, '$1 chambres · Voyageurs\u00a0: $2', null],
+    // v1.0.9 review: the stay calendar's accessible name and its screen-reader heading, the theme's Arabic label + the month(s) shown
+    // («تاريخ الوصول والمغادرة, novembre - décembre 2026»); the English theme text is right already
+    [/^تاريخ الوصول والمغادرة\s*[,،]\s*(.+)$/, 'Dates du séjour, $1', null]
   ];
   var ARABIC = /[؀-ۿ]/, started = false, pend = [], timer = null, full = false;
+  // v1.0.9 review: the theme's own French counts (whole short texts on html[lang=fr] only): «1 chambres», «0 enfants», «prix pour 2 nuit»,
+  // «1 chambres, 2 adultes» -> singular for 0 and 1, plural from 2; a text that is not only counts (a room or hotel name) is never matched
+  // browser check 20 Nov: the theme now writes the stay summary in French too, «1 chambres · Voyageurs : 2» -> «1 chambre · Voyageurs\u00a0: 2»
+  var FRN = /^(?:prix pour )?\d+ (?:chambre|adulte|enfant|nuit)s?(?:, ?\d+ (?:chambre|adulte|enfant)s?)*(?: · Voyageurs? ?: ?\d+)?$/;
+  function frn(k) {
+    if (!FRN.test(k)) return null;
+    var out = k.replace(/(\d+) (chambre|adulte|enfant|nuit)s?(?![a-z])/g, function (m, n, w) { return n + ' ' + w + (+n > 1 ? 's' : ''); })
+      .replace(/ · (Voyageurs?) ?: ?(\d+)$/, ' · $1\u00a0: $2');
+    return out === k ? null : out;
+  }
   function lang() { return (document.documentElement.getAttribute('lang') || 'ar').slice(0, 2).toLowerCase(); }
   function app() { var el = document.querySelector('#__nuxt'); return el ? el.__vue_app__ : null; }
   function safe(f) { return function (a, b) { try { return f(a, b); } catch (e) {} }; }
   function tr(s, l) {
     var k = s.replace(/\s+/g, ' ').trim();
     if (!k) return null;
-    if (!ARABIC.test(k)) return l === 'fr' && Object.prototype.hasOwnProperty.call(FR_EN, k) ? FR_EN[k] : null;
+    if (!ARABIC.test(k)) return l !== 'fr' ? null : (Object.prototype.hasOwnProperty.call(FR_EN, k) ? FR_EN[k] : frn(k));
     var d = l === 'fr' ? FR : EN;
     if (Object.prototype.hasOwnProperty.call(d, k)) return d[k];
     for (var i = 0; i < RX.length; i++) {
@@ -2345,7 +2427,7 @@
     return null;
   }
   function skip(el) { return !el || /^(SCRIPT|STYLE|NOSCRIPT|TEXTAREA|CODE|PRE)$/.test(el.tagName) || el.isContentEditable || (el.closest && el.closest('[data-adv-cf],[data-adv-pop],[data-adv-hotel]')); }
-  function latin(v, l) { return l === 'fr' && v.length < 40 && Object.prototype.hasOwnProperty.call(FR_EN, v.replace(/\s+/g, ' ').trim()); }
+  function latin(v, l) { if (l !== 'fr' || v.length >= 40) return false; var k = v.replace(/\s+/g, ' ').trim(); return Object.prototype.hasOwnProperty.call(FR_EN, k) || frn(k) !== null; }
   function doText(n, l) {
     var v = n.nodeValue;
     if (!v || !(ARABIC.test(v) || latin(v, l)) || skip(n.parentElement)) return;

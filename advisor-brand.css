@@ -8,6 +8,7 @@
 @font-face{font-family:"Calibri Adj";src:local("Calibri Italic"),local("Calibri-Italic");font-weight:351 550;font-style:italic;size-adjust:116%}
 @font-face{font-family:"Calibri Adj";src:local("Calibri Bold Italic"),local("Calibri-BoldItalic");font-weight:551 1000;font-style:italic;size-adjust:116%}
 :root{--font-default:"Calibri Adj","Noto Sans Arabic",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif!important}
+/* advisorholidays.sa brand stylesheet v1.0.9 (v1.0.9 = v1.0.8 + theme-update fixes, 16 Nov 2026: French guests labels on one line and the two counters on one row, the phone help pill in the floating-button tuck, the results empty state with the theme's new assistant link, no capital ::first-letter on Arabic pages (Firefox broke the letter joining), the city heading bar without a :has() (pager long task), compact multi-line hotel names on the results and on the city page's suggested hotels; review fixes 19 Nov: a tapped help pill tucked again once its menu is closed, the help menu's WhatsApp icon, the breadcrumb links' capital on English and French pages). */
 /* advisorholidays.sa brand stylesheet v1.0.8 (v1.0.8 = v1.0.7 + site-wide QA fixes F01-F40 as shipped and the second review's fixes (fix2: menu button ring after a tap, guests labels' capital, French map dates, phone /transport band, hotel total card), at the end of the file: phone menu, floating buttons, guests Done bar, calendars inside the window, two-line hotel names, map view, transport start prompt / phone tabs / loading lists, phone sheets, focus rings, 1536 margins, copyright, French strings, empty states, sign-in forms, blog posts and contact form). v1.0.7 = (v1.0.6 + home tabs navigate, capitalised sheet labels: EN/FR button labels in pop-ups and phone sheets start with a capital; the tabs themselves are in advisor-site.js; a spinner on a tab and a dimmed form while the tab's page loads). v1.0.6 = (v1.0.5 + the site's own drop-down look for every list and pop-up, the site's own hotel list and a narrower hotel field from 1536px, a Done bar under the date pickers, the phone-sheet tab row on the hotel results, the content card for the new about/privacy/terms block ids and the contact Subject drop-down; v1.0.5 = v1.0.4 + the optional Hotel field drawn by advisor-site.js; v1.0.4 = v1.0.3 + readable tab row on the hotel search results; v1.0.3 = v1.0.2 + new search tabs, transport/airport/services pages, template image fallbacks).
    v1.0.2 = v7 + footer app strip and coloured payment cards; v7 = v6 + font fit fixes after the Calibri switch.
    v6 = v5 + full hero photo, French search rows, Calibri font, brand-coloured social icons.
@@ -118,8 +119,8 @@ main>div.gap-12:has(>[data-block-id^='hero-section']) [role='heading'][aria-leve
 /* homepage section subtitles: one size per width for every section (were 13px on phones, 17-22px on desktop) */
 main>div.gap-12:has(>[data-block-id^='hero-section']) header:has(>div>[role='heading'])>div~div span[style*='clamp(']{font-size:clamp(15px,.45vw + 13.3px,19px)!important;line-height:1.6}
 main>div.gap-12:has(>[data-block-id^='hero-section']) header:has(>div>[role='heading'])>div~div p{text-wrap:balance}
-/* section title accent, city page (same bar as the home section titles) */
-[data-block-id^='city-'] div:has(>p>span[style*='clamp(22px'])::after,[data-block-id^='city-search'] section>div.grid>div>h2::after{content:'';display:block;width:64px;height:4px;margin-top:10px;border-radius:4px;background:var(--adv-grad)}
+/* section title accent, city page (same bar as the home section titles; v1.0.9: drawn by the title span, no :has() on every div) */
+[data-block-id^='city-'] p>span[style*='clamp(22px']::after,[data-block-id^='city-search'] section>div.grid>div>h2::after{content:'';display:block;width:64px;height:4px;margin-top:10px;border-radius:4px;background:var(--adv-grad)}
 
 /* ===== Home: hero photo + search band ===== */
 main>div.gap-12:has(>[data-block-id^='hero-section']){row-gap:0}
@@ -327,7 +328,7 @@ main button[data-slot='button'].bg-secondary:has(>a[href*='openstreetmap'])>a sv
 main button[data-slot='button'].bg-secondary:has(>a[href*='openstreetmap']):hover{background:#F4EFFB}
 main div.container>h2{position:relative;padding-inline-start:14px;font-weight:800;color:#14294A}
 main div.container>h2::before{content:'';position:absolute;inset-inline-start:0;top:.15em;bottom:.15em;width:4px;border-radius:4px;background:var(--adv-grad-v)}
-main div.container>h2::first-letter{text-transform:uppercase}
+html:not(:lang(ar)) main div.container>h2::first-letter{text-transform:uppercase}
 /* "إبدأ حجزك الآن" / "وسائل الراحة" fell back to the 36px global h2; match the other section titles. Amenities also sat 24px under the last room. */
 main div.container>h2:is(.mt-6,[class~='md:mt-14']){font-size:1.125rem;line-height:1.75rem}
 main div.container>h2.mt-6{margin-top:clamp(36px,4vw,48px)}
@@ -539,7 +540,7 @@ main>div.gap-12>div.space-y-4:not([data-block-id])>:nth-last-child(2):has(+p:emp
 [data-block-id='contact-info'] div:has(>p.text-xs:first-child){position:relative;padding:14px 18px;padding-inline-start:22px;border:1px solid #E4DDF0;border-radius:14px;background:#fff;box-shadow:0 10px 24px -20px rgba(20,41,74,.5)}
 [data-block-id='contact-info'] div:has(>p.text-xs:first-child)::before{content:'';position:absolute;inset-block:14px;inset-inline-start:0;width:4px;border-radius:4px;background:var(--adv-grad-v)}
 [data-block-id='contact-info'] div:has(>p.text-xs:first-child)>p.text-xs{font-size:13px;font-weight:700;color:#6B3FA0}
-[data-block-id='contact-info'] div:has(>p.text-xs:first-child)>p.text-xs::first-letter{text-transform:uppercase}
+html:not(:lang(ar)) [data-block-id='contact-info'] div:has(>p.text-xs:first-child)>p.text-xs::first-letter{text-transform:uppercase}
 [data-block-id='contact-info'] div:has(>p.text-xs:first-child)>p:last-child{line-height:1.8;color:#2A3350}
 [data-block-id='contact-info'] div:has(>p.text-xs:first-child)>a{width:fit-content;font-weight:700;color:#14294A}
 [data-block-id='contact-info'] div:has(>p.text-xs:first-child)>a:hover{color:#5B3FA0;text-decoration:underline;text-underline-offset:3px}
@@ -554,7 +555,11 @@ main>div.gap-12>div.space-y-4:not([data-block-id])>:nth-last-child(2):has(+p:emp
 /* ===== Breadcrumb ===== */
 [data-slot='breadcrumb-page']{color:#6B3FA0;font-weight:700}
 [data-slot='breadcrumb-link']:hover{color:#1E64AB}
-[data-slot='breadcrumb-link']::first-letter{text-transform:uppercase}
+html:not(:lang(ar)) [data-slot='breadcrumb-link']::first-letter{text-transform:uppercase}
+/* v1.0.9 review: the theme's breadcrumb links are inline-flex now (min-h-11: 44px tall under 768px, text centred) and ::first-letter needs
+   a block container: block, and under 768px the same 44px made of an even 12px padding, so the text stays centred in every engine */
+html:not(:lang(ar)) [data-slot='breadcrumb-link']{display:block}
+@media (max-width:767.98px){html:not(:lang(ar)) [data-slot='breadcrumb-link'].min-h-11{min-height:0;padding-block:12px}}
 /* breadcrumb was glued to the WhatsApp strip (hotels, hotel, blog, contact); city uses .mt-4 (16px) */
 main .container.mb-6>nav[data-slot='breadcrumb']{padding-top:clamp(12px,1.2vw,16px)}
 
@@ -789,7 +794,7 @@ html:lang(en){--adv-tr-none:'No vehicles available for this route on this date';
 html:lang(fr){--adv-tr-none:'Aucun véhicule disponible pour cet itinéraire à cette date';--adv-tr-hint:'Essayez une autre date ou un autre itinéraire, ou contactez-nous sur WhatsApp pour vous aider.'}
 /* EN/FR breadcrumb page name is lowercase ("transportations", "transports") */
 main:has(>div.container>div.mt-8>section.h-fit.shadow-center)>div.container.mb-6 [data-slot='breadcrumb-page']{display:inline-block}
-main:has(>div.container>div.mt-8>section.h-fit.shadow-center)>div.container.mb-6 [data-slot='breadcrumb-page']::first-letter{text-transform:uppercase}
+html:not(:lang(ar)) main:has(>div.container>div.mt-8>section.h-fit.shadow-center)>div.container.mb-6 [data-slot='breadcrumb-page']::first-letter{text-transform:uppercase}
 
 /* --- search card: mode tabs as pills (active = brand gradient from the base button rule) --- */
 main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>section>[data-block-id='hotel-search']>div>div.mb-3{display:flex;flex-wrap:wrap;gap:10px;width:auto;margin-bottom:14px;padding:0;border-radius:0}
@@ -842,12 +847,12 @@ main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section:n
 /* --- filter card (sidebar and phone sheet share it) --- */
 main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section.h-fit{padding:20px 18px 24px;border:1px solid transparent;border-top-width:4px;border-radius:20px;background:linear-gradient(#fff,#fff) padding-box,var(--adv-grad) border-box;box-shadow:0 20px 44px -28px rgba(74,42,122,.55)}
 :is(main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section.h-fit,:root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='sheet-content']) p.text-lg.font-medium{font-size:16px;font-weight:800;line-height:1.4;color:#14294A}
-:is(main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section.h-fit,:root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='sheet-content']) p.text-lg.font-medium::first-letter{text-transform:uppercase}
+html:not(:lang(ar)) :is(main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section.h-fit,:root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='sheet-content']) p.text-lg.font-medium::first-letter{text-transform:uppercase}
 :is(main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section.h-fit,:root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='sheet-content']) div.mt-8:has(>p.text-lg){margin-top:20px;padding-top:18px;border-top:1px solid #EEE8F6}
 /* airport mode: the departure-station group has no stations yet; hide the bare heading */
 :is(main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section.h-fit,:root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='sheet-content']) div.mt-8:has(>p.text-lg:only-child){display:none}
 :is(main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section.h-fit,:root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='sheet-content']) label[data-slot='label']{font-size:13px;font-weight:700;color:#5A5F78}
-:is(main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section.h-fit,:root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='sheet-content']) label[data-slot='label']::first-letter{text-transform:uppercase}
+html:not(:lang(ar)) :is(main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section.h-fit,:root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='sheet-content']) label[data-slot='label']::first-letter{text-transform:uppercase}
 :is(main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section.h-fit,:root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='sheet-content']) input[data-slot='input']{height:44px;padding-inline:12px;border-color:#8E80B8;border-radius:10px;background-color:#fff;color:#1A2238;font-size:15px;font-variant-numeric:tabular-nums}
 :is(main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section.h-fit,:root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='sheet-content']) input[data-slot='input']:hover{border-color:#6F5FA6}
 :is(main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section.h-fit,:root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='sheet-content']) input[data-slot='input']:focus-visible{border-color:#7A45A0;box-shadow:0 0 0 3px rgba(122,69,160,.2)}
@@ -965,7 +970,7 @@ main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.border{gap:8px
 main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.border>div:first-child{font-size:16px;font-weight:800;color:#14294A}
 /* the title is the first result's route text (or "routes" when there are none); an empty one left a blank line */
 main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.border>div:first-child:empty{display:none}
-main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.border>div:first-child::first-letter,main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section:not(.h-fit)>div:first-child div[data-slot='sheet-trigger']>span::first-letter{text-transform:uppercase}
+html:not(:lang(ar)) main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.border>div:first-child::first-letter,html:not(:lang(ar)) main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section:not(.h-fit)>div:first-child div[data-slot='sheet-trigger']>span::first-letter{text-transform:uppercase}
 main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.mt-8>section:not(.h-fit)>div:first-child div[data-slot='sheet-trigger']>span{display:inline-block}
 main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.border div.text-muted-foreground{color:#2A3350;font-weight:600}
 main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.border div.text-muted-foreground svg{color:#7A45A0}
@@ -1008,7 +1013,7 @@ main>div.container:has(>div.mt-8>section.h-fit.shadow-center)>div.border div.cur
 :root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='dialog-content']:has(input[name='bookingKey']) [data-slot='dialog-footer'] p{font-size:13px;line-height:1.7;color:#5A5F78}
 :root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='dialog-content']:has(input[name='bookingKey'])>button.absolute{color:#4A2A7A;opacity:1}
 /* EN/FR strings arrive in lower case ("entrez vos détails de réservation", "numéro de réservation") */
-:root:has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='dialog-content']:has(input[name='bookingKey']) :is([data-slot='dialog-title'],[data-slot='dialog-description'],label)::first-letter{text-transform:uppercase}
+:root:not(:lang(ar)):has(main>div.container>div.mt-8>section.h-fit.shadow-center) [data-slot='dialog-content']:has(input[name='bookingKey']) :is([data-slot='dialog-title'],[data-slot='dialog-description'],label)::first-letter{text-transform:uppercase}
 
 /* ===== Transport booking request (/transport/booking-request: the step after "book the trip", before any payment) =====
    Scoped by its passengers field (goingTripPassengers is only on this form; the hotel booking page is untouched). Looks only: nothing here changes what is sent. */
@@ -1028,7 +1033,7 @@ main>div.container:has(input[name='goingTripPassengers']) :is(form>div.shadow-ce
 main>div.container:has(input[name='goingTripPassengers']) form>div.shadow-center>div.grid{max-width:none;column-gap:18px;row-gap:18px}
 main>div.container:has(input[name='goingTripPassengers']) form label{font-size:14px;font-weight:700;color:#14294A}
 /* EN/FR labels arrive in lower case ("prénom", "nom de famille", "téléphone", "catégorie", "total") */
-main>div.container:has(input[name='goingTripPassengers']) :is(form [data-slot='form-item']>label,aside>div.bg-accent>div:last-child>div.flex>span:first-child>span,aside>div:last-child>div:last-child>h3)::first-letter{text-transform:uppercase}
+html:not(:lang(ar)) main>div.container:has(input[name='goingTripPassengers']) :is(form [data-slot='form-item']>label,aside>div.bg-accent>div:last-child>div.flex>span:first-child>span,aside>div:last-child>div:last-child>h3)::first-letter{text-transform:uppercase}
 main>div.container:has(input[name='goingTripPassengers']) form :is(input[data-slot='form-control'],textarea,button[data-slot='popover-trigger'],button[data-slot='sheet-trigger']){height:48px;padding-inline:14px;border:1px solid #8E80B8;border-radius:12px;background-color:#fff;color:#1A2238;font-size:15px;box-shadow:none}
 main>div.container:has(input[name='goingTripPassengers']) form textarea{height:auto;min-height:104px;padding-block:12px;line-height:1.7}
 main>div.container:has(input[name='goingTripPassengers']) form input::placeholder,main>div.container:has(input[name='goingTripPassengers']) form textarea::placeholder{color:#5B6478;opacity:1}
@@ -1203,7 +1208,7 @@ main>div:has(>div.container>nav [data-slot='breadcrumb-link'][href$='/services']
 :root:has(link[rel='canonical'][href*='/packages/']) :is(main div.container>div.flex>div.shadow-center,[data-slot='sheet-content']) :is(label.text-lg,p.text-lg){font-size:15px;font-weight:700;line-height:1.4;color:#14294A}
 :root:has(link[rel='canonical'][href*='/packages/']) :is(main div.container>div.flex>div.shadow-center,[data-slot='sheet-content']) label.text-sm{font-size:13px;font-weight:600;color:#5A5F78}
 /* Jood's French/English labels are lower case ("prix", "min", "max", "filter"): first letter capitalised like the other labels */
-:root:has(link[rel='canonical'][href*='/packages/']) :is(main div.container>div.flex>div.shadow-center,[data-slot='sheet-content']) :is(label,p.text-lg)::first-letter,:root:has(link[rel='canonical'][href*='/packages/']) main section [data-slot='sheet-trigger']>span::first-letter{text-transform:uppercase}
+:root:not(:lang(ar)):has(link[rel='canonical'][href*='/packages/']) :is(main div.container>div.flex>div.shadow-center,[data-slot='sheet-content']) :is(label,p.text-lg)::first-letter,:root:not(:lang(ar)):has(link[rel='canonical'][href*='/packages/']) main section [data-slot='sheet-trigger']>span::first-letter{text-transform:uppercase}
 :root:has(link[rel='canonical'][href*='/packages/']) :is(main div.container>div.flex>div.shadow-center,[data-slot='sheet-content']) button:is([data-slot='popover-trigger'],[data-slot='dialog-trigger']){height:48px;justify-content:flex-start;gap:10px;padding-inline:14px;border:1px solid #8E80B8;border-radius:12px;background:#fff;color:#1A2238;font-size:15px;font-variant-numeric:tabular-nums}
 :root:has(link[rel='canonical'][href*='/packages/']) :is(main div.container>div.flex>div.shadow-center,[data-slot='sheet-content']) button:is([data-slot='popover-trigger'],[data-slot='dialog-trigger'])>svg{order:-1;flex:none;width:18px;height:18px;margin:0;opacity:1;color:#7A45A0}
 :root:has(link[rel='canonical'][href*='/packages/']) :is(main div.container>div.flex>div.shadow-center,[data-slot='sheet-content']) button:is([data-slot='popover-trigger'],[data-slot='dialog-trigger']):hover{border-color:#6F5FA6;background:#fff}
@@ -1293,10 +1298,11 @@ html:lang(fr){--adv-tr-noopt:'Aucune option disponible pour le moment'}
    image's own 14x14 box. Also matches the keenpix-proxied URL so the look stays the same if Jood re-routes it. */
 img:is([src*='/templates/star.avif'],[src*='templates%2Fstar.avif']){content:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpolygon points='12,1.85 15.23,8.3 22.37,9.38 17.23,14.45 18.41,21.57 12,18.25 5.59,21.57 6.77,14.45 1.63,9.38 8.77,8.3' fill='%23DFA71C' stroke='%23DFA71C' stroke-width='1.6' stroke-linejoin='round'/%3E%3C/svg%3E");height:auto;aspect-ratio:1/1;object-fit:contain}
 
-/* Floating WhatsApp button (whatsapp-chat block): templates/whatsapp.avif is blocked too (broken icon + "whatsapp icon" text over the page).
+/* Floating WhatsApp button (whatsapp-chat block), and since v1.0.9 the same icon in the theme's phone help menu ([data-floating-help-menu]):
+   templates/whatsapp.avif is blocked too (broken icon + "whatsapp icon" text over the page).
    WhatsApp-green disc with the white glyph, same 56px box; a green-tinted lift and a white ring so it reads on the navy bands and on white pages. */
 [data-block-id='whatsapp-chat']{border-radius:50%;box-shadow:0 0 0 2px #fff,0 10px 24px -8px rgba(7,94,84,.55)}
-[data-block-id='whatsapp-chat']>img:is([src*='/templates/whatsapp.avif'],[src*='templates%2Fwhatsapp.avif']){content:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 56 56'%3E%3Ccircle cx='28' cy='28' r='28' fill='%2325D366'/%3E%3Cpath transform='translate(13.4 13.4) scale(1.22)' fill='%23fff' d='M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z'/%3E%3C/svg%3E");border-radius:50%;object-fit:contain}
+[data-block-id='whatsapp-chat']>img:is([src*='/templates/whatsapp.avif'],[src*='templates%2Fwhatsapp.avif']),[data-floating-help-menu] img:is([src*='/templates/whatsapp.avif'],[src*='templates%2Fwhatsapp.avif']){content:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 56 56'%3E%3Ccircle cx='28' cy='28' r='28' fill='%2325D366'/%3E%3Cpath transform='translate(13.4 13.4) scale(1.22)' fill='%23fff' d='M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z'/%3E%3C/svg%3E");border-radius:50%;object-fit:contain}
 [data-block-id='whatsapp-chat']:focus-visible{outline:3px solid #8EDCF2;outline-offset:3px}
 @media (hover:hover){[data-block-id='whatsapp-chat']:hover{box-shadow:0 0 0 2px #fff,0 14px 28px -8px rgba(7,94,84,.7)}}
 @media (hover:hover) and (prefers-reduced-motion:no-preference){[data-block-id='whatsapp-chat']{transition:transform .18s ease,box-shadow .18s ease}[data-block-id='whatsapp-chat']:hover{transform:translateY(-2px)}}
@@ -1873,6 +1879,12 @@ button[data-slot='button'].fixed.rounded-full.bg-primary:not(main *){inset-inlin
 main button[data-slot='button'].fixed.rounded-full{inset-inline-start:24px;bottom:max(1rem,env(safe-area-inset-bottom))}
 }
 :is([data-block-id='whatsapp-chat'],button[data-slot='button'].fixed.rounded-full)[data-adv-tuck]{opacity:0;visibility:hidden;pointer-events:none}
+/* v1.0.9: the theme's phone help pill («مساعدة» / Help, [data-floating-help-menu]) is tucked by the same rules (never while its menu is open,
+   the focus is in its menu or it has the keyboard focus); faded only, so a keyboard still reaches it, and it shows again at once when focused
+   from the keyboard. A tap leaves it focused (Chromium, Firefox) without :focus-visible: it fades again once its menu is closed (review fix). */
+[data-floating-help-menu]>button.fixed[data-adv-tuck]:not(:focus){opacity:0;pointer-events:none}
+[data-floating-help-menu]>button.fixed[data-adv-tuck]:focus:not(:focus-visible){opacity:0;pointer-events:none}
+@media (prefers-reduced-motion:no-preference){[data-floating-help-menu]>button.fixed{transition:opacity .2s ease}}
 @media (prefers-reduced-motion:no-preference){:is([data-block-id='whatsapp-chat'],button[data-slot='button'].fixed.rounded-full){transition:opacity .2s ease,visibility .2s,transform .18s ease,box-shadow .18s ease,background-position .4s ease}}
 
 /* --- F03 guests and rooms pop-over: the Done bar (advisor-site.js part 7) is the calendar's bar. The pop-over is capped to the room left in
@@ -1885,6 +1897,10 @@ main button[data-slot='button'].fixed.rounded-full{inset-inline-start:24px;botto
 /* fix2: the room title and the counters' labels arrive in lower case from the translations («room 1», «adults number», «chambre 1», «nombre
    d'adultes»): a capital first letter on English and French pages, like «Add room» and «Done» under them (Arabic untouched) */
 html:not(:lang(ar)) :is([data-slot='popover-content'],[data-slot='sheet-content']):has([data-slot='increment']) :is(div.border-b>p.text-lg,[data-slot='form-label'])::first-letter{text-transform:uppercase}
+/* v1.0.9: whatever a label does (wraps in Noto, or with a longer translation), the label row takes the extra height so both counters stay on
+   one row and the +/- buttons on their field; French labels are a hair tighter so «Nombre d'enfants» keeps one line in the 112px columns */
+html:not(:lang(ar)) :is([data-slot='popover-content'],[data-slot='sheet-content']):has([data-slot='increment']) [data-slot='form-item']:has(>[data-slot='form-label']):has([data-slot='increment']){grid-template-rows:1fr auto}
+html:lang(fr) :is([data-slot='popover-content'],[data-slot='sheet-content']):has([data-slot='increment']) [data-slot='form-label']{letter-spacing:-.012em}
 
 /* --- F04 calendars inside the window: a date pop-up is never taller than the room left on its side minus 12px (it scrolls inside, the Done
        bar stays in view); windows under 860px tall get a compact calendar (32px days, tighter header and bar, about 60px less); advisor-site.js
@@ -1903,7 +1919,11 @@ html:not(:lang(ar)) :is([data-slot='popover-content'],[data-slot='sheet-content'
 
 /* --- F06 hotel names: up to two lines on the results cards and the home featured hotels (never cut on one line; a Latin name in an Arabic page
        keeps its start); the city page's suggested-hotel cards were already on two lines. --- */
-main :is(h2,h3).truncate:has(>a[href*='provider=']){white-space:normal;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden;text-overflow:clip;line-height:1.3;unicode-bidi:plaintext;overflow-wrap:anywhere}
+main :is(h2,h3).truncate:has(>a[href*='provider=']){white-space:normal;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;line-clamp:4;overflow:hidden;text-overflow:clip;--leading-normal:1.3;line-height:1.3;unicode-bidi:plaintext;overflow-wrap:anywhere}
+/* v1.0.9: the theme's h2 line-height reads --leading-normal (!important in its base layer): 1.3 for the hotel names on the results and on the
+   city page's suggested-hotel cards (the same theme card; v1.0.8's city-search h2.truncate line-height:1.3, dead on this theme, meant the
+   same), in the old markup above (now up to 4 lines, so no name is cut) and in the new one (the theme wraps the name itself) */
+main :is(h2,h3):not(.truncate):has(>a[href*='provider=']){--leading-normal:1.3}
 html[dir='rtl'] main :is(h2,h3).truncate:has(>a[href*='provider=']){text-align:right}
 html[dir='ltr'] main :is(h2,h3).truncate:has(>a[href*='provider=']){text-align:left}
 main div.flex.items-center.min-w-0:has(>:is(h2,h3).truncate>a[href*='provider=']){align-items:flex-start}
@@ -2118,11 +2138,13 @@ html:lang(ar){--adv-empty-hint:'جرّب وجهة أو تواريخ أخرى، �
 html:lang(en){--adv-empty-hint:'Try another destination or other dates, or contact us on WhatsApp and we will help you.';--adv-empty-blog:'Try another word or browse all the posts.'}
 html:lang(fr){--adv-empty-hint:"Essayez une autre destination ou d'autres dates, ou contactez-nous sur WhatsApp pour vous aider.";--adv-empty-blog:'Essayez un autre mot ou parcourez tous les articles.'}
 :root{--adv-empty-tile:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%231AA0C8'/%3E%3Cstop offset='.55' stop-color='%237A45A0'/%3E%3Cstop offset='1' stop-color='%23E8604A'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='18' fill='url(%23g)'/%3E%3Ccircle cx='29' cy='29' r='11' fill='none' stroke='%23fff' stroke-width='3.5'/%3E%3Cpath d='m37 37 8 8' stroke='%23fff' stroke-width='3.5' stroke-linecap='round'/%3E%3C/svg%3E")}
-main section div.min-h-64.rounded-2xl.bg-card.text-center:has(>p.text-muted-foreground:only-child),
+main section div.min-h-64.rounded-2xl.bg-card.text-center:is(:has(>p.text-muted-foreground:only-child),:has(>p.text-muted-foreground:first-child+a:last-child)),
 main section.container>p.mt-8.text-center.text-muted-foreground{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:104px clamp(20px,4vw,48px) 32px;border:1px solid #E4DDF0;border-radius:20px;background:var(--adv-empty-tile) center 32px/56px no-repeat,var(--adv-mist);box-shadow:none;text-align:center}
-main section div.min-h-64.rounded-2xl.bg-card.text-center:has(>p.text-muted-foreground:only-child)>p,
+main section div.min-h-64.rounded-2xl.bg-card.text-center:is(:has(>p.text-muted-foreground:only-child),:has(>p.text-muted-foreground:first-child+a:last-child))>p,
 main section.container>p.mt-8.text-center.text-muted-foreground>span{font-size:clamp(17px,.4vw + 15px,20px);font-weight:800;line-height:1.5;color:#14294A}
-main section div.min-h-64.rounded-2xl.bg-card.text-center:has(>p.text-muted-foreground:only-child)::after{content:var(--adv-empty-hint);max-width:52ch;font-size:15px;line-height:1.7;color:#46506A;text-wrap:balance}
+main section div.min-h-64.rounded-2xl.bg-card.text-center:is(:has(>p.text-muted-foreground:only-child),:has(>p.text-muted-foreground:first-child+a:last-child))::after{content:var(--adv-empty-hint);max-width:52ch;font-size:15px;line-height:1.7;color:#46506A;text-wrap:balance}
+/* v1.0.9: the theme's new «اسأل المساعد عن خيارات ثانية» link stays, under the hint */
+main section div.min-h-64.rounded-2xl.bg-card.text-center:has(>p.text-muted-foreground:first-child+a:last-child)>a{order:1;margin-top:10px}
 main section.container>p.mt-8.text-center.text-muted-foreground::after{content:var(--adv-empty-blog);max-width:52ch;font-size:15px;line-height:1.7;color:#46506A;text-wrap:balance}
 main div.relative.overflow-hidden.rounded-2xl.border.bg-muted>div.absolute.inset-0.flex.items-center.justify-center.text-muted-foreground{flex-direction:column;gap:12px;padding-top:72px;background:var(--adv-empty-tile) center calc(50% - 30px)/56px no-repeat,var(--adv-mist);font-size:17px;font-weight:800;color:#14294A}
 
