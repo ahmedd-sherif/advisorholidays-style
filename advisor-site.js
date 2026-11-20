@@ -1793,7 +1793,8 @@
   var MAINBTN = "button[type='submit'],[data-slot='card-content']>button";
   // v1.0.9: the hotel page's booking card (desktop) and booking bar (phones) button, and the buttons found by their theme label key: the stay
   // summary's «تغيير» (change_stay) and the hotel's «اختر غرفة» (choose_a_room)
-  var MAINBTN9 = MAINBTN + ",div.shadow-center.bg-card>button[data-slot='button'].bg-primary,[data-booking-action-bar] button[data-slot='button'].bg-primary";
+  // (browser check 20 Nov: the WebBeds/other hotels' card has no .shadow-center; div.bg-card.text-card-foreground.h-fit>button matches both cards)
+  var MAINBTN9 = MAINBTN + ",div.shadow-center.bg-card>button[data-slot='button'].bg-primary,div.bg-card.text-card-foreground.h-fit>button[data-slot='button'].bg-primary,[data-booking-action-bar] button[data-slot='button'].bg-primary";
   var MAINKEY = "[data-theme-property*='change_stay'],[data-theme-property*='choose_a_room']";
   // a page that scrolls past the first-screen threshold at all (a short page such as /en/login scrolls 91px; 120px were required before)
   function scrollable() { var d = document.documentElement; return (d.scrollHeight - innerHeight) > TOP + 8; }
@@ -2367,7 +2368,10 @@
   // English filter names of the hotel API left on French pages (exact texts only)
   var FR_EN = {
     'Distance to haram': 'Distance du Haram',
-    'All': 'Tous'
+    'All': 'Tous',
+    // browser check 20 Nov: the theme now writes the blog dates in French itself («Publié le: »): the no-break space before ':' kept
+    'Publié le:': 'Publié le\u00a0:',
+    'Mis à jour le:': 'Mis à jour le\u00a0:'
   };
   // a known Arabic start + a name, or a number: [regex, fr, en] ($1 = the kept part); en null = leave as is on English pages
   var RX = [
@@ -2399,10 +2403,12 @@
   var ARABIC = /[؀-ۿ]/, started = false, pend = [], timer = null, full = false;
   // v1.0.9 review: the theme's own French counts (whole short texts on html[lang=fr] only): «1 chambres», «0 enfants», «prix pour 2 nuit»,
   // «1 chambres, 2 adultes» -> singular for 0 and 1, plural from 2; a text that is not only counts (a room or hotel name) is never matched
-  var FRN = /^(?:prix pour )?\d+ (?:chambre|adulte|enfant|nuit)s?(?:, ?\d+ (?:chambre|adulte|enfant)s?)*$/;
+  // browser check 20 Nov: the theme now writes the stay summary in French too, «1 chambres · Voyageurs : 2» -> «1 chambre · Voyageurs\u00a0: 2»
+  var FRN = /^(?:prix pour )?\d+ (?:chambre|adulte|enfant|nuit)s?(?:, ?\d+ (?:chambre|adulte|enfant)s?)*(?: · Voyageurs? ?: ?\d+)?$/;
   function frn(k) {
     if (!FRN.test(k)) return null;
-    var out = k.replace(/(\d+) (chambre|adulte|enfant|nuit)s?(?![a-z])/g, function (m, n, w) { return n + ' ' + w + (+n > 1 ? 's' : ''); });
+    var out = k.replace(/(\d+) (chambre|adulte|enfant|nuit)s?(?![a-z])/g, function (m, n, w) { return n + ' ' + w + (+n > 1 ? 's' : ''); })
+      .replace(/ · (Voyageurs?) ?: ?(\d+)$/, ' · $1\u00a0: $2');
     return out === k ? null : out;
   }
   function lang() { return (document.documentElement.getAttribute('lang') || 'ar').slice(0, 2).toLowerCase(); }
