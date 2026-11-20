@@ -1839,14 +1839,20 @@
   // v1.0.10: the hotel page's booking bar (below 1280px once a room is chosen; fixed at the bottom, z-index 30) hid the WhatsApp disc
   // (z-index 20), the phone help pill sat over its total, and from 768px the theme hides the assistant launcher while it is up. While the
   // bar is shown, html[data-adv-lift] and --adv-float-lift (the bar's height, in a style element of our own, since the theme manages the
-  // html attributes) put the buttons 12px above it (advisor-brand.css). The lift leaves 260px above it (help pill + its menu), so on a
-  // short landscape phone the buttons may sit over the top of the bar but stay reachable.
+  // html attributes) put the buttons 12px above it (advisor-brand.css). On a short (landscape) screen the lift is lowered to leave room
+  // above the buttons (phones: 260px for the help pill and its menu; from 768px: 150px for the launcher), so they may sit over the top of
+  // the bar (the lifted disc is raised above it in the CSS), but never lower than the top of the bar's «احجز» (part 6 would tuck them
+  // there for as long as the bar stays), and the lift stays on (1px at least) while the bar is shown, which keeps the launcher shown.
   var liftPx = 0, liftEl = null;
   function lift() {
     var d = document.documentElement, bar = document.querySelector('[data-booking-action-bar]'), px = 0;
     if (bar) {
       var cs = getComputedStyle(bar), r = bar.getBoundingClientRect();
-      if (cs.position === 'fixed' && cs.display !== 'none' && cs.visibility !== 'hidden' && r.height > 0 && r.top < innerHeight) px = Math.max(0, Math.min(Math.round(innerHeight - r.top), innerHeight - 260));
+      if (cs.position === 'fixed' && cs.display !== 'none' && cs.visibility !== 'hidden' && r.height > 0 && r.top < innerHeight) {
+        var bk = bar.querySelector("button[data-slot='button'].bg-primary"), kr = bk ? bk.getBoundingClientRect() : null;
+        var clear = kr && kr.height ? Math.round(innerHeight - kr.top) + 4 : 0;
+        px = Math.max(1, clear, Math.min(Math.round(innerHeight - r.top), innerHeight - (innerWidth < 768 ? 260 : 150)));
+      }
     }
     if (px === liftPx) return;
     liftPx = px;

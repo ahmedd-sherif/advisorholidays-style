@@ -1918,16 +1918,18 @@ main button[data-slot='button'].fixed.rounded-full{inset-inline-start:24px;botto
    Hotel page booking bar: once a room is chosen, below 1280px the theme shows [data-booking-action-bar] (fixed at the bottom, z-index 30,
    about 220px on phones, 270px at 1024x768; class xl:hidden). The WhatsApp disc (z-index 20) sat under it, the phone help pill over its
    total, and from 768 to 1279px the theme hides the assistant launcher outright while the bar is up (max-xl:[body:has(bar)]:hidden).
-   advisor-site.js part 6 sets html[data-adv-lift] and --adv-float-lift (the bar's height, capped so that the help pill and its menu
-   always fit above it on short landscape screens) and the buttons sit 12px above the bar: on phones the disc, the help pill and its
-   menu; from 768 to 1279px the disc and the assistant launcher, shown again. */
+   advisor-site.js part 6 sets html[data-adv-lift] and --adv-float-lift whenever the bar is shown: the bar's height, lowered on short
+   (landscape) screens so the help pill and its menu, or the launcher, keep room above them, but never below the top of the bar's «احجز».
+   The buttons sit 12px above that line: on phones the disc, the help pill and its menu (which scrolls if the screen is too short for it);
+   from 768 to 1279px the disc and the assistant launcher, shown again. While lifted the disc is at the pills' z-index 40, above the bar
+   (30), since on a short screen it can sit over the top of the bar. */
 @media (max-width:767.98px){
 a[data-block-id='whatsapp-chat']{display:flex;inset-inline-end:auto;inset-inline-start:16px;bottom:80px;width:48px;height:48px}
 html[data-adv-lift] [data-floating-help-menu]>button.fixed{bottom:calc(var(--adv-float-lift,0px) + 12px)}
-html[data-adv-lift] [data-floating-help-menu] [popover]{bottom:calc(var(--adv-float-lift,0px) + 72px)}
+html[data-adv-lift] [data-floating-help-menu] [popover]{bottom:calc(var(--adv-float-lift,0px) + 72px);max-height:calc(100vh - var(--adv-float-lift,0px) - 84px);max-height:calc(100dvh - var(--adv-float-lift,0px) - 84px);overflow-y:auto}
 }
 @media (max-width:1279.98px){
-html[data-adv-lift] a[data-block-id='whatsapp-chat']{bottom:calc(var(--adv-float-lift,0px) + 12px)}
+html[data-adv-lift] a[data-block-id='whatsapp-chat']{bottom:calc(var(--adv-float-lift,0px) + 12px);z-index:40}
 }
 @media (min-width:768px) and (max-width:1279.98px){
 html[data-adv-lift] button[data-slot='button'].fixed.rounded-full.bg-primary:not(main *){display:inline-flex;bottom:calc(var(--adv-float-lift,0px) + 12px)}
