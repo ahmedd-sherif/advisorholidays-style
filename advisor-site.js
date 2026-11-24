@@ -2707,6 +2707,11 @@
       return u.origin + u.pathname + (s ? '?' + s : '');
     } catch (e) { return ''; }
   }
+  // the page's own locale prefix ('' for Arabic), and a remembered link moved to it
+  function prefix() { var m = location.pathname.match(/^\/(en|fr)(?=\/|$)/i); return m ? '/' + m[1].toLowerCase() : ''; }
+  function relocale(href) {
+    try { var u = new URL(href, location.href); u.pathname = prefix() + u.pathname.replace(/^\/(en|fr|ar)(?=\/)/i, ''); return u.toString(); } catch (e) { return href; }
+  }
   function remembered() { try { var v = JSON.parse(sessionStorage.getItem(KEY) || 'null'); return v && v.name ? v : null; } catch (e) { return null; } }
   function remember() {
     var m = location.pathname.match(HOTEL), h = document.querySelector('main h1');
@@ -2746,7 +2751,10 @@
       if (wb.invoiceInfo && wb.invoiceInfo.total) out.value = +wb.invoiceInfo.total;
     }
     order.forEach(function (k) { out.rooms.push(group[k].q + ' × ' + group[k].t); });
-    var mem = page === 'request' ? remembered() : null, fromMem = !!(mem && same(mem.name, hotel));
+    // the hotel page seen last in this tab is this booking's when its name or its slug matches (the name changes when the visitor switches
+    // language on the booking page: the keep-hotel script in the head reloads selectedHotel in the new language; review 24 Nov)
+    var jslug = jh && jh.slug ? String(jh.slug) : '', jhere = !!(jslug && (!hotel || same(jh.name, hotel)));
+    var mem = page === 'request' ? remembered() : null, fromMem = !!(mem && (same(mem.name, hotel) || (jhere && mem.slug === jslug)));
     var q = page === 'hotel' ? params(location.search) : fromMem ? params(mem.q) : null;
     if (q) {
       if (!out.ci) out.ci = iso(q.get('checkIn'));
@@ -2755,8 +2763,8 @@
     }
     if (!out.n) out.n = nightsOf(out.ci, out.co);
     if (page === 'hotel') out.link = pageLink(location.href);
-    else if (fromMem) out.link = mem.href;
-    else if (useJb && jh.slug) out.link = location.origin + (l === 'ar' ? '' : '/' + l) + '/hotels/' + encodeURIComponent(jh.slug);
+    else if (fromMem) out.link = relocale(mem.href);
+    else if (jhere) out.link = location.origin + prefix() + '/hotels/' + encodeURIComponent(jslug); // selectedHotel holds WebBeds hotels too
     return out;
   }
   // what the page shows next to the button: hotel name and total
