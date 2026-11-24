@@ -1800,7 +1800,7 @@
   // v1.0.9: the hotel page's booking card (desktop) and booking bar (phones) button, and the buttons found by their theme label key: the stay
   // summary's «تغيير» (change_stay) and the hotel's «اختر غرفة» (choose_a_room)
   // (browser check 20 Nov: the WebBeds/other hotels' card has no .shadow-center; div.bg-card.text-card-foreground.h-fit>button matches both cards)
-  var MAINBTN9 = MAINBTN + ",div.shadow-center.bg-card>button[data-slot='button'].bg-primary,div.bg-card.text-card-foreground.h-fit>button[data-slot='button'].bg-primary,[data-booking-action-bar] button[data-slot='button'].bg-primary";
+  var MAINBTN9 = MAINBTN + ",div.shadow-center.bg-card>button[data-slot='button'].bg-primary,div.bg-card.text-card-foreground.h-fit>button[data-slot='button'].bg-primary,[data-booking-action-bar] button[data-slot='button'].bg-primary,[data-adv-wa-book]"; // v1.0.11: and part 12's WhatsApp booking button
   var MAINKEY = "[data-theme-property*='change_stay'],[data-theme-property*='choose_a_room']";
   // a page that scrolls past the first-screen threshold at all (a short page such as /en/login scrolls 91px; 120px were required before)
   function scrollable() { var d = document.documentElement; return (d.scrollHeight - innerHeight) > TOP + 8; }
