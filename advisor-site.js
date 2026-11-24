@@ -2866,7 +2866,8 @@
   }
   function scan() {
     timer = null;
-    var p = location.pathname;
+    var p = location.pathname, have = document.querySelectorAll('[data-adv-wa-book]');
+    for (var k = 0; k < have.length; k++) safe(refresh)(have[k]); // keep each link's message current (total, rooms) for long-press and copy
     if (HOTEL.test(p)) {
       remember();
       var bb = bookButtons();
