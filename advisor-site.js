@@ -2641,21 +2641,21 @@
   var PHONE = '966569083123', KEY = 'adv-wa-book-hotel', EVENT = 'whatsapp_booking_click';
   var T = {
     ar: {
-      btn: 'أكمل الحجز عبر واتساب', or: 'أو', note: 'نرسل تفاصيل اختيارك لفريق الحجز على واتساب ليكمل معك الحجز.',
+      btn: 'أكمل الحجز عبر واتساب', short: 'أكمل الحجز عبر واتساب', or: 'أو', note: 'نرسل تفاصيل اختيارك لفريق الحجز على واتساب ليكمل معك الحجز.',
       hello: 'السلام عليكم، أرغب في إكمال هذا الحجز عبر واتساب:', hotel: 'الفندق', cin: 'الوصول', cout: 'المغادرة', nights: 'عدد الليالي',
       rooms: 'الغرف', guests: 'النزلاء', total: 'الإجمالي المعروض', link: 'رابط الفندق', cur: 'ر.س', sep: ': ', and: '، ',
       ad: function (n) { return n + (n === 1 ? ' بالغ' : ' بالغين'); }, ch: function (n) { return n + (n === 1 ? ' طفل' : ' أطفال'); },
       loc: 'ar-SA-u-nu-latn-ca-gregory', long: true
     },
     en: {
-      btn: 'Complete booking on WhatsApp', or: 'or', note: 'Your selection goes to our booking team on WhatsApp, who will complete the booking with you.',
+      btn: 'Complete booking on WhatsApp', short: 'Book on WhatsApp', or: 'or', note: 'Your selection goes to our booking team on WhatsApp, who will complete the booking with you.',
       hello: "Hello, I'd like to complete this booking on WhatsApp:", hotel: 'Hotel', cin: 'Check-in', cout: 'Check-out', nights: 'Nights',
       rooms: 'Rooms', guests: 'Guests', total: 'Total shown', link: 'Hotel link', cur: 'SAR', sep: ': ', and: ', ',
       ad: function (n) { return n + (n === 1 ? ' adult' : ' adults'); }, ch: function (n) { return n + (n === 1 ? ' child' : ' children'); },
       loc: 'en-GB', long: false
     },
     fr: {
-      btn: 'Finaliser la réservation sur WhatsApp', or: 'ou', note: 'Votre sélection est envoyée à notre équipe de réservation sur WhatsApp, qui finalisera la réservation avec vous.',
+      btn: 'Finaliser la réservation sur WhatsApp', short: 'Réserver sur WhatsApp', or: 'ou', note: 'Votre sélection est envoyée à notre équipe de réservation sur WhatsApp, qui finalisera la réservation avec vous.',
       hello: 'Bonjour, je souhaite finaliser cette réservation sur WhatsApp :', hotel: 'Hôtel', cin: 'Arrivée', cout: 'Départ', nights: 'Nuits',
       rooms: 'Chambres', guests: 'Voyageurs', total: 'Total affiché', link: "Lien de l'hôtel", cur: 'SAR', sep: ' : ', and: ', ',
       ad: function (n) { return n + (n > 1 ? ' adultes' : ' adulte'); }, ch: function (n) { return n + (n > 1 ? ' enfants' : ' enfant'); },
@@ -2833,7 +2833,8 @@
     a.rel = 'noopener';
     a.href = 'https://wa.me/' + PHONE;
     a.innerHTML = ICON + '<span></span>';
-    a.lastChild.textContent = T[l].btn;
+    // the booking bar and card use the short label (English and French: the full one pushed the bar's button to a second row on phones)
+    a.lastChild.textContent = place === 'request' ? T[l].btn : T[l].short;
     a.addEventListener('click', onClick);
     a.addEventListener('auxclick', function (e) { if (e.button === 1) onClick(e); });
     a.addEventListener('contextmenu', function (e) { safe(refresh)(e.currentTarget); });
