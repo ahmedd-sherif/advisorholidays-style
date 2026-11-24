@@ -2229,7 +2229,7 @@ main h1.adv-page-h1::after{content:'';display:block;width:72px;height:5px;margin
    A secondary button after the theme's «احجز» (hotel page booking bar below 1280px, booking card from 1280px) and under «ادفع بأمان»
    and its secure-payment line on /hotels/booking-request (with an "or" rule above it and a one-line note under it). White with a WhatsApp-green edge and glyph so the
    theme's «احجز» stays the main button; the green text is 5.4:1 on white. It is hidden while «احجز» is disabled (no room chosen yet).
-   Booking bar: beside «احجز» on one row when both fit (the price block takes its own row below 1024px; «احجز» takes two thirds of the spare
+   Booking bar: beside «احجز» on one row when both fit (the price block takes its own row; «احجز» takes two thirds of the spare
    width), else under it. Booking card: a full-width row under «احجز», 14px so the label keeps one line on the 300px WebBeds card. */
 [data-adv-wa-book]{display:flex;align-items:center;justify-content:center;gap:8px;box-sizing:border-box;min-height:40px;margin:0;padding:8px 16px;border:1.5px solid #1DA851;border-radius:calc(var(--radius,.625rem) - 2px);background:#fff;color:#0B7A3B;font:inherit;font-size:15px;font-weight:700;line-height:1.25;text-align:center;text-decoration:none;white-space:normal;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 [data-adv-wa-book]>svg{flex:none;width:20px;height:20px;color:#25D366}
@@ -2240,13 +2240,13 @@ main h1.adv-page-h1::after{content:'';display:block;width:72px;height:5px;margin
 @media (prefers-reduced-motion:no-preference){[data-adv-wa-book]{transition:background-color .15s ease,border-color .15s ease,color .15s ease}}
 @media (forced-colors:active){[data-adv-wa-book]{border-color:ButtonText;color:LinkText}[data-adv-wa-book]>svg{color:LinkText}}
 button:disabled+[data-adv-wa-book]{display:none}
-/* booking bar (below 1280px): «احجز» and the WhatsApp button share a row; the price block keeps its own row below 1024px (at 768 the
-   WhatsApp button was left alone on a full-width third row); from 1024 price, «احجز» and WhatsApp fit on one row */
+/* booking bar (below 1280px): the price block keeps its own row (the theme's two rows; at 768 the WhatsApp button was left alone on a
+   full-width third row, and from 1024 a long French or WebBeds price block could do the same), «احجز» and the WhatsApp button share the second */
 @media (max-width:1279.98px){
 [data-booking-action-bar] .container:has(>[data-adv-wa-book])>button[data-slot='button']{width:auto;flex:2 1 6rem}
 [data-booking-action-bar] .container>[data-adv-wa-book]{flex:1 1 auto}
 }
-@media (max-width:1023.98px){[data-booking-action-bar] .container:has(>[data-adv-wa-book])>div:first-of-type{flex-basis:100%}}
+@media (max-width:1279.98px){[data-booking-action-bar] .container:has(>[data-adv-wa-book])>div:first-of-type{flex-basis:100%}}
 @media (max-width:399.98px){[data-adv-wa-book]{padding-inline:10px;gap:6px;font-size:14px}}
 /* booking card (from 1280px): a full-width row under «احجز» */
 @media (min-width:1280px){main div.bg-card:has(>[data-adv-wa-book]){flex-wrap:wrap}main div.bg-card>[data-adv-wa-book]{flex:1 1 100%;padding-inline:8px;gap:6px;font-size:14px}}

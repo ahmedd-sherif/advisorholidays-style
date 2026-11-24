@@ -2761,6 +2761,12 @@
       if (!out.co) out.co = iso(q.get('checkOut'));
       if (!out.g) out.g = guestsOf(q.get('rooms'));
     }
+    // on the hotel page its address holds the stay the rooms and prices were fetched for; the WebBeds reservation store is only written
+    // when «احجز» is pressed and is kept in localStorage, so it can still hold an earlier stay (review 24 Nov)
+    if (page === 'hotel' && q) {
+      var uci = iso(q.get('checkIn')), uco = iso(q.get('checkOut'));
+      if (uci && uco && nightsOf(uci, uco)) { if (uci !== out.ci || uco !== out.co) out.n = 0; out.ci = uci; out.co = uco; }
+    }
     if (!out.n) out.n = nightsOf(out.ci, out.co);
     if (page === 'hotel') out.link = pageLink(location.href);
     else if (fromMem) out.link = relocale(mem.href);
