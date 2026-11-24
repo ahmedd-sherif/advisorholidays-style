@@ -2875,7 +2875,12 @@
     } else if (REQUEST.test(p)) {
       var sub = document.querySelector("main form button[type='submit']");
       var hotel = txt(document.querySelector('main aside h2'));
-      if (sub && sub.parentElement && hotel) place(sub.parentElement, sub, 'request', true);
+      if (sub && sub.parentElement && hotel) {
+        // after the pay button's own "secure, encrypted" line, which belongs to the card payment
+        var last = sub.parentElement.lastElementChild;
+        if (last && last.matches('[data-adv-wa-book-wrap]')) last = last.previousElementSibling;
+        place(sub.parentElement, last && sub.compareDocumentPosition(last) & 4 ? last : sub, 'request', true);
+      }
     }
   }
   function later(ms) { if (!timer) timer = setTimeout(safe(scan), ms || 200); }
