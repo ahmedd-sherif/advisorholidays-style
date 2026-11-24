@@ -8,7 +8,7 @@
 @font-face{font-family:"Calibri Adj";src:local("Calibri Italic"),local("Calibri-Italic");font-weight:351 550;font-style:italic;size-adjust:116%}
 @font-face{font-family:"Calibri Adj";src:local("Calibri Bold Italic"),local("Calibri-BoldItalic");font-weight:551 1000;font-style:italic;size-adjust:116%}
 :root{--font-default:"Calibri Adj","Noto Sans Arabic",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif!important}
-/* advisorholidays.sa brand stylesheet v1.0.10 (v1.0.10 = v1.0.9 + the /services list drawn for Jood's new service cards (an icon per kind of service, 3/2/1 columns, every card state) and the WhatsApp disc back on phones, on the right in Arabic with the help pill on the left, the floating buttons lifted over the hotel booking bar below 1280px, 20 Nov 2026). v1.0.9 (v1.0.9 = v1.0.8 + theme-update fixes, 16 Nov 2026: French guests labels on one line and the two counters on one row, the phone help pill in the floating-button tuck, the results empty state with the theme's new assistant link, no capital ::first-letter on Arabic pages (Firefox broke the letter joining), the city heading bar without a :has() (pager long task), compact multi-line hotel names on the results and on the city page's suggested hotels; review fixes 19 Nov: a tapped help pill tucked again once its menu is closed, the help menu's WhatsApp icon, the breadcrumb links' capital on English and French pages). */
+/* advisorholidays.sa brand stylesheet v1.0.11 (v1.0.11 = v1.0.10 + the «أكمل الحجز عبر واتساب» / Complete booking on WhatsApp button next to «احجز» and on /hotels/booking-request, advisor-site.js part 12, 24 Nov 2026). v1.0.10 (v1.0.10 = v1.0.9 + the /services list drawn for Jood's new service cards (an icon per kind of service, 3/2/1 columns, every card state) and the WhatsApp disc back on phones, on the right in Arabic with the help pill on the left, the floating buttons lifted over the hotel booking bar below 1280px, 20 Nov 2026). v1.0.9 (v1.0.9 = v1.0.8 + theme-update fixes, 16 Nov 2026: French guests labels on one line and the two counters on one row, the phone help pill in the floating-button tuck, the results empty state with the theme's new assistant link, no capital ::first-letter on Arabic pages (Firefox broke the letter joining), the city heading bar without a :has() (pager long task), compact multi-line hotel names on the results and on the city page's suggested hotels; review fixes 19 Nov: a tapped help pill tucked again once its menu is closed, the help menu's WhatsApp icon, the breadcrumb links' capital on English and French pages). */
 /* advisorholidays.sa brand stylesheet v1.0.8 (v1.0.8 = v1.0.7 + site-wide QA fixes F01-F40 as shipped and the second review's fixes (fix2: menu button ring after a tap, guests labels' capital, French map dates, phone /transport band, hotel total card), at the end of the file: phone menu, floating buttons, guests Done bar, calendars inside the window, two-line hotel names, map view, transport start prompt / phone tabs / loading lists, phone sheets, focus rings, 1536 margins, copyright, French strings, empty states, sign-in forms, blog posts and contact form). v1.0.7 = (v1.0.6 + home tabs navigate, capitalised sheet labels: EN/FR button labels in pop-ups and phone sheets start with a capital; the tabs themselves are in advisor-site.js; a spinner on a tab and a dimmed form while the tab's page loads). v1.0.6 = (v1.0.5 + the site's own drop-down look for every list and pop-up, the site's own hotel list and a narrower hotel field from 1536px, a Done bar under the date pickers, the phone-sheet tab row on the hotel results, the content card for the new about/privacy/terms block ids and the contact Subject drop-down; v1.0.5 = v1.0.4 + the optional Hotel field drawn by advisor-site.js; v1.0.4 = v1.0.3 + readable tab row on the hotel search results; v1.0.3 = v1.0.2 + new search tabs, transport/airport/services pages, template image fallbacks).
    v1.0.2 = v7 + footer app strip and coloured payment cards; v7 = v6 + font fit fixes after the Calibri switch.
    v6 = v5 + full hero photo, French search rows, Calibri font, brand-coloured social icons.
@@ -2224,3 +2224,33 @@ main h1.adv-page-h1::after{content:'';display:block;width:72px;height:5px;margin
 /* --- F40 assistant page: the "Smart Booking" bar lines up with the header's container (it sat about 40px from the edges) --- */
 @media (min-width:1280px){div.flex.h-dvh>main section.mx-auto>header.h-14{padding-inline:max(20px,calc((100% - 1240px) / 2))}}
 @media (min-width:1536px){div.flex.h-dvh>main section.mx-auto>header.h-14{padding-inline:max(139px,calc((100% - 1496px) / 2))}}
+
+/* --- v1.0.11 «أكمل الحجز عبر واتساب» / Complete booking on WhatsApp / Finaliser la réservation sur WhatsApp (advisor-site.js part 12) ---
+   A secondary button after the theme's «احجز» (hotel page booking bar below 1280px, booking card from 1280px) and after «ادفع بأمان» on
+   /hotels/booking-request (with an "or" rule above it and a one-line note under it). White with a WhatsApp-green edge and glyph so the
+   theme's «احجز» stays the main button; the green text is 5.4:1 on white. It is hidden while «احجز» is disabled (no room chosen yet).
+   Booking bar: beside «احجز» on one row when both fit (the price block takes its own row on phones), else under it. */
+[data-adv-wa-book]{display:flex;align-items:center;justify-content:center;gap:8px;box-sizing:border-box;min-height:40px;margin:0;padding:8px 16px;border:1.5px solid #1DA851;border-radius:calc(var(--radius,.625rem) - 2px);background:#fff;color:#0B7A3B;font:inherit;font-size:15px;font-weight:700;line-height:1.25;text-align:center;text-decoration:none;white-space:normal;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+[data-adv-wa-book]>svg{flex:none;width:20px;height:20px;color:#25D366}
+[data-adv-wa-book]>span{min-width:0}
+@media (hover:hover){[data-adv-wa-book]:hover{background:#EAF8EF;border-color:#128C4B;color:#075E36}}
+[data-adv-wa-book]:active{background:#DDF4E6}
+[data-adv-wa-book]:focus-visible{outline:3px solid #8EDCF2;outline-offset:2px}
+@media (prefers-reduced-motion:no-preference){[data-adv-wa-book]{transition:background-color .15s ease,border-color .15s ease,color .15s ease}}
+@media (forced-colors:active){[data-adv-wa-book]{border-color:ButtonText;color:LinkText}[data-adv-wa-book]>svg{color:LinkText}}
+button:disabled+[data-adv-wa-book]{display:none}
+/* booking bar (below 1280px): «احجز» and the WhatsApp button share a row; the price block keeps its own row on phones */
+@media (max-width:1279.98px){
+[data-booking-action-bar] .container:has(>[data-adv-wa-book])>button[data-slot='button']{width:auto;flex:1 1 6rem}
+[data-booking-action-bar] .container>[data-adv-wa-book]{flex:1 1 auto}
+}
+@media (max-width:767.98px){[data-booking-action-bar] .container:has(>[data-adv-wa-book])>div:first-of-type{flex-basis:100%}}
+@media (max-width:399.98px){[data-adv-wa-book]{padding-inline:10px;gap:6px;font-size:14px}}
+/* booking card (from 1280px): a full-width row under «احجز» */
+@media (min-width:1280px){main div.bg-card:has(>[data-adv-wa-book]){flex-wrap:wrap}main div.bg-card>[data-adv-wa-book]{flex:1 1 100%}}
+/* /hotels/booking-request: "or", the button as tall as «ادفع بأمان», a short note */
+[data-adv-wa-book-wrap]{display:flex;flex-direction:column;gap:10px}
+[data-adv-wa-book-wrap]>.adv-wa-or{display:flex;align-items:center;gap:12px;margin:0;color:#5B6478;font-size:14px;line-height:1.4}
+[data-adv-wa-book-wrap]>.adv-wa-or::before,[data-adv-wa-book-wrap]>.adv-wa-or::after{content:'';flex:1 1 0;height:1px;background:#E3E0EC}
+[data-adv-wa-book-wrap]>[data-adv-wa-book]{min-height:48px;font-size:16px}
+[data-adv-wa-book-wrap]>.adv-wa-note{margin:0;color:#5B6478;font-size:14px;line-height:1.5;text-align:center}

@@ -12,6 +12,9 @@
    9. Transport place lists: "loading" while their places are fetched, instead of "no options available" (14 Nov 2026).
    10. French (and English) pages: the theme's Arabic leftovers replaced by the page language's text (14 Nov 2026).
    11. Services list: each service card gets the kind of service (meal, parking, visa...) for its icon (20 Nov 2026).
+   12. Booking: «أكمل الحجز عبر واتساب» / Complete booking on WhatsApp next to «احجز» and on /hotels/booking-request, with the stay in the
+       message and a GA4 event (24 Nov 2026).
+   v1.0.11 = v1.0.10 + part 12 (card payment is the only way to book and no web card payment has gone through yet; asked by the ads review).
    v1.0.10 = v1.0.9 + part 11, for Jood's new service cards (about 15 Nov 2026; the new card look is in advisor-brand.css), and part 6
    lifts the floating buttons over the hotel page's booking bar below 1280px (owner: the WhatsApp and assistant buttons never go away).
    v1.0.9 = v1.0.8 + fixes for Jood's theme update of 15 Nov 2026: part 6 also tucks the theme's phone help pill («مساعدة» / Help; never while
@@ -2605,6 +2608,294 @@
     } catch (e) {}
   }
   // start once Nuxt has hydrated the page (as parts 2-10)
+  function hydrated(nuxt, f) {
+    var done = false, n = 0;
+    function run() { if (!done) { done = true; setTimeout(f, 0); } }
+    nuxt.hooks.hookOnce('app:suspense:resolve', run);
+    (function poll() { if (done) return; if (!nuxt.isHydrating) run(); else setTimeout(poll, ++n < 120 ? 500 : 3000); })();
+  }
+  function start() {
+    var a = app();
+    if (!a) { setTimeout(start, 300); return; }
+    var nuxt = a.config.globalProperties.$nuxt;
+    if (nuxt && nuxt.isHydrating && nuxt.hooks && nuxt.hooks.hookOnce) hydrated(nuxt, safe(go));
+    else go();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', safe(start)); else safe(start)();
+})();
+
+/* ---------- 12. "Complete booking on WhatsApp" next to «احجز» and «ادفع بأمان» (v1.0.11, 24 Nov 2026) ----------
+   Card payment (Telr) is the only way to book on the site, and no web card payment has gone through yet. So the hotel page's booking bar
+   (below 1280px, [data-booking-action-bar]), its booking card (from 1280px) and /hotels/booking-request get a secondary button
+   ([data-adv-wa-book]) that opens WhatsApp (wa.me/966569083123) with the stay in the page language: hotel, check-in, check-out, nights,
+   rooms (room type and board), guests, the total shown and the hotel page link. A click also sends the GA4 event whatsapp_booking_click
+   (placement, hotel_name, value, currency, check_in, check_out, nights, rooms, guests) for the daily ads check. The theme's «احجز» and
+   card payment, its non-refundable notices and the floating buttons are not touched; the look is in advisor-brand.css.
+   The stay comes from the theme's own stores (Pinia: hotel-booking-store for Jood Booking hotels; webbeds-booking-process-store and
+   webbeds-reservation-store for WebBeds hotels), the page address and what the page shows (hotel name, total). The booking request page
+   has no stay in its address, so the last hotel page seen is kept for this tab (sessionStorage adv-wa-book-hotel) for its dates, guests
+   and link. Fields that cannot be read are left out of the message; the button never blocks or changes the card payment. */
+(function () {
+  if (window.__advWaBook) return;
+  window.__advWaBook = 1;
+  var PHONE = '966569083123', KEY = 'adv-wa-book-hotel', EVENT = 'whatsapp_booking_click';
+  var T = {
+    ar: {
+      btn: 'أكمل الحجز عبر واتساب', or: 'أو', note: 'نرسل تفاصيل اختيارك لفريق الحجز على واتساب ليكمل معك الحجز.',
+      hello: 'السلام عليكم، أرغب في إكمال هذا الحجز عبر واتساب:', hotel: 'الفندق', cin: 'الوصول', cout: 'المغادرة', nights: 'عدد الليالي',
+      rooms: 'الغرف', guests: 'النزلاء', total: 'الإجمالي المعروض', link: 'رابط الفندق', cur: 'ر.س', sep: ': ', and: '، ',
+      ad: function (n) { return n + (n === 1 ? ' بالغ' : ' بالغين'); }, ch: function (n) { return n + (n === 1 ? ' طفل' : ' أطفال'); },
+      loc: 'ar-SA-u-nu-latn-ca-gregory', long: true
+    },
+    en: {
+      btn: 'Complete booking on WhatsApp', or: 'or', note: 'Your selection goes to our booking team on WhatsApp, who will complete the booking with you.',
+      hello: "Hello, I'd like to complete this booking on WhatsApp:", hotel: 'Hotel', cin: 'Check-in', cout: 'Check-out', nights: 'Nights',
+      rooms: 'Rooms', guests: 'Guests', total: 'Total shown', link: 'Hotel link', cur: 'SAR', sep: ': ', and: ', ',
+      ad: function (n) { return n + (n === 1 ? ' adult' : ' adults'); }, ch: function (n) { return n + (n === 1 ? ' child' : ' children'); },
+      loc: 'en-GB', long: false
+    },
+    fr: {
+      btn: 'Finaliser la réservation sur WhatsApp', or: 'ou', note: 'Votre sélection est envoyée à notre équipe de réservation sur WhatsApp, qui finalisera la réservation avec vous.',
+      hello: 'Bonjour, je souhaite finaliser cette réservation sur WhatsApp :', hotel: 'Hôtel', cin: 'Arrivée', cout: 'Départ', nights: 'Nuits',
+      rooms: 'Chambres', guests: 'Voyageurs', total: 'Total affiché', link: "Lien de l'hôtel", cur: 'SAR', sep: ' : ', and: ', ',
+      ad: function (n) { return n + (n > 1 ? ' adultes' : ' adulte'); }, ch: function (n) { return n + (n > 1 ? ' enfants' : ' enfant'); },
+      loc: 'fr-FR', long: false
+    }
+  };
+  var ICON = '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>';
+  var PRE = '(?:\\/[a-z]{2}(?:-[a-z]{2})?)?';
+  var HOTEL = new RegExp('^' + PRE + '\\/hotels\\/(?!search\\/?$|booking-request\\/?$|booking-confirm\\/?$)([^\\/?#]+)\\/?$', 'i');
+  var REQUEST = new RegExp('^' + PRE + '\\/hotels\\/booking-request\\/?$', 'i');
+  var started = false, timer = null;
+  function lang() { var l = (document.documentElement.getAttribute('lang') || 'ar').slice(0, 2).toLowerCase(); return T[l] ? l : 'ar'; }
+  function safe(f) { return function (a, b) { try { return f(a, b); } catch (e) {} }; }
+  function app() { var el = document.querySelector('#__nuxt'); return el ? el.__vue_app__ : null; }
+  function store(id) { try { var p = app().config.globalProperties.$pinia; return (p && p._s && p._s.get(id)) || null; } catch (e) { return null; } }
+  function clean(s) { return String(s == null ? '' : s).replace(/\s+/g, ' ').trim(); }
+  function txt(el) { return el ? clean(el.textContent) : ''; }
+  // a shown amount ("2,309.09", Arabic-Indic digits) -> number
+  function num(s) {
+    s = String(s == null ? '' : s).replace(/[٠-٩]/g, function (c) { return String(c.charCodeAt(0) - 1632); }).replace(/[۰-۹]/g, function (c) { return String(c.charCodeAt(0) - 1776); })
+      .replace(/٫/g, '.').replace(/[,٬\s  ]/g, '');
+    var m = s.match(/\d+(?:\.\d+)?/);
+    return m ? parseFloat(m[0]) : null;
+  }
+  function amount(v) { return v == null ? '' : (Math.round(v * 100) % 100 ? v.toFixed(2) : String(Math.round(v))); }
+  function iso(s) { var m = String(s || '').match(/^(\d{4})-(\d{2})-(\d{2})/); return m ? m[0] : ''; }
+  function utc(s) { return Date.UTC(+s.slice(0, 4), +s.slice(5, 7) - 1, +s.slice(8, 10), 12); }
+  function nightsOf(a, b) { if (!a || !b) return 0; var n = Math.round((utc(b) - utc(a)) / 864e5); return n > 0 && n < 400 ? n : 0; }
+  function day(s, l) {
+    if (!s) return '';
+    try {
+      return new Intl.DateTimeFormat(T[l].loc, T[l].long ? { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }
+        : { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }).format(new Date(utc(s)));
+    } catch (e) { return s; }
+  }
+  // rooms=2-1-5_1-0: rooms joined by "_", each "adults-children[-age...]"
+  function guestsOf(q) {
+    var a = 0, c = 0, n = 0;
+    String(q || '').split('_').forEach(function (r) { var p = r.split('-'); if (!/^\d+$/.test(p[0] || '')) return; n++; a += +p[0]; c += /^\d+$/.test(p[1] || '') ? +p[1] : 0; });
+    return n ? { a: a, c: c } : null;
+  }
+  function params(search) { try { return new URLSearchParams(search || ''); } catch (e) { return { get: function () { return null; } }; } }
+  // the hotel page link with only the stay in it (no ad click ids)
+  function pageLink(href) {
+    try {
+      var u = new URL(href, location.href), q = new URLSearchParams();
+      ['city', 'checkIn', 'checkOut', 'rooms', 'provider'].forEach(function (k) { var v = u.searchParams.get(k); if (v) q.set(k, v); });
+      var s = q.toString();
+      return u.origin + u.pathname + (s ? '?' + s : '');
+    } catch (e) { return ''; }
+  }
+  function remembered() { try { var v = JSON.parse(sessionStorage.getItem(KEY) || 'null'); return v && v.name ? v : null; } catch (e) { return null; } }
+  function remember() {
+    var m = location.pathname.match(HOTEL), h = document.querySelector('main h1');
+    if (!m || !h || !txt(h)) return;
+    try { sessionStorage.setItem(KEY, JSON.stringify({ name: txt(h), slug: decodeURIComponent(m[1]), href: pageLink(location.href), q: location.search })); } catch (e) {}
+  }
+  function same(a, b) { a = clean(a).toLowerCase(); b = clean(b).toLowerCase(); return !!a && a === b; }
+  // the stay: which store holds this page's selection, its rooms, dates and guests
+  function stay(page, hotel) {
+    var l = lang(), jb = store('hotel-booking-store'), wb = store('webbeds-booking-process-store'), wr = store('webbeds-reservation-store');
+    var slug = page === 'hotel' ? decodeURIComponent((location.pathname.match(HOTEL) || [])[1] || '') : '';
+    var jr = jb && jb.selectedRooms && jb.selectedRooms.length ? jb.selectedRooms : null, jh = jb && jb.selectedHotel;
+    var useJb = !!(jr && jh && (page === 'hotel' ? jh.slug === slug : same(jh.name, hotel)));
+    var wrs = !useJb && wb && wb.selectedRooms && wb.selectedRooms.length ? wb.selectedRooms : null;
+    var out = { rooms: [], ci: '', co: '', n: 0, g: null, link: '', value: null };
+    var group = {}, order = [];
+    function add(key, qty, label) { if (!group[key]) { group[key] = { q: 0, t: label }; order.push(key); } group[key].q += qty; }
+    if (useJb) {
+      jr.forEach(function (r) {
+        var extra = [r.meal, r.viewName].filter(function (x) { return x && x !== 'null'; }).join(T[l].and);
+        var label = clean(r.roomTypeName) + (extra ? ' (' + clean(extra) + ')' : '');
+        add(label, +r.quantity || 1, label);
+      });
+      out.ci = iso(jr[0].checkIn); out.co = iso(jr[0].checkOut); out.n = +jr[0].nbrNights || 0;
+      if (jb.invoiceInfo && jb.invoiceInfo.priceToPay) out.value = +jb.invoiceInfo.priceToPay;
+    } else if (wrs) {
+      var g = { a: 0, c: 0 };
+      wrs.forEach(function (r) {
+        var name = clean((l === 'ar' && r.roomTypeNameAr) || r.roomTypeName), board = clean((l === 'ar' && r.descriptionAr) || r.description);
+        var label = name + (board ? ' (' + board + ')' : '');
+        add(label, 1, label);
+        g.a += +r.adults || 0; g.c += +r.children || 0;
+      });
+      if (g.a) out.g = g;
+      var ri = wr && wr.reservationInfo;
+      if (ri) { out.ci = iso(ri.checkin); out.co = iso(ri.checkout); }
+      if (wb.invoiceInfo && wb.invoiceInfo.total) out.value = +wb.invoiceInfo.total;
+    }
+    order.forEach(function (k) { out.rooms.push(group[k].q + ' × ' + group[k].t); });
+    var mem = page === 'request' ? remembered() : null, fromMem = !!(mem && same(mem.name, hotel));
+    var q = page === 'hotel' ? params(location.search) : fromMem ? params(mem.q) : null;
+    if (q) {
+      if (!out.ci) out.ci = iso(q.get('checkIn'));
+      if (!out.co) out.co = iso(q.get('checkOut'));
+      if (!out.g) out.g = guestsOf(q.get('rooms'));
+    }
+    if (!out.n) out.n = nightsOf(out.ci, out.co);
+    if (page === 'hotel') out.link = pageLink(location.href);
+    else if (fromMem) out.link = mem.href;
+    else if (useJb && jh.slug) out.link = location.origin + (l === 'ar' ? '' : '/' + l) + '/hotels/' + encodeURIComponent(jh.slug);
+    return out;
+  }
+  // what the page shows next to the button: hotel name and total
+  function shown(a) {
+    var place = a.getAttribute('data-adv-wa-book'), hotel = '', totalEl = null;
+    if (place === 'request') {
+      var aside = document.querySelector('main aside');
+      hotel = txt(aside && aside.querySelector('h2'));
+      var tot = aside ? aside.querySelectorAll('p.text-xl.font-bold') : [];
+      totalEl = tot.length ? tot[tot.length - 1] : null;
+    } else {
+      hotel = txt(document.querySelector('main h1'));
+      var host = a.parentElement;
+      totalEl = host && host.querySelector('p.text-4xl');
+    }
+    var cur = 'SAR', svg = totalEl && totalEl.parentElement && totalEl.parentElement.querySelector('svg[aria-label]');
+    if (svg && /^[A-Z]{3}$/.test(svg.getAttribute('aria-label') || '')) cur = svg.getAttribute('aria-label');
+    return { place: place, hotel: hotel, total: totalEl ? num(txt(totalEl)) : null, cur: cur };
+  }
+  function message(d, l) {
+    var t = T[l], L = [t.hello];
+    function line(k, v) { if (v) L.push(t[k] + t.sep + v); }
+    line('hotel', d.hotel);
+    line('cin', day(d.ci, l));
+    line('cout', day(d.co, l));
+    line('nights', d.n ? String(d.n) : '');
+    line('rooms', d.rooms.join(t.and));
+    line('guests', d.g && d.g.a ? [t.ad(d.g.a)].concat(d.g.c ? [t.ch(d.g.c)] : []).join(t.and) : '');
+    line('total', d.total != null ? amount(d.total) + ' ' + (d.cur === 'SAR' ? t.cur : d.cur) : '');
+    line('link', d.link);
+    return L.join('\n');
+  }
+  function collect(a) {
+    var s = shown(a), d = stay(s.place === 'request' ? 'request' : 'hotel', s.hotel);
+    d.place = s.place; d.hotel = s.hotel; d.cur = s.cur;
+    d.total = s.total != null ? s.total : d.value;
+    return d;
+  }
+  function refresh(a) {
+    var d = collect(a);
+    a.href = 'https://wa.me/' + PHONE + '?text=' + encodeURIComponent(message(d, lang()));
+    return d;
+  }
+  function track(d) {
+    try {
+      var p = {
+        placement: d.place, hotel_name: d.hotel, value: d.total != null ? Math.round(d.total * 100) / 100 : undefined, currency: d.cur,
+        check_in: d.ci || undefined, check_out: d.co || undefined, nights: d.n || undefined, rooms: d.rooms.length ? d.rooms.join(' | ').slice(0, 100) : undefined,
+        guests: d.g ? d.g.a + d.g.c : undefined, page_language: lang(), transport_type: 'beacon'
+      };
+      Object.keys(p).forEach(function (k) { if (p[k] === undefined || p[k] === '') delete p[k]; });
+      if (typeof window.gtag === 'function') window.gtag('event', EVENT, p);
+      else { window.dataLayer = window.dataLayer || []; window.dataLayer.push({ event: EVENT, wa_booking: p }); }
+    } catch (e) {}
+  }
+  function onClick(e) {
+    var a = e.currentTarget, d = null;
+    try { d = refresh(a); } catch (x) {}
+    if (d) track(d);
+  }
+  function make(place) {
+    var a = document.createElement('a'), l = lang();
+    a.setAttribute('data-adv-wa-book', place);
+    a.setAttribute('data-adv-lang', l);
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.href = 'https://wa.me/' + PHONE;
+    a.innerHTML = ICON + '<span></span>';
+    a.lastChild.textContent = T[l].btn;
+    a.addEventListener('click', onClick);
+    a.addEventListener('auxclick', function (e) { if (e.button === 1) onClick(e); });
+    a.addEventListener('contextmenu', function (e) { safe(refresh)(e.currentTarget); });
+    a.addEventListener('focus', function (e) { safe(refresh)(e.currentTarget); });
+    a.addEventListener('pointerenter', function (e) { safe(refresh)(e.currentTarget); });
+    return a;
+  }
+  // the theme button the link goes after: in the booking bar / card it sits next to the shown total (p.text-4xl)
+  function bookButtons() {
+    var out = [], totals = document.querySelectorAll('main p.text-4xl.font-black');
+    for (var i = 0; i < totals.length; i++) {
+      var host = totals[i].parentElement && totals[i].parentElement.parentElement && totals[i].parentElement.parentElement.parentElement;
+      if (!host) continue;
+      var kids = host.children, b = null;
+      for (var j = 0; j < kids.length; j++) if (kids[j].matches("button[data-slot='button']")) b = kids[j];
+      if (b) out.push({ host: host, btn: b, place: host.closest('[data-booking-action-bar]') ? 'room_bar' : 'room_card' });
+    }
+    return out;
+  }
+  function place(host, after, kind, wrapNote) {
+    var cur = host.querySelector(':scope>[data-adv-wa-book],:scope>[data-adv-wa-book-wrap]');
+    var l = lang();
+    if (cur) {
+      var link = cur.matches('[data-adv-wa-book]') ? cur : cur.querySelector('[data-adv-wa-book]');
+      if (link && link.getAttribute('data-adv-lang') === l && cur.previousElementSibling === after) return;
+      cur.remove();
+    }
+    var a = make(kind), node = a;
+    if (wrapNote) {
+      node = document.createElement('div');
+      node.setAttribute('data-adv-wa-book-wrap', '');
+      var or = document.createElement('p'); or.className = 'adv-wa-or'; or.textContent = T[l].or;
+      var note = document.createElement('p'); note.className = 'adv-wa-note'; note.textContent = T[l].note;
+      node.appendChild(or); node.appendChild(a); node.appendChild(note);
+    }
+    after.insertAdjacentElement('afterend', node);
+    safe(refresh)(a);
+  }
+  function scan() {
+    timer = null;
+    var p = location.pathname;
+    if (HOTEL.test(p)) {
+      remember();
+      var bb = bookButtons();
+      for (var i = 0; i < bb.length; i++) place(bb[i].host, bb[i].btn, bb[i].place, false);
+    } else if (REQUEST.test(p)) {
+      var sub = document.querySelector("main form button[type='submit']");
+      var hotel = txt(document.querySelector('main aside h2'));
+      if (sub && sub.parentElement && hotel) place(sub.parentElement, sub, 'request', true);
+    }
+  }
+  function later(ms) { if (!timer) timer = setTimeout(safe(scan), ms || 200); }
+  function go() {
+    if (started) return;
+    started = true;
+    scan();
+    new MutationObserver(function (list) {
+      for (var i = 0; i < list.length; i++) {
+        var t = list[i].target;
+        if (t && t.nodeType === 1 && t.closest && t.closest('[data-adv-wa-book],[data-adv-wa-book-wrap]')) continue;
+        later(200);
+        return;
+      }
+    }).observe(document.body, { childList: true, subtree: true });
+    try {
+      var r = app().config.globalProperties.$router;
+      if (r && !r.__advWaBook) { r.__advWaBook = 1; r.afterEach(function () { [80, 700].forEach(function (ms) { setTimeout(safe(scan), ms); }); }); }
+    } catch (e) {}
+  }
+  // start once Nuxt has hydrated the page (as parts 2-11)
   function hydrated(nuxt, f) {
     var done = false, n = 0;
     function run() { if (!done) { done = true; setTimeout(f, 0); } }
